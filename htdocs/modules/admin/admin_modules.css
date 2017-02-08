@@ -1,0 +1,24 @@
+<?php 
+header('Content-Type: text/css');
+
+?>
+
+    .portlet {
+        width: 60em;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+div.row {
+  clear: both;
+  padding-top: .5em;
+  }
+
+div.row span.col1 {
+  float: left;
+  width: 10em;
+  text-align: left;
+  }

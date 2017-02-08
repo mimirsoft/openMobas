@@ -1,0 +1,71 @@
+<?php
+include("../../../framework/theme.css");
+include("invoices_main.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<SCRIPT LANGUAGE="JavaScript">
+
+function check_all(frm, chAll, field) {
+    comfList = document.forms[frm].elements[field];
+    checkAll = (chAll.checked)?true:false; // what to do? Check all or uncheck all.
+    if (checkAll) {
+            for (i = 0; i < comfList.length; i++) {
+                comfList[i].checked = true;
+
+            }
+        }
+    else {
+        for (i = 0; i < comfList.length; i++) {
+                comfList[i].checked = false;
+            }
+        }
+
+
+
+}
+
+
+</SCRIPT>
+<div class="portlet2">
+    <div class="divheader">Recurring Invoices</div>
+    <form name="rents_form" ID="rents_form" action="<?php echo $BASE_DIR ?>/invoices/invoices_charge_recurring.php"  method=POST>
+    <div class="row">
+        <span class="label">Record Transaction on (YYYY-MM-DD):</span>
+        <span class="formw">
+            <?php
+            Framework::date_selectors($recorddate_year, $recorddate_month, $recorddate_day, "record", "")
+            ?>
+        </span>
+    </div>    
+    <div class="row">
+        <table>
+        <?php  foreach($recurring_invoices as $recurring_invoice)
+            {
+            ?>
+                <TR>
+                    <TD><?php echo $recurring_invoice['cv_name'] ?></TD>
+                    <TD><?php echo $recurring_invoice['invoice_total'] ?></TD>
+                    <TD><?php echo $recurring_invoice['lastcharged'] ?></TD>
+                    <TD>
+                    <input type="checkbox"  name="recurring_list[]" id="recurring_list[]"  value="<?php echo $recurring_invoice["recurringinvoice_id"]; ?>">
+                    </TD>
+                </TR>
+             <?php
+            }
+            ?>
+        <TR>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD> CheckALL: <input type="checkbox" name="checkAll" value="Comfortable with"
+    onclick="javascript:check_all('rents_form', this, 'recurring_list[]')"  ></TD>
+        </TR>
+                <TR>
+                    <TD>
+                    <input type=SUBMIT name="ACTION" value="Charge Recurring" >
+                </TD>
+                </TR>
+        </form>
+        </table>
+</div>

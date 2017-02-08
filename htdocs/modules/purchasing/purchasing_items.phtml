@@ -1,0 +1,293 @@
+<?php
+include("../../../framework/theme.css");
+include("purchasing_items.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<script language="JavaScript"
+
+type="text/javascript">
+function show_box(obj) {
+    var el = document.getElementById(obj);
+    if ( el.style.display == 'block' ) {
+    el.style.display = 'none';
+    }
+    else {
+    el.style.display = 'block';
+    }
+}
+
+var xmlHttp;
+
+function createXMLHttpRequest() {
+  try {
+    xmlHttp = new XMLHttpRequest();
+  } catch (trymicrosoft) {
+    try {
+      xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (othermicrosoft) {
+      try {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (failed) {
+        xmlHttp = false;
+      }
+    }
+  }
+
+  if (!xmlHttp)
+    alert("Error initializing XMLHttpRequest!");
+}
+
+
+function form_extender(formElement, target_container) {
+    createXMLHttpRequest();
+    form_Name = formElement.getAttribute("name");
+    var queryString = "ACTION="+form_Name;
+    form_Value = formElement.value;
+    queryString += "&VALUE="+form_Value;
+    xmlHttp.open("POST", "invoices_create_request.php", true);
+    xmlHttp.onreadystatechange = handleStateChange;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    var div = document.getElementById(target_container);
+    div.innerHTML =  '';
+}
+
+function handleStateChange() {
+     if (xmlHttp.readyState == 4) {
+       if (xmlHttp.status == 200)
+       {
+            var xmlDoc = xmlHttp.responseXML;
+            if(xmlDoc.getElementsByTagName("removerow").length > 0)
+            {
+                for(var i = 0; i < xmlDoc.getElementsByTagName("removerow").length; i++)
+                {
+                    var rowname = xmlDoc.getElementsByTagName("removerow")[i].childNodes[0].nodeValue;
+                    thisrow = document.getElementById(rowname);
+                    if(thisrow != null)
+                    {
+                        while(thisrow.hasChildNodes())
+                        {
+                            thisrow.removeChild(thisrow.lastChild)
+                        }
+                        thisrow.parentNode.removeChild(thisrow);
+                    }
+                }
+            }
+            if(xmlDoc.getElementsByTagName("addrow").length > 0)
+            {
+                for(var i = 0; i < xmlDoc.getElementsByTagName("addrow").length; i++)
+                {
+                    add_current_row = xmlDoc.getElementsByTagName("addrow")[i];
+                    var rowname = add_current_row.getElementsByTagName("rowname")[0].childNodes[0].nodeValue;
+                    var rowformname = add_current_row.getElementsByTagName("rowformname")[0].childNodes[0].nodeValue;
+                    var previousrow = add_current_row.getElementsByTagName("previousrow")[0].childNodes[0].nodeValue;
+                    var label = add_current_row.getElementsByTagName("label")[0].childNodes[0].nodeValue;
+                    var multiple = false;
+                    thisrow = document.getElementById(previousrow);
+                    newdiv = document.createElement("div");
+                    newdiv.setAttribute("id", rowname);
+                    newdiv.setAttribute("class", "row");
+                    newspan = document.createElement("span");
+                    newspan.innerHTML = label;
+                    newspan.setAttribute("class", "label");
+                    newdiv.appendChild(newspan);
+                    newspan = document.createElement("span");
+                    newspan.setAttribute("class", "form");
+                    
+                    newSelect = document.createElement("select");
+                    if (add_current_row.getElementsByTagName("multiple")[0])
+                    {
+                        var multiple = add_current_row.getElementsByTagName("multiple")[0].childNodes[0].nodeValue;
+                        newSelect.setAttribute("multiple", true);
+                    }
+                    newSelect.setAttribute("name", rowformname);
+                    newSelect.setAttribute("id", rowformname);
+                    newSelect.setAttribute("onchange", "form_extender(this)");
+                    for(var j = 0; j < add_current_row.getElementsByTagName("id").length; j++)
+                    {
+                        newoption  = document.createElement("option");
+                        newoption.setAttribute("value", add_current_row.getElementsByTagName("id")[j].childNodes[0].nodeValue);
+                        newoption.innerHTML = add_current_row.getElementsByTagName("name")[j].childNodes[0].nodeValue;
+                        newSelect.appendChild(newoption);
+                    }
+                    newspan.appendChild(newSelect);
+                    newdiv.appendChild(newspan);
+                    thisrow.parentNode.insertBefore(newdiv, thisrow.nextSibling);
+                    
+                }
+            }
+       }
+       else if (xmlHttp.status == 404)
+         alert("Request URL does not exist");
+       else
+         alert("Error: status code is " + xmlHttp.status);
+      }
+}
+
+</script>
+<div class="portlet2">
+<form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_items.php"  method=POST>
+    <div class="divheader">Purchase Request Info</div>
+    <div class="row">
+        <span class="label">Vendor:</span>
+        <span class="formw"><?php echo $invoice_info['cv_name']; ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Vendor No:</span>
+        <span class="formw"><?php echo $invoice_info['cv_number']; ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Invoice ID:</span>
+        <span class="formw"><input type=text name=invoice_id size=5 value=<?php echo $invoice_info['invoice_id']?> >
+        
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">PR Date(YYYY-MM-DD):</span>
+        <span class="formw">
+            <?php
+            Framework::date_selectors(substr($invoice_info['pr_date'], 0 ,4), substr($invoice_info['pr_date'], 5 ,2), substr($invoice_info['pr_date'], 8 ,2), "pr", '');
+            ?>
+
+        </span>
+    </div>       
+    <div class="row">
+        <span class="label">PO Date(YYYY-MM-DD):</span>
+        <span class="formw">
+            <?php
+            @Framework::date_selectors(substr($invoice_info['po_date'], 0 ,4), substr($invoice_info['po_date'], 5 ,2), substr($invoice_info['po_date'], 8 ,2), "po", '');
+            ?>
+
+        </span>
+    </div>       
+    <div class="row">
+        <span class="label">Discount(percentage):</span>
+        <span class="formw"><input type=text name=pr_discount size=5 value=<?php echo $invoice_info['pr_discount']?> >
+			
+        <input type=SUBMIT name="ACTION" value="Update Discount" >        
+        </span>
+    </div>    
+	<div class="row">
+        <span class="label">Purchase Description:</span>
+        <span class="formw"><textarea id="purchase_description" name="purchase_description" type="text" cols="40" rows=6 /><?php echo $invoice_info['purchase_description']; ?></textarea>
+        </span>
+    <div class="row">
+        <span class="label">Expense/Inventory Account:</span>
+        <span class="formw"><Select id="expense_account" name="expense_account" >
+        <?php  foreach($revenue_accounts as $r_account)
+            {
+                ?><OPTION  value="<?php echo $r_account['account_id'] ?>" <?php 
+                if(isset($invoice_info['expense_account_id']))
+                {
+                 	if($invoice_info['expense_account_id'] == $r_account['account_id'])
+                 	{
+						echo "SELECTED";
+                 	}
+                }
+                else
+                if($r_account['default_account'] == 1)
+                {
+                	echo "SELECTED";
+                } 
+                ?>><?php echo $r_account['account_fullname'] ?></OPTION><?php
+
+                
+            }
+    
+        ?>
+        </Select>
+        </span>
+    </div>    
+
+    <div class="row">
+        <span class="label">Payable Account:</span>
+        <span class="formw"><?php echo $invoice_info['vendoraccount_fullname']; ?>
+        </span>
+    </div>    
+    <div class="row">
+    <input type=SUBMIT name="ACTION" value="Update Info" >
+    </div>    
+                    
+</div>    
+<div class="portlet2">
+    <div class="divheader">Add Items</div>
+    <div class="row">
+        <span class="label">Items:</span>
+        <span>
+        <table>
+            <?php foreach($invoice_items as $invoice_item)
+            {
+            ?>
+            <form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_items.php"  method=POST>
+            <TR>
+                <TD><?php echo $invoice_item['inventorytype_name']?></TD>
+                <TD><?php echo $invoice_item['item_name']?></TD>
+                <TD><input type=text name=purchaseitem_price_per size=6 value=<?php echo $invoice_item['purchaseitem_price_per']?> > </TD>
+                <TD><input type=text name=purchaseitem_count size=5 value=<?php echo $invoice_item['purchaseitem_count']?> > </TD>
+                <TD><?php echo $invoice_item['purchaseitem_price_total']?></TD>
+                <TD>
+                    <input type="hidden"  name="pr_id"  value="<?php echo $pr_id ?>" >
+                    <input type=SUBMIT name="ACTION" value="UPDATE ITEM" >
+                    <input type=SUBMIT name="ACTION" value="REMOVE ITEM" >
+                    <input type=hidden name="purchaseitem_id" value=<?php echo $invoice_item['purchaseitem_id']?>>
+                </TD>
+            </TR>
+            </form>
+            <?php
+            }
+            ?>
+            <TR>
+                <TD></TD>
+                <TD></TD>
+                <TD></TD>
+                <TD></TD>
+                <TD align=right>$<?php echo $invoice_info['pr_subtotal']?></TD>
+                <TD>SUBTOTAL
+                </TD>
+            </TR>
+            <TR>
+                <TD></TD>
+                <TD></TD>
+                <TD></TD>
+                <TD></TD>
+                <TD align=right>$<?php echo $invoice_info['pr_discount_total']?></TD>
+                <TD>Discount
+                </TD>
+            </TR>
+            <TR>
+                <TD></TD>
+                <TD></TD>
+                <TD></TD>
+                <TD></TD>
+                <TD align=right>$<?php echo $invoice_info['pr_total']?></TD>
+                <TD>TOTAL
+                </TD>
+            </TR>
+        </table>
+       </span>
+    </div>    
+    <form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_items.php"  method=POST>
+    <div class="row">
+        <span class="label">Item:</span>
+        <span class="formw"><select name="add_item">
+        <?php foreach($items as $row)
+        {   
+            ?>
+            <OPTION VALUE="<?php echo $row['inventory_id'] ?>"><?php echo $row['item_name'] ?></OPTION>
+            <?php
+        }
+        ?>
+        </select>
+        </span>
+    </div>    
+    <div class="row">
+        <input type="hidden"  name="pr_id"  value="<?php echo $pr_id ?>" >
+        <input type="SUBMIT"  name="ACTION"  value="Add Item" >
+        <input type="SUBMIT"  name="ACTION"  value="Approve" >
+        <input type="SUBMIT"  name="ACTION"  value="Delete Purchase Requisition" >
+    </div>    
+    </form>
+</div>

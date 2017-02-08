@@ -1,0 +1,1 @@
+The installation script for a module and its associated classes exists inside that modules _rbac.php file.

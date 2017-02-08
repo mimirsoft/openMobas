@@ -1,0 +1,38 @@
+<?php
+include("../../../framework/theme.css");
+include("invoices_view_recurring.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+
+<div class="portlet2">
+    <div class="divheader">Recurring Invoices</div>
+    <div class="row">
+        <table>
+    	<colgroup>
+    	<col class="col1"/>
+     	<col class="col2"/>
+     	<col class="col5"/>
+     	</colgroup>        <?php  foreach($recurring_invoices as $recurring_invoice)
+            {
+            ?>
+                <form action="<?php echo $BASE_DIR ?>/invoices/invoices_recurring_items.php"  method=POST>
+                <TR>
+                    <TD><?php echo $recurring_invoice['cv_name'] ?></TD>
+                    <TD><?php echo $recurring_invoice['invoice_description'] ?></TD>
+                    <TD  class="td_right"><?php echo $recurring_invoice['invoice_total'] ?></TD>
+                    <TD><?php echo $recurring_invoice['start_date'] ?></TD>
+                    <TD><?php echo $recurring_invoice['end_date'] ?></TD>
+                    <TD><?php echo $recurring_invoice['lastcharged'] ?></TD>
+                    <TD>
+                    <input type=SUBMIT name="ACTION" value="EDIT INVOICE" >
+                    <input type=SUBMIT name="ACTION" value="DELETE INVOICE" >
+                    <input type=hidden name="recurringinvoice_id" value=<?php echo $recurring_invoice['recurringinvoice_id']?>>
+                </TR>
+                </form>
+            <?php
+            }
+            ?>
+        </table>
+    </div>
+</div>

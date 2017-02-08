@@ -1,0 +1,120 @@
+<? 
+include("../../../framework/theme.css");
+include("contacts_activity.css");
+?>
+<script language="JavaScript"
+
+type="text/javascript">
+var xmlHttp;
+var contactsid ="<? echo $contacts_id ?>"
+        
+
+function createXMLHttpRequest() {
+  try {
+    xmlHttp = new XMLHttpRequest();
+  } catch (trymicrosoft) {
+    try {
+      xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (othermicrosoft) {
+      try {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (failed) {
+        xmlHttp = false;
+      }
+    }
+  }
+
+  if (!xmlHttp)
+    alert("Error initializing XMLHttpRequest!");
+}
+
+function add_update(id) {
+    createXMLHttpRequest();
+    var activityTitle =  document.getElementById("activity_title").value;
+    var activityTxt = document.getElementById("activity_txt").value;
+    var queryString = "ACTION=add_update&contacts_id=" + contactsid + "&activity_title=" + activityTitle + "&activity_txt=" + encodeURIComponent(activityTxt);
+                
+    xmlHttp.open("POST", "contacts_activitysave.php", true);
+    xmlHttp.onreadystatechange = handleStateChange;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    
+}
+function handleStateChange() {
+     if (xmlHttp.readyState == 4) {
+       if (xmlHttp.status == 200)
+       {
+            var xmlDoc = xmlHttp.responseXML;
+            if(xmlDoc.getElementsByTagName("transaction").length > 0)
+            {
+                var transaction_status = xmlDoc.getElementsByTagName("transaction")[0].childNodes[0].nodeValue;
+                if(transaction_status == "SAVED")
+                { 
+                    draw_table();
+                }
+            }    
+            if(xmlDoc.getElementsByTagName("login").length > 0)
+            {
+                var login_status = xmlDoc.getElementsByTagName("login")[0].childNodes[0].nodeValue;
+                if(login_status == "FAILED")
+                {
+                    
+                    loginwindow = window.open('../interface/login_popup.html', 'Login', 'height=100,width=300');
+                }
+            }
+               
+       }
+       else if (xmlHttp.status == 404)
+         alert("Request URL does not exist");
+       else
+         alert("Error: status code is " + xmlHttp.status);
+      }
+}
+function draw_table() {
+         window.location.reload(false);
+}
+
+</script>
+<div class="portlet3">
+    <div class="divheader">Log Activity</div>
+    <div class="row">
+        <span class="label">Title:</span>
+        <span class="bold"><INPUT type=TEXT name="case_title" id="activity_title" value=""></span>
+    </div>    
+    <div class="row">
+        <span class="label">Comments:</span>
+        <span class="formw"><TEXTAREA name="casesystem_txt" id="activity_txt" rows="10" cols="63"></TEXTAREA></span>
+    </div>    
+
+    <div class="row">
+        <span class="formw"><input type="BUTTON"  name="ACTION"  value="Add Update" onclick="add_update('NULL')">
+        </span>
+    </div>    
+</div>    
+
+<div class="portlet3">
+    <div class="divheader">Activity Log</div>
+    <?
+    if(is_array($caseentrys))
+    {
+        foreach($caseentrys as $row)
+        {
+            ?>
+    <div class="row">
+        <span class="col2">
+             <span class="bold">   <? echo $userArray[$row['user_id']]['username'] ?>   </span>
+            <BR />
+            <? echo $row['contact_activity_date'] ?>
+        </span>
+     
+        <span class="col3">
+                 <span class="bold"> <? echo $row['contact_activity_title'] ?></span><BR />
+                <? echo $row['contact_activity_txt'] ?>
+        </span>
+    </div>
+<HR>
+            <?
+        }
+    }
+    ?>
+</div>

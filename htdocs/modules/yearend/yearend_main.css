@@ -1,0 +1,64 @@
+<style type="text/css">
+    
+    td {
+         font-size: 10pt;
+}
+
+    input{
+         font-size: 10pt;
+
+}
+   .portlet {
+        width: auto;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+    }
+    .portlet2 {
+        width: auto;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+    }
+    div.row {
+        clear: both;
+        padding-top: 10px;
+    }
+    .right {
+        text-align: right;
+        padding-right: 1em;
+    }
+    .neg {
+        text-align: right;
+        padding-right: 1em;
+    }
+    #rowhead
+    {
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+div.row span.label {
+  float: left;
+  width: 12em;
+  text-align: right;
+  }
+div.row span.formw {
+  float: left;
+  width: 20em;
+  text-align: left;
+  } 
+    tr.green td{
+        background-color: #99CC32;    
+    }
+    tr.yellow td{
+        background-color: #DBDB70;    
+    }
+
+</style>
+

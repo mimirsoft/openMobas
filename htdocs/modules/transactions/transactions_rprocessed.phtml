@@ -1,0 +1,37 @@
+<?
+include("../../../framework/theme.css");
+include("transactions_rprocess.css");
+framework::navbar();
+?>
+    <div class="portlet2">
+        <div class="divheader">PROCESSED TRANSACTIONS</div>
+        <table>    
+            <TR>
+                <TH>Comment:</TH>
+                <TH>TRANSACTION INFO:</TH>
+            </TR>
+            
+        <?
+    foreach($processed as $row)
+    {
+        ?>
+        <TR class="<? echo $class?>">
+            <TD>
+                <? echo $row['recurring']['recurring_comment']; ?>
+            </TD>
+            <TD>
+                <?
+                foreach($row['dc_line'] as $dc_line)
+                {
+                    echo $dc_line['transaction_dc']." ".$dc_line['transaction_dc_amount']." ".$indexed_stack[$dc_line['transaction_account']]['account_name']."<BR/>";
+                } 
+                ?>
+            </TD>
+        </TR>
+ 
+    <?
+    }
+    ?>
+
+    </table>    
+</div>

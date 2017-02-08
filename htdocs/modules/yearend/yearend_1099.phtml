@@ -1,0 +1,29 @@
+<?
+if($count == 0)
+{
+    echo "<div style=\"position: static; height: 140mm;\">\n";
+    $count = 1;
+}
+else
+{
+    echo "<div style=\"page-break-after:always; height: 110mm; position: static; \">\n";
+    $count = 0;
+}
+   
+?>
+<p class="payersname"><? echo $SYS_INFO['COMPANY_NAME'] ?></p>
+<p class="payersname2">&nbsp;<? echo $SYS_INFO['COMPANY_NAME2'] ?></p>
+<p class="payersaddress1"><? echo $SYS_INFO['COMPANY_MAILADDRESS1'] ?></p>
+<p class="payersaddress2"><? echo $SYS_INFO['COMPANY_MAILADDRESS2'] ?></p>
+<p class="payerstelephone"> <? echo $SYS_INFO['COMPANY_PHONE'] ?></p>
+<p class="payersFEDTAXID"><? if($SYS_INFO['COMPANY_EIN'] != "" ){echo $SYS_INFO['COMPANY_EIN'];}else{ echo "nbsp;" ;} ?> </p>
+
+<p class="ssn"><? echo $ssn ?></p>
+
+<p class="rent"><?echo $income; ?></p>
+<p class="addressname"><? echo $firstname." ".$lastname." ".$careof ?></p>
+<p class="address"><? echo $address ?></p>
+<p class="address2"><? echo $city.", ".$state." ".$zip ?></p>
+<p class="accountnumber"><? echo $accountIDtoNameArray[$transactions_main_account] ?></p>
+</div>
+

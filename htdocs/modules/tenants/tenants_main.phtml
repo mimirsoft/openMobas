@@ -1,0 +1,194 @@
+<?php
+include("../../../framework/theme.css");
+include("tenants_main.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+?>
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/tenants/tenants_main.php"  method=POST>
+    <div class="divheader">Enter Tenant Info</div>
+    <div class="row">
+        <span class="label">Customer:</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="cv_id" >
+            <?php foreach ($customers as $row)
+            {
+                ?> <OPTION value="<?php echo $row['cv_id'] ?>"><?php echo $row['cv_name'] ?></OPTION>
+                <?php
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Create New:</span>
+        <span class="formw"><input type="checkbox"  name="create_new"  value=true ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Name:</span>
+        <span class="formw"><input type="TEXT"  name="name"  ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Customer Number:</span>
+        <span class="formw"><input type="TEXT"  name="number"  ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Tax ID:</span>
+        <span class="formw"><input type="TEXT"  name="taxid"  ></span>
+    </div>    
+   <div class="row">
+        <span class="label">Default Email:</span>
+        <span class="formw"><input type="TEXT"  name="cv_default_email"   ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Default Phone:</span>
+        <span class="formw"><input type="TEXT"  name="cv_default_phone"   ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Default Address:</span>
+        <span class="formw"><input type="TEXT"  name="cv_default_address"   ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Default City:</span>
+        <span class="formw"><input type="TEXT"  name="cv_default_city"   ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Default State:</span>
+        <span class="formw"><input type="TEXT"  name="cv_default_state"  ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Default Zip:</span>
+        <span class="formw"><input type="TEXT"  name="cv_default_zip"   ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Property:</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="inventory_id" >
+            <?php foreach ($properties as $row)
+            {
+                ?> <OPTION value="<?php echo $row['inventory_id'] ?>"><?php echo $row['item_name'] ?></OPTION>
+                <?php
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Rent:</span>
+        <span class="formw">
+            <input type="TEXT"  name="tenant_rent"  value="" size="5">
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Lease Start</span>
+        <span class="formw">
+        <?php Framework::date_selectors($lease_start_date_year, $lease_start_date_month, $lease_start_date_day, "lease_start_", ""); ?>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">Lease End</span>
+        <span class="formw">
+        <?php Framework::date_selectors($lease_end_date_year, $lease_end_date_month, $lease_end_date_day, "lease_end_", ""); ?>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">
+            <input type="HIDDEN"  name="tenant_id"  value="NULL">
+            <input type="SUBMIT"  name="ACTION"  value="Add Tenant">
+        </span>
+    </div>    
+</form>
+</div>
+<div class="portlet2">
+    <div class="divheader"><?php echo $box_title ?> - <a href="<?php echo $BASE_DIR ?>/tenants/tenants_print.php?prop_status=<?php echo $property_status ?>&tenant_status=<?php echo $tenant_status ?>">PRINT</a></div>
+<form action="<?php echo $BASE_DIR ?>/tenants/tenants_main.php"  method=POST>
+    <div class="row">
+        <span class="label">Property Status:</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="property_status" >
+            <option VALUE="CURRENT">CURRENT</option>
+            <option VALUE="CLOSED">CLOSED</option>
+            <option VALUE="OLD">OLD</option>
+            </SELECT>
+        </span>
+
+        <span class="label">Tenant Status:</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="tenant_status" >
+            <option VALUE="Y">CURRENT</option>
+            <option VALUE="N">OLD</option>
+            </SELECT>
+        </span>
+        <span class="label">
+            <input type="SUBMIT"  name="ACTION"  value="Show Tenants">
+        </span>
+    </div>    
+</form>
+    <div class="row">
+        <table>
+            <tr>
+                <th><a href="<?php echo $BASE_DIR ?>/tenants/tenants_main.php?property_status=<?php echo $property_status ?>&tenant_status=<?php echo $tenant_status ?>&sortby=name">Name</a>
+                </th>
+                <th>
+                    <a href="<?php echo $BASE_DIR ?>/tenants/tenants_main.php?property_status=<?php echo $property_status ?>&tenant_status=<?php echo $tenant_status ?>&sortby=prop">Address</a>
+                    <a href="<?php echo $BASE_DIR ?>/tenants/tenants_main.php?property_status=<?php echo $property_status ?>&tenant_status=<?php echo $tenant_status ?>&sortby=street">Street</a>
+                </th>
+                <th>Rent
+                </th>
+                <th><a href="<?php echo $BASE_DIR ?>/tenants/tenants_main.php?property_status=<?php echo $property_status ?>&tenant_status=<?php echo $tenant_status ?>&sortby=lease_start"> Lease Start</a>
+                </th>
+                <th><a href="<?php echo $BASE_DIR ?>/tenants/tenants_main.php?property_status=<?php echo $property_status ?>&tenant_status=<?php echo $tenant_status ?>&sortby=lease_end">Lease End</a>
+                </th>
+                <th><a href="<?php echo $BASE_DIR ?>/tenants/tenants_main.php?property_status=<?php echo $property_status ?>&tenant_status=<?php echo $tenant_status ?>&sortby=lease_end">30 Day</a>
+                </th>
+                <th><a href="<?php echo $BASE_DIR ?>/tenants/tenants_main.php?property_status=<?php echo $property_status ?>&tenant_status=<?php echo $tenant_status ?>&sortby=30day">Move Out</a>
+                </th>
+                <th><a href="<?php echo $BASE_DIR ?>/tenants/tenants_main.php?property_status=<?php echo $property_status ?>&tenant_status=<?php echo $tenant_status ?>&sortby=30day">Refund</a>
+                </th>
+            </tr>
+    <?php
+    if(is_array($tenants))
+    {
+        $yellow_timestamp = strtotime("+7 day");
+        $red_timestamp = strtotime("+4 day");
+        
+        foreach($tenants as $lineInfo)
+        {
+            $class = '';
+            
+            if($lineInfo['refund_date'] != '')
+            {
+                if($yellow_timestamp > strtotime($lineInfo['refund_date']))
+                {
+                    $class = 'notice';
+                }
+                if($red_timestamp > strtotime($lineInfo['refund_date']))
+                {
+                    $class = 'alert';
+                }
+            }
+            ?>
+            <form action="<?php echo $BASE_DIR ?>/tenants/tenants_edit.php"  target="_blank" method=POST>
+            <tr class="<?php echo $class ?>">
+            <td><?php echo $lineInfo['cv_name']?></td>
+            <td><?php echo $lineInfo['item_name'] ?></td>
+            <td><?php echo $lineInfo['tenant_rent'] ?></td>
+            <td><?php echo $lineInfo['lease_start_date'] ?></td>
+            <td><?php echo $lineInfo['lease_end_date'] ?></td>
+            <td><?php echo $lineInfo['thirty_day_date'] ?></td>
+            <td><?php echo $lineInfo['move_out_date'] ?></td>
+            <td><?php echo $lineInfo['refund_date'] ?></td>
+            <td><input type="HIDDEN"  name="tenant_id"  value="<?php echo $lineInfo['tenant_id'] ?>">
+                    <input type="SUBMIT"  name="ACTION"  value="EDIT">
+                    </td>
+            </tr>
+            </form>
+            <?php
+        
+        }
+    }
+    ?>
+    </table>
+    </div>    
+
+</div>

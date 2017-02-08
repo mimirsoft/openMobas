@@ -1,0 +1,94 @@
+<?php
+include("../../../framework/theme.css");
+include("cv_master_main.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+?>
+<div class="leftcol">
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_statement.php"  method=POST>
+    <div class="divheader">Search</div>
+    <div class="row">
+        <span class="label">Name:</span>
+        <span class="formw"><input type="TEXT"  name="name"  value="<?php echo $name; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Search By</span>
+        <span class="formw"><SELECT class="smallsans" NAME="string">
+            <OPTION VALUE="name">Name</OPTION>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label"></span>
+        <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Search All" ></span>
+    </div>    
+    <div class="row">
+        <span class="label"></span>
+        <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Search Customers" ></span>
+    </div>    
+    <div class="row">
+        <span class="label"></span>
+        <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Search Vendors" ></span>
+    </div>    
+    <div class="row">
+        <span class="label"></span>
+        <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Search Neither" ></span>
+    </div>    
+</form>
+</div>
+
+
+<?php
+if ($warn == true)
+{
+    ?>
+    <div>
+    <p class="warning" align="center" ><?php echo $warning?></p>
+    </div>
+    <?php
+    exit;
+}
+?>
+
+<div class="portlet2">
+    <div class="divheader">Results</div>
+        <form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_statement.php"  method=POST>
+        <div class="row">
+            <span class="label">Statement Type:</span>
+            <span class="formw"><SELECT class="smallsans" NAME="statementtype">
+                <OPTION VALUE="summary">SUMMARY</OPTION>
+                <OPTION VALUE="detailed_summary">Summary with Description</OPTION>
+                <OPTION VALUE="simplified_outstanding">Summary with Outstanding Only</OPTION>
+                <OPTION VALUE="itemized_outstanding">Itemized Outstanding</OPTION>
+                
+                </SELECT>
+            </span>        <table>
+            <TR>
+                <TD>Customer Name:</TD>
+                <TD>Email:</TD>
+            </TR>
+      <?php
+        foreach($customers as $customer)
+        {
+        ?>
+            <TR>
+                <TD>
+                    <a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<?php echo $customer['cv_id'] ?>" target="_blank" method=POST><?php echo $customer['cv_name'] ?></a>
+                </TD>
+                <TD>
+                    <a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<?php echo $customer['cv_id'] ?>" target="_blank" method=POST><?php echo  $customer['cv_default_email']; ?> </a>
+                </TD>
+                <TD>
+                    <input type="checkbox"  name="cv_list[]"  value="<?php echo $customer['cv_id']; ?>">
+                    <a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_statement_handler.php?cv_id=<?php echo $customer['cv_id'] ?>" target="_blank" method=POST>PREVIEW</a>
+                    
+                </TD>
+            </TR>
+        <?php
+        }
+    ?>	
+</table>
+<input type="SUBMIT"  name="ACTION"  value="Email Statements" >
+</form>
+</div>

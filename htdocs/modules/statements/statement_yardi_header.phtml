@@ -1,0 +1,26 @@
+    <div style="position: static; height: 65mm; width:200mm">
+        <div class="yardi_block1">
+        <p class="yardi_head_reg"><?php echo $statement['name'] ?></p>
+        <p class="yardi_head_reg"><?php echo $statement['name2'] ?></p>
+        <p class="yardi_head_reg"><?php echo date("F Y", strtotime($statement['date'])) ?></p>
+        </div>
+        <div class="yardi_block2">
+        <p class="yardi_reg">Prepared For:</p>
+        <p class="yardi_reg_indent"><?php echo $SYS_INFO['COMPANY_NAME'] ?></p>
+        <p class="yardi_reg_indent">c/o <?php echo @$SYS_INFO['COMPANY_CO'] ?></p>
+        <p class="yardi_reg_indent"><?php echo $SYS_INFO['COMPANY_MAILADDRESS1'] ?></p>
+        <p class="yardi_reg_indent"><?php echo $SYS_INFO['COMPANY_MAILADDRESS2'] ?></p>
+        </div>
+        <div class="yardi_block3">
+        <p class="yardi_reg">Prepared By:</p>
+        <p class="yardi_reg_indent"><?php echo @$SYS_INFO['COMPANY_CO'] ?></p>
+        <p class="yardi_reg_indent"><?php echo $SYS_INFO['COMPANY_MAILADDRESS1'] ?></p>
+        <p class="yardi_reg_indent"><?php echo $SYS_INFO['COMPANY_MAILADDRESS2'] ?></p>
+        </div>
+        <div class="yardi_block4">
+        <p class="yardi_small">Page <?php echo ""; ?></p>
+        <p class="yardi_small"><?php echo @$SYS_INFO['COMPANY_CO']?></p>
+        <p class="yardi_small"><?php echo date("m/d/Y") ?></p>
+        <p class="yardi_small"><?php echo date("h:i A") ?></p>
+        </div>
+    </div>

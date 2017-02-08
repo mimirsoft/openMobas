@@ -1,0 +1,44 @@
+<?
+include("contacts_print2.css");
+
+
+$count = "col1";
+$count2 = 0;
+?>
+<div class="container">
+<?
+       foreach($contacts as $contact)
+        {
+        ?>
+            <div class="<?
+            switch($count)
+            {
+                case "col1":
+                    echo $count;
+                    $count = "col2";
+                break;
+                case "col2":
+                    echo $count;
+                    $count = "col3";
+                break;
+                case "col3":
+                    echo $count;
+                    $count = "col1";
+                break;
+
+            }
+              ?>" >
+                <? echo $contact['firstname'] ?> <? echo $contact['lastname'] ?>
+                <BR /><? echo $contact['street'] ; ?> <BR /> <? echo $contact['city']." ".$contact['state']." ".$contact['zip']; ?>
+            </div>
+            
+            <?
+            $count2++;
+            if($count2 == 30)
+            {
+                ?><div style="breaker"></div><?
+                $count2 = 0;
+            }
+        }
+    ?>	
+</div>

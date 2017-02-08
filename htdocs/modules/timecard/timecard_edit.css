@@ -1,0 +1,41 @@
+<style type="text/css">
+    
+    .portlet {
+        width: auto;
+        display: block;
+        float: left;
+        clear: both;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+div.row {
+  padding-top: .5em;
+  clear: both;
+  }
+
+div.row span.label {
+  float: left;
+  width: 10em;
+  text-align: right;
+  }
+div.row span.formw {
+  float: left;
+  width: auto;
+  text-align: left;
+  } 
+div.row span.right {
+  float: right;
+  width: 100px;
+  text-align: right;
+  }
+div.row span.col1 {
+  float: left;
+  text-align: left;
+  width: 15em;
+  }
+
+
+</style>
+

@@ -1,0 +1,258 @@
+<?
+include("../../../framework/theme.css");
+include("transactions_rprocess.css");
+framework::navbar();
+?>
+<SCRIPT LANGUAGE="JavaScript">
+
+function check_all(frm, chAll, field) {
+    comfList = document.forms[frm].elements[field];
+    checkAll = (chAll.checked)?true:false; // what to do? Check all or uncheck all.
+    if (checkAll) {
+            for (i = 0; i < comfList.length; i++) {
+                comfList[i].checked = true;
+            }
+        }
+    else {
+        for (i = 0; i < comfList.length; i++) {
+                comfList[i].checked = false;
+            }
+        }
+
+
+
+}
+</SCRIPT>
+<form action="<? echo $BASE_DIR ?>/transactions/transactions_rprocess.php"  method=POST>
+<div class="portlet">
+    <div class="divheader">Recurring Transactions</div>
+    <div class="row">
+        <span class="label">Starting Date (YYYY-MM-DD):</span>
+        <span class="formw">
+            <?
+            Framework::date_selectors($startdate_year, $startdate_month, $startdate_day, "start", "")
+            ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Ending Date (YYYY-MM-DD):</span>
+        <span class="formw">
+            <?
+            Framework::date_selectors($enddate_year, $enddate_month, $enddate_day, "end", "")
+            ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">RECURRING TYPE:</span>
+        <span class="formw">
+            <SELECT  class="smallsans" SIZE="1" NAME="recurring_type" ID="recurring_type"  onchange="form_extender(this);">
+            <OPTION VALUE="NULL"></OPTION>
+            <?
+                foreach($types as $row2)
+                {
+                    ?>
+                        <OPTION VALUE="<? echo $row2['recurringtype_id']; ?>"><? echo $row2['recurringtype_name']; ?></OPTION>
+                    <?
+                }
+            ?></SELECT>            
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">RECURRING CHECK/DISPERSAL?:</span>
+        <span class="formw">
+            <input type=checkbox class="smallsans" SIZE="1" NAME="recurring_check" ID="recurring_check" value="true" > 
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">&nbsp;</span>
+        <span class="formw"><input name="ACTION" type="SUBMIT" value="Get Recurring">
+    </div>    
+</div>
+<div id="div_target">
+</div>
+</form>
+<form  name="rents_form" ID="rents_form" target="_blank" action="<? echo $BASE_DIR ?>/transactions/transactions_rprocess.php"  method=POST>
+<?
+
+$class = "green";
+
+if(is_array($recurring))
+{
+  ?>  
+    <div class="portlet2">
+        <div class="divheader"><? echo $recurring_type_info['recurringtype_name'] ?></div>
+    <div class="row">
+        <span class="label">Record Transaction on (YYYY-MM-DD):</span>
+        <span class="formw">
+            <?
+            Framework::date_selectors($recorddate_year, $recorddate_month, $recorddate_day, "record", "")
+            ?>
+        </span>
+    </div>    
+    <div class="row">
+    <table>    
+        <TR>
+            
+            <TR>
+                <TH>Comment:</TH>
+                <TH>Debits Account:</TH>
+                <TH>Amount:</TH>
+                <TH>Balance:</TH>
+                <TH>Credit Account:</TH>
+                <TH>Amount:</TH>
+                <TH>Balance:</TH>
+                <TH>Check No:</TH>
+            </TR>
+            
+        <?
+    foreach($recurring as $row)
+    {
+        $continue = false;
+        ?>
+        <TR class="<? echo $class?>">
+            <TD>
+                <? echo $row["recurring_comment"]; ?>
+            </TD>
+            <TD>
+                <?
+                $debits = recurring::getall_debits_of_recurring($row["recurring_id"]);
+                foreach($debits as $debit)
+                {
+                    echo $accountIDtoNameArray[$debit["recurring_account"]];
+                }
+                ?>
+            </TD>
+            <TD>
+                <?foreach($debits as $debit)
+                {
+                    echo $debit["recurring_dc_amount"];
+                } 
+                ?>
+            </TD>
+            <TD>
+                <?foreach($debits as $debit)
+                {
+                    if($indexed_stack[$debit["recurring_account"]]['account_current'] == 'N')
+                    {
+                        echo "ACCOUNT ".$debit["recurring_account"]." IS CLOSED DELETE THIS RECURRING</TD></TR>";
+                        $continue = true;
+                    }
+                    else{
+                        echo $indexed_stack[$debit["recurring_account"]]['account_balance'];
+                        //what type of account is this?  
+                        switch($indexed_stack[$debit["recurring_account"]]['accounttype_sign'])
+                        {
+                            case "DEBIT":
+                                //if this is a debit account, then we don't care, cause this is a debit transaction
+                            break;
+                            case "CREDIT":
+                                if($indexed_stack[$debit["recurring_account"]]['account_balance'] < $debit["recurring_dc_amount"])
+                                {
+                                    echo " WARNING:: ACCOUNT BALANCE IS LESS THAN AMOUNT OF TRANSACTION";
+                                }
+                            break;
+                        }
+                    }
+                }
+                if($continue)
+                {
+                    continue;
+                } 
+                ?>
+            </TD>
+            <TD>
+                <?
+                $credits = recurring::getall_credits_of_recurring($row["recurring_id"]);
+                foreach($credits as $credit)
+                {
+                    echo $accountIDtoNameArray[$credit["recurring_account"]];
+                }
+                ?>
+            </TD>
+            <TD>
+                <?foreach($credits as $credit)
+                {
+                    echo $credit["recurring_dc_amount"];
+                } 
+                ?>
+            </TD>            
+            <TD>
+                <?foreach($credits as $credit)
+                {
+                    if($indexed_stack[$credit["recurring_account"]]['account_current'] == 'N')
+                    {
+                        echo "ACCOUNT ".$credit["recurring_account"]." IS CLOSED DELETE THIS RECURRING</TD></TR>";
+                        $continue = true;
+                    }
+                    else{
+                        echo $indexed_stack[$credit["recurring_account"]]['account_balance'];
+                        //what type of account is this?  
+                        switch($indexed_stack[$credit["recurring_account"]]['accounttype_sign'])
+                        {
+                            case "CREDIT":
+                                //if this is a debit account, then we don't care, cause this is a debit transaction
+                            break;
+                            case "DEBIT":
+                                if($indexed_stack[$credit["recurring_account"]]['account_balance'] < $credit["recurring_dc_amount"])
+                                {
+                                    echo " WARNING:: ACCOUNT BALANCE IS LESS THAN AMOUNT OF TRANSACTION";
+                                }
+                            break;
+
+                        }
+                    }
+                }
+                if($continue)
+                {
+                    continue;
+                } 
+                ?>
+            </TD>
+            <TD>
+                <input type="text"  name="recurring[<? echo $row["recurring_id"]; ?>][checkno]"  size="6" value="">
+           </TD>
+            <TD>
+                 <input type="checkbox"  name="recurring_list[]" id="recurring_list[]"  value="<? echo $row["recurring_id"]; ?>">
+            </TD>
+        <TR>
+        <?
+        switch ($class)
+        {
+            case "green":
+                $class = "yellow";
+                break;
+            
+            case "yellow":
+                $class = "green";
+                break;
+        }
+    
+    }	
+    ?>
+        <TR>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD> CheckALL: <input type="checkbox" name="checkAll" value="Comfortable with"
+    onclick="javascript:check_all('rents_form', this, 'recurring_list[]')"  ></TD>
+        </TR>
+    
+    
+    
+    </table>    
+    </div>
+        <div class="row">
+            <span>
+                <input type="SUBMIT"  name="ACTION"  value="RECORD TRANSACTIONS">
+            </span>
+        </div>    
+    </div>
+<?
+}
+
+?>
+</form>

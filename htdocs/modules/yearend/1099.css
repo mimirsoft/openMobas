@@ -1,0 +1,93 @@
+<style type="text/css">
+
+* {padding: 0; margin: 0;
+    font-family:sans-serif;
+    }
+
+
+	.payersname {
+	position: relative;
+	font-size: 10pt;
+	top: 6mm;
+	left: 10mm;
+	}
+	.payersname2 {
+	position: relative;
+	font-size: 10pt;
+	top: 6mm;
+	left: 10mm;
+	}
+	.payersname2 {
+	position: relative;
+	font-size: 10pt;
+	top: 6mm;
+	left: 10mm;
+	}
+	.payersaddress1 {
+	position: relative;
+	font-size: 10pt;
+	top: 6mm;
+	left: 10mm;
+	}
+	.payersaddress2 {
+	position: relative;
+	font-size: 10pt;
+	top: 6mm;
+	left: 10mm;
+	}
+	.payerstelephone {
+	position: relative;
+	font-size: 10pt;
+	top: 6mm;
+	left: 10mm;
+	}
+	.payersFEDTAXID {
+	position: relative;
+	font-size: 10pt;
+	top: 25mm;
+	left: 10mm;
+	}
+	.ssn {
+	position: relative;
+	font-size: 10pt;
+	top: 21mm;
+	left: 54mm;
+	}
+	.rent {
+	position: relative;
+	font-size: 10pt;
+	top: -22mm;
+	left: 100mm;
+	}
+	.income {
+	position: relative;
+	font-size: 10pt;
+	top: -5mm;
+	left: 100mm;
+	}
+	.addressname {
+	position: relative;
+	font-size: 10pt;
+	top: 26mm;
+	left: 10mm;
+	}
+	.address {
+	position: relative;
+	font-size: 10pt;
+	top: 33mm;
+	left: 10mm;
+	}
+	.address2 {
+	position: relative;
+	font-size: 10pt;
+	top: 41mm;
+	left: 10mm;
+	}
+	.accountnumber {
+	position: relative;
+	font-size: 10pt;
+	top: 48mm;
+	left: 10mm;
+	}
+
+</style>

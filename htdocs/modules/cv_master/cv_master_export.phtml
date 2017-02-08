@@ -1,0 +1,22 @@
+<?php
+$list = array ();
+foreach($customers as $customer)
+{
+
+    $l = array($customer['cv_name'], "", "",$customer['cv_default_address'],"",$customer['cv_default_city'],$customer['cv_default_state'],$customer['cv_default_zip'],$customer['tax_id']);
+	$list[]=$l;    
+            
+}
+
+header('Content-Type: text/csv; charset=utf-8');
+header('Content-Disposition: attachment; filename=owner_export.csv');
+
+// create a file pointer connected to the output stream
+$output = fopen('php://output', 'w');
+
+foreach ($list as $fields) {
+    fputcsv($output, $fields);
+}
+
+?>	
+       

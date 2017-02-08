@@ -1,0 +1,85 @@
+<style type="text/css">
+* {padding: 0; margin: 0;}
+
+td
+{
+
+font-family:sans-serif;
+
+}        .block1 {
+        clear: both;
+        position: relative;
+        font-size: 12pt;
+        height: 30mm;
+        top: 0mm;
+        left: 10mm;
+        }
+        .maildate {
+        position: relative;
+        font-size: 12pt;
+        top: 0mm;
+        left: 0mm;
+        }
+        .coname {
+        font-family: 'Verdana'; 
+        font-size: 16pt; 
+        font-style:italic; 
+        font-weight:bold; 
+        
+        top: 0mm;
+        left: 0mm;
+        }
+        .coaddy {
+        position: relative;
+        font-family: 'Verdana';
+        font-size: 12pt;
+        font-style:italic; 
+        top: 0mm;
+        left: 0mm;
+        }
+        .coaddy2 {
+        position: relative;
+        font-family: 'Verdana';
+        font-style:italic; 
+        font-size: 12pt;
+        top: 0mm;
+        left: 0mm;
+        }
+        .cophone {
+        position: relative;
+        font-size: 12pt;
+        font-family: 'Verdana';
+        font-style:italic; 
+        top: 0mm;
+        left: 0mm;
+        }
+        .block3 {
+        position: relative;
+        font-size: 12pt;
+        top: 20mm;
+        left: 12mm;
+        }
+
+        .mailaddress1 {
+        position: relative;
+        font-size: 12pt;
+        top: 0mm;
+        left: 0mm;
+        }
+        .mailaddress2 {
+        position: relative;
+        font-size: 12pt;
+        top: 0mm;
+        left: 0mm;
+        }
+        .mailaddress3 {
+        position: relative;
+        font-size: 12pt;
+        top: 0mm;
+        left: 0mm;
+        }
+
+
+
+</style>
+

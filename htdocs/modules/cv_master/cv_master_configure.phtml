@@ -1,0 +1,200 @@
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<?php
+include("cv_master_configure.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<div class="portlet" >
+<form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_configure.php"  method=POST>
+    <div class="divheader">Create Inventory Catagory</div>
+    <div class="row">
+        <span class="label">Type:</span>
+        <span class="formw">
+            <input type="TEXT"  name="type_name"  value="<?php  echo $type_info['inventorytype_name']?>" >
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">Maintenance/Service Policy:</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="service_policy" >
+                <OPTION VALUE="none" <?php if('none' == $type_info['service_policy']){echo " SELECTED ";} ?> >NONE</OPTION>
+                <OPTION VALUE="by_us" <?php if('by_us' == $type_info['service_policy']){echo " SELECTED ";} ?> >BY US - BILL TO VENDOR</OPTION>
+                <OPTION VALUE="by_us_with_approval" <?php if('by_us_with_approval' == $type_info['service_policy']){ echo " SELECTED ";} ?> >BY US - APPROVAL REQUIRED</OPTION>
+                <OPTION VALUE="by_vendor" <?php if('by_vendor' == $type_info['service_policy']){echo " SELECTED ";} ?> >VENDOR ONLY</OPTION>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">On Sale Generate Purchase Order?:</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="onsale_policy" >
+
+                <OPTION VALUE="0" <?php if(0 == $type_info['onsale_generate_po']){echo " SELECTED ";} ?> >NO</OPTION>
+                <OPTION VALUE="1"<?php if(1 == $type_info['onsale_generate_po']){echo " SELECTED ";} ?>  >YES</OPTION>
+
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Purchase Order Expense Account?:</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="po_expense_account" >
+
+                <OPTION VALUE="0" <?php if(0 == $type_info['po_expense_account']){echo " SELECTED ";} ?> >NO</OPTION>
+                <OPTION VALUE="1"<?php if(1 == $type_info['po_expense_account']){echo " SELECTED ";} ?>  >YES</OPTION>
+
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Sales Revenue Account?:</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="sales_revenue_account" >
+
+                <OPTION VALUE="0" <?php if(0 == $type_info['sales_revenue_account']){echo " SELECTED ";} ?> >NO</OPTION>
+                <OPTION VALUE="1"<?php if(1 == $type_info['sales_revenue_account']){echo " SELECTED ";} ?>  >YES</OPTION>
+
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Inventory Account?:</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="inventory_account" >
+
+                <OPTION VALUE="0" <?php if(0 == $type_info['inventory_account']){echo " SELECTED ";} ?> >NO</OPTION>
+                <OPTION VALUE="1"<?php if(1 == $type_info['inventory_account']){echo " SELECTED ";} ?>  >YES</OPTION>
+
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Has Native Table?:</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="nativetable" >
+                <OPTION VALUE="0" <?php if(0 == $type_info['nativetable']){echo " SELECTED ";} ?> >NO</OPTION>
+                <OPTION VALUE="1"<?php if(1 == $type_info['nativetable']){echo " SELECTED ";} ?> >YES</OPTION>
+
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Native Table Name:</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="nativetable_name" >
+                <OPTION VALUE="none" <?php if('none' == $type_info['nativetable_name']){echo " SELECTED ";} ?>  >NONE</OPTION>
+                <OPTION VALUE="properties_main"<?php if('properties_main' == $type_info['nativetable_name']){echo " SELECTED ";} ?>  >Properties</OPTION>
+            </SELECT>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">
+            <input type="HIDDEN"  name="type_id"  value="<?php echo $type_info['inventorytype_id']?>">
+        <?php if($ACTION == 'Edit Type')
+        {
+            ?><input type="SUBMIT"  name="ACTION"  value="Update Type"><?php
+        }
+        else
+        {
+            ?><input type="SUBMIT"  name="ACTION"  value="Save Type"><?php
+        }
+        ?>
+        </span>
+    </div>
+</form>
+</div>
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_configure.php"  method=POST>
+    <div class="divheader">Create New CV Category</div>
+    <div class="row">
+        <span class="label">Type:</span>
+        <span class="formw"><input type="TEXT"  name="cv_category_name"  value="<?php echo $cv_category_name; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label"><input type="SUBMIT"  name="ACTION"  value="Edit CV Category"></span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="cv_cat_edit" >
+            <?php
+            foreach ($CV_Categories as $row)
+            {
+                ?>
+                <OPTION value="<?php echo $row['cv_category_id'] ?>"><?php echo $row['cv_category_name'] ?></OPTION>
+                <?php
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">
+            <input type="HIDDEN"  name="cv_category_id"  value="<?php echo $cv_category_id ?>">
+            <?php
+            if($ACTION == "Edit CV Category")
+            {
+                
+            ?><input type="SUBMIT"  name="ACTION"  value="Update CV Category"><?php
+            } 
+            else{
+                
+                ?>            <input type="SUBMIT"  name="ACTION"  value="Create CV Category">
+                <?php 
+                
+            }
+            ?>
+        </span>
+    </div>    
+</form>
+</div>
+    
+<div class="portlet" >
+    <div class="divheader">Inventory Types</div>
+
+<?php
+foreach($types as $row)
+{
+    ?>
+    <form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_configure.php"  method=POST>
+    <div class="row">
+        <span class="label"><?php echo $row['inventorytype_name']; ?></span>
+        <span class="formw">
+            <input type="HIDDEN"  name="inventorytype_edit"  value="<?php echo $row['inventorytype_id']; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Edit Type">
+        </span>
+    </div>
+    </form>
+<?php
+}
+?>
+</div>
+
+<div class="portlet2" >
+<form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_configure.php"  method=POST>
+    <div class="divheader">Payable/Receivable Settings</div>
+    <div class="row">
+        <span class="label">Default Account Receivable</span>
+        <span class="formw">
+                <SELECT  class="smallsans" SIZE="20" NAME="default_account_receivable" id="account_id" >
+                <?php
+                transactions::build_accountstree_selectoptions($account_array, $CV_Settings['default_account_receivable']);
+                ?>
+                </SELECT>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">Default Account Receivable</span>
+        <span class="formw">
+                <SELECT  class="smallsans" SIZE="20" NAME="default_account_payable" id="account_id" >
+                <?php
+                transactions::build_accountstree_selectoptions($account_array, $CV_Settings['default_account_payable']);
+                ?>
+                </SELECT>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">
+        <input type="SUBMIT"  name="ACTION"  value="Update Defaults">
+        </span>
+    </div>
+</form>
+</div>
+

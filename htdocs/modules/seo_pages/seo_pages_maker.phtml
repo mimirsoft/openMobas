@@ -1,0 +1,60 @@
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="seo_pages_maker" media="screen" >
+<?php
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/seo_pages/seo_pages_maker.php" method=POST>
+    <div class="divheader">Enter SEO Geo Term</div>
+    <div class="row">
+        <span class="label">Seo GeoTerm:</span>
+        <span class="formw"><input type="TEXT"  name="seogeo[seo_geoterm]"  size=50 value="<?php echo $seo_geo['seo_geoterm']; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Seo GeoTerm URL:</span>
+        <span class="formw"><input type="TEXT"  name="seogeo[seo_geoterm_url]"  size=50  value="<?php echo $seo_geo['seo_geoterm_url']; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Seo GeoTerm Title:</span>
+        <span class="formw"><input type="TEXT"  name="seogeo[seo_geoterm_title]"  size=50  value="<?php echo $seo_geo['seo_geoterm_title']; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Seo GeoTerm Page Content:</span>
+        <span class="formw"><textarea type="TEXT"  style="width: 35em; height: 10em" name="seogeo[seo_geoterm_content]"  ><?php echo $seo_geo['seo_geoterm_content']; ?></textarea></span>
+    </div>    
+    <div class="row">
+       <span class="label">Save/Update:</span> <span><input type="HIDDEN"  name="seogeo[seo_geoterm_id]"  value="<?php echo $seo_geo['seo_geoterm_id']; ?>" >
+       <input type="SUBMIT"  name="ACTION"  value="Save Geo Term" ></span>
+    </div>    
+</form>
+</div>
+<div class="portlet">
+	<div class="divheader">SEO Pages</div>
+<table>
+	<tr>
+		<td>geoterm</td>
+    	<td>url</td>
+    	<td>title</td>
+    	<td>content</td>
+	</tr>
+<?php 
+foreach($seo_data as $row)
+{
+    ?><tr>
+    	<td><?php echo $row['seo_geoterm'] ; ?></td>
+    	<td><?php echo $row['seo_geoterm_url'] ; ?></td>
+    	<td><?php echo $row['seo_geoterm_title'] ; ?></td>
+    	<td><?php echo $row['seo_geoterm_content'] ; ?></td>
+    	<td><form action="<?php echo $BASE_DIR ?>/seo_pages/seo_pages_maker.php" method=POST>
+    		<input type="HIDDEN"  name="seo_geoterm_edit"  value="<?php echo $row['seo_geoterm_id']; ?>" >
+       		<input type="SUBMIT"  name="ACTION"  value="EditGeo" >
+    		<input type="SUBMIT"  name="ACTION"  value="Delete" >
+    		</form></td>
+    </tr>
+    <?php 
+}
+?>
+
+</table>
+</div>

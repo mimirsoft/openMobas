@@ -1,0 +1,32 @@
+
+<div class="portlet2">
+    <div class="divheader">Invoices</div>
+    <div class="row">
+        <table>
+        <?        $total = 0 ;
+        $total_applied = 0;
+            foreach($invoices as $invoice_row)
+            {
+            ?>
+                <TR>
+                <TD><?  
+                //echo $invoice_row['date_charged'] ?></TD>
+                <TD>
+				    <? echo $invoice_row['cv_name'] ?>
+				</TD>
+                <TD><?  $total += $invoice_row['invoice_total'];
+                echo $invoice_row['invoice_total'] ?></TD>
+                <TD><?  $total_applied += $invoice_row['total_remitted'];
+                echo $invoice_row['total_remitted'] ?></TD>
+                <TD>
+                    
+                </TD>
+                </TR>
+               
+            <?
+            }
+            ?>
+        </table>
+        TOTAL: $<?php echo $total;?> TOTAL PAID: $<?php echo $total_applied;?>
+    </div>
+</div>    

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><?php  ?></title>
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="leads_configure.css" media="screen" >
+</head>
+<body>
+
+
+<?php
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+
+?>
+
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/leads/leads_configure.php"  method=POST>
+    <div class="divheader">Lead Category</div>
+    <div class="row">
+        <span class="label">Type:</span>
+        <span class="formw"><input type="TEXT"  name="leadcat_name"  value="<?php echo $leadcat_name; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label"><input type="SUBMIT"  name="ACTION"  value="Edit Lead Category"></span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="lead_cat_edit" >
+            <?php
+            foreach ($leadTypes as $row)
+            {
+                ?>
+                <OPTION value="<?php echo $row['leadcat_id'] ?>"><?php echo $row['leadcat_name'] ?></OPTION>
+                <?php
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">
+            <input type="HIDDEN"  name="leadcat_id"  value="<?php echo $leadcat_id ?>">
+            <input type="SUBMIT"  name="ACTION"  value="Save Lead Category">
+        </span>
+    </div>    
+</form>
+</div>
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/leads/leads_configure.php"  method=POST>
+    <div class="divheader">Lead Origin</div>
+    <div class="row">
+        <span class="label">Origin:</span>
+        <span class="formw"><input type="TEXT"  name="leadorigin_name"  value="<?php echo $leadorigin_name; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label"><input type="SUBMIT"  name="ACTION"  value="Edit Lead Origin"></span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="lead_origin_edit" >
+            <?php
+            foreach ($leadOrigin as $row)
+            {
+                ?>
+                <OPTION value="<?php echo $row['leadorigin_id'] ?>"><?php echo $row['leadorigin_name'] ?></OPTION>
+                <?php
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">
+            <input type="HIDDEN"  name="leadorigin_id"  value="<?php echo $leadorigin_id ?>">
+            <input type="SUBMIT"  name="ACTION"  value="Save Lead Origin">
+        </span>
+    </div>    
+</form>
+</div>
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/leads/leads_configure.php"  method=POST>
+    <div class="divheader">Module Defaults</div>
+    <div class="row">
+        <span class="label">Default Category:</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="defaults[category]" >
+            <?php
+            foreach ($leadTypes as $row)
+            {
+                ?>
+                <OPTION value="<?php echo $row['leadcat_id'] ?>"<?php if(@$defaults['category'] == $row['leadcat_id']){echo " SELECTED "; } ?> > <?php echo $row['leadcat_name'] ?></OPTION>
+                <?php
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Default Origin:</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="defaults[origin]" >
+            <?php
+            foreach ($leadOrigin as $row)
+            {
+                ?>
+                <OPTION value="<?php echo $row['leadorigin_id'] ?>"<?php if(@$defaults['origin'] == $row['leadorigin_id']){echo " SELECTED "; } ?> > <?php echo $row['leadorigin_name'] ?></OPTION>
+                <?php
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">
+            <input type="SUBMIT"  name="ACTION"  value="Save Defaults">
+        </span>
+    </div>    
+</form>
+</div>
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/leads/leads_configure.php"  method=POST>
+    <div class="divheader">Assign Zips</div>
+    <div class="row">
+        <span class="label">Zip Code:</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="zip_id" >
+            <?php
+            foreach ($leadZips as $row)
+            {
+                ?>
+                <OPTION value="<?php echo $row['zip_id'] ?>" > <?php echo $row['zip']." ".$row['zip_name']; ?></OPTION>
+                <?php
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Assign To:</span>
+        <span class="formw"><SELECT  SIZE="1" NAME="user_id" >
+        <?php foreach($users as $row)
+        {	
+            ?><OPTION VALUE="<?php echo $row['user_id'] ?>" <?php if(@$row['user_id'] ==  $user_id){echo " SELECTED ";} ?> ><?php echo $row['username'] ?></OPTION><?php
+        }
+        ?>
+        </SELECT>
+        </span>
+    </div>    
+     <div class="row">
+        <span class="label">
+            <input type="SUBMIT"  name="ACTION"  value="Assign Zip">
+        </span>
+    </div>    
+</form>
+    <div class="row">
+	<table>
+    <?php
+    foreach ($assignedZips as $row)
+    {
+        ?>
+       	<tr>
+           	<td><?php echo $row['zip'] ?></td>
+            <td><?php echo $row['zip_name'] ?></td>
+            <td><?php echo $row['username'] ?></td>
+            <td><form action="<?php echo $BASE_DIR ?>/leads/leads_configure.php"  method=POST>
+        		<input type="HIDDEN"  name="zip_id"  value="<?php echo $row['zip_id'] ?>">
+        		<input type="HIDDEN"  name="user_id"  value="<?php echo $row['user_id'] ?>">
+        		<input type="SUBMIT"  name="ACTION"  value="Delete Assigned">
+        		</form>
+    		</td>
+        </tr>
+        <?php
+    }
+    ?>
+	</table>
+	</div>
+
+</div>
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/leads/leads_configure.php"  method=POST>
+    <div class="divheader">Create Zips</div>
+    <div class="row">
+        <span class="label">Zip:</span>
+        <span class="formw"><input type="TEXT"  name="zip"  value="<?php echo $zip; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Zip Name:</span>
+        <span class="formw"><input type="TEXT"  name="zip_name"  value="<?php echo $zip_name; ?>" ></span>
+    </div>    
+     <div class="row">
+ 	<span class="label">
+            <input type="HIDDEN"  name="zip_id"  value="<?php echo $zip_id ?>">
+          <?php 
+          
+          if($ACTION == "Edit Zip")
+          {
+              ?><input type="SUBMIT"  name="ACTION"  value="Update Zip">
+              <?php 
+          }
+          else{
+              ?><input type="SUBMIT"  name="ACTION"  value="Save Zip">
+          <?php 
+          }?>
+          
+           
+        </span>
+    </div>    
+</form>
+    <div class="row">
+	<table>
+    <?php
+    foreach ($leadZips as $row)
+    {
+        ?>
+       	<tr>
+           	<td><?php echo $row['zip'] ?></td>
+            <td><?php echo $row['zip_name'] ?></td>
+            <td><form action="<?php echo $BASE_DIR ?>/leads/leads_configure.php"  method=POST>
+        		<input type="HIDDEN"  name="zip_id"  value="<?php echo $row['zip_id'] ?>">
+        		<input type="SUBMIT"  name="ACTION"  value="Edit Zip">
+        		</form>
+    		</td>
+    		<td><form action="<?php echo $BASE_DIR ?>/leads/leads_configure.php"  method=POST>
+        		<input type="HIDDEN"  name="zip_id"  value="<?php echo $row['zip_id'] ?>">
+        		<input type="SUBMIT"  name="ACTION"  value="Delete Zip">
+        		</form>
+    		</td>
+        </tr>
+        <?php 
+    }
+    ?>
+	</table>
+	</div>
+</div>
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/leads/leads_configure.php"  method=POST>
+    <div class="divheader">Reset Followups</div>
+    <div class="row">
+        <span class="label">Warning:</span>
+        <span class="formw">This button will set all follow up dates to 0000-00-00</span>
+    </div>    
+    <div class="row">
+ 	<span class="label">
+           
+        <input type="SUBMIT"  name="ACTION"  value="Reset Followups">
+          
+           
+        </span>
+    </div>    
+</form>
+</div>
+</body>
+</html> 

@@ -1,0 +1,232 @@
+<?php
+include("../../../framework/theme.css");
+include("casesystem.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<SCRIPT type="text/javascript" >
+try {
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp2 = new XMLHttpRequest();
+} catch (trymicrosoft) {
+try {
+    xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+    xmlHttp2 = new ActiveXObject("Msxml2.XMLHTTP");
+} catch (othermicrosoft) {
+  try {
+      xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+      xmlHttp2 = new ActiveXObject("Microsoft.XMLHTTP");
+  } catch (failed) {
+      xmlHttp = false;
+      xmlHttp2= false;
+  }
+}
+}
+
+if (!xmlHttp)
+alert("Error initializing XMLHttpRequest!");
+
+
+function caseFinder(formElement) {
+    form_Name = formElement.getAttribute("name");
+    var queryString = "ACTION="+form_Name;
+    form_Value = formElement.value;
+    queryString += "&VALUE="+form_Value;
+    xmlHttp2.open("POST", "casesystem_search.php", true);
+    xmlHttp2.onreadystatechange = searchResults;
+    xmlHttp2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xmlHttp2.send(queryString);
+}
+
+function searchResults() {
+	if (xmlHttp2.readyState == 4) {
+		if (xmlHttp2.status == 200)
+      	{
+			var xmlDoc = xmlHttp2.responseXML;
+           	if(xmlDoc.getElementsByTagName("results").length > 0)
+           	{
+        		thisTable = document.getElementById("results_table");
+    	      	for(var i = thisTable.rows.length - 1; i > 0; i--)
+				{
+    	      		thisTable.deleteRow(i);
+				}
+				
+    	      	for(var i = 0; i < xmlDoc.getElementsByTagName("row").length; i++)
+                {
+    	      		thisTable.insertRow(i+1);
+    	      		thisTable.rows[i+1].insertCell(0);
+    	      		thisTable.rows[i+1].cells[0].innerHTML = "<a href =\"casesystem_update.php?case_id="+xmlDoc.getElementsByTagName("id")[i].childNodes[0].nodeValue+"\" target=\"_blank\">"+xmlDoc.getElementsByTagName("title")[i].childNodes[0].nodeValue+"</a>";
+    	    	      			
+    	      		thisTable.rows[i+1].insertCell(1);
+    	      		if(xmlDoc.getElementsByTagName("status")[i].childNodes.length > 0)
+    	      		{
+    	      			thisTable.rows[i+1].cells[1].innerHTML = xmlDoc.getElementsByTagName("status")[i].childNodes[0].nodeValue;
+    	      		}
+    	      		thisTable.rows[i+1].insertCell(2);
+    	      		if(xmlDoc.getElementsByTagName("whoopen")[i].childNodes.length > 0)
+    	      		{
+        	      		thisTable.rows[i+1].cells[2].innerHTML = xmlDoc.getElementsByTagName("whoopen")[i].childNodes[0].nodeValue;
+    	      		}
+    	      		thisTable.rows[i+1].insertCell(3);
+    	      		thisTable.rows[i+1].cells[3].innerHTML = xmlDoc.getElementsByTagName("whenopen")[i].childNodes[0].nodeValue;
+    	      		thisTable.rows[i+1].insertCell(4);
+    	      		if(xmlDoc.getElementsByTagName("whoupdated")[i].childNodes.length > 0)
+    	      		{
+    	      			thisTable.rows[i+1].cells[4].innerHTML = xmlDoc.getElementsByTagName("whoupdated")[i].childNodes[0].nodeValue;
+    	      		}
+    	      		thisTable.rows[i+1].insertCell(5);
+    	      		thisTable.rows[i+1].cells[5].innerHTML = xmlDoc.getElementsByTagName("whenupdated")[i].childNodes[0].nodeValue;
+    	      		thisTable.rows[i+1].insertCell(6);
+    	      		if(xmlDoc.getElementsByTagName("whoassigned")[i].childNodes.length > 0)
+    	      		{
+    	      			thisTable.rows[i+1].cells[6].innerHTML = xmlDoc.getElementsByTagName("whoassigned")[i].childNodes[0].nodeValue;
+    	      		}
+    	      		thisTable.rows[i+1].insertCell(7);
+    	      		if(xmlDoc.getElementsByTagName("whenfollowup")[i].childNodes.length > 0)
+    	      		{
+        	      		thisTable.rows[i+1].cells[7].innerHTML = xmlDoc.getElementsByTagName("whenfollowup")[i].childNodes[0].nodeValue;
+    	      		}
+    	      		thisTable.rows[i+1].insertCell(8);
+    	      		if(xmlDoc.getElementsByTagName("whenclosed")[i].childNodes.length > 0)
+    	      		{
+        	      		thisTable.rows[i+1].cells[8].innerHTML = xmlDoc.getElementsByTagName("whenclosed")[i].childNodes[0].nodeValue;
+    	      		}
+    	      		thisTable.rows[i+1].insertCell(9);
+    	      		if(xmlDoc.getElementsByTagName("tags")[i].childNodes.length > 0)
+    	      		{
+        	      		thisTable.rows[i+1].cells[9].innerHTML = xmlDoc.getElementsByTagName("tags")[i].childNodes[0].nodeValue;
+    	      		}
+                }
+           }
+      }
+      else if (xmlHttp2.status == 404)
+        alert("Request URL does not exist");
+      else
+        alert("Error: status code is " + xmlHttp2.status);
+     }
+}
+
+</SCRIPT>
+
+<div class="module_container">
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/casesystem/casesystem_main.php"  method=POST>
+    <div class="divheader">Create New Case</div>
+    <div class="row">
+        <span class="label">Case Title:</span>
+        <span class="formw"><INPUT type=TEXT name="case_title"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Tag With Customer:</span>
+        <span class="formw">
+            <SELECT class="smallsans"  ID="customer_id" NAME="customer_id" onchange="caseFinder(this)">
+            <OPTION VALUE="none"></OPTION>
+            <?php
+            foreach($customers as $customer)
+            {
+                ?>
+                <OPTION VALUE="<?php echo $customer['cv_id'] ?>"><?php echo $customer['cv_name'] ?></OPTION>
+                <?php 
+            }
+            
+            ?>
+            </SELECT>
+        </span>
+    </div>        <div class="row">
+        <span class="label">Assign To:</span>
+        <span class="formw">
+        <SELECT  SIZE="1" NAME="casesystem_main_assigned" >
+        <?php foreach($users as $row)
+        {	
+            ?><OPTION VALUE="<?php echo $row['user_id'] ?>" ><?php echo $row['username'] ?></OPTION><?php
+        }
+        ?>
+        </SELECT>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">Comments:</span>   
+        <span class="formw"><TEXTAREA name="casesystem_txt" rows="10" cols="60"></TEXTAREA></span>
+    </div>
+<?php
+if($USER->CheckPermissionType($MODULE_NAME) == 'U')
+{
+?>
+    <div class="row">
+        <span class="label">Hidden Comments:</span>
+        <span class="formw">
+            <TEXTAREA name="hiddencasesystem_txt" rows="10" cols="60"></TEXTAREA>
+        </span>
+    </div>
+<?php
+}
+?>
+    <div class="row">
+        <span><input type="HIDDEN"  name="VIEW_ALL"  value="<?php echo $VIEW_ALL ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Create Case" size="15"></span>
+    </div>
+</form>
+</div>   
+    
+<div class="portlet2">
+    <div class="divheader">Cases</div>
+    <div class="row">
+        <span class="colleft"><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=YES" ?>" >VIEW CLOSED CASES</a></span>
+        <span class="colleft"><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=NO" ?>" >VIEW OPEN CASES</a></span>
+        <span class="colleft"><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=YES&VIEW_CLOSED=".$VIEW_CLOSED ?>">VIEW ALL CASES</a></span>
+        <span class="colleft"><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=NO&VIEW_CLOSED=".$VIEW_CLOSED ?>">VIEW MY CASES</a></span>
+    </div>    
+    <div class="row">
+    <table id="results_table">
+        <TR>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=case_title" ?>">CASE TITLE</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=status_text" ?>">STATUS</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whoopen_id" ?>">WHO OPENED</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whenopen_date" ?>">WHEN OPEN</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whoupdated_id" ?>">WHO UPDATED</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whenupdated_date" ?>">WHEN UPDATED</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whoassigned_id" ?>">WHO ASSIGNED</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whenfollowup" ?>">WHEN FOLLOWUP</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whenclosed_date" ?>">WHEN CLOSE</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=tags" ?>">TAGS</A></TD>
+        </TR>
+    
+<?php
+    if(is_array($cases))
+    {
+        foreach($cases as $row)
+        {
+            ?>
+            <tr class="action<?php echo $row['action_needed']?>">
+                <TD><a href ="<?php echo $BASE_DIR ?>/casesystem/casesystem_update.php?case_id=<?php echo $row['case_id'] ?>" target="_blank" ><?php echo $row['case_title']; if($row['case_title'] == ""){ echo "No Title";} ?></a></TD>
+                <TD><?php echo $row['status_text'] ?></TD>
+                <TD><?php echo $userArray[$row['whoopen_id']]['username'] ?></TD>
+                <TD><?php echo $row['whenopen_date'] ?></TD>
+                <TD><?php echo $userArray[$row['whoupdated_id']]['username'] ?></TD>
+                <TD><?php echo $row['whenupdated_date'] ?></TD>
+                <TD><?php echo $userArray[$row['whoassigned_id']]['username'] ?></TD>
+                <TD><?php echo $row['whenfollowup'] ?></TD>
+                <TD><?php echo $row['whenclosed_date'] ?></TD>
+                <TD>
+                <?php
+                    if(@$row['cv_tag_string'] != "")
+                    {
+                        $cv_tags = explode(",", $row['cv_tag_string']);
+                        foreach($cv_tags as $cv_tag)
+                        {
+                           echo $tag_id_to_name[$cv_tag];
+                            
+                        }
+                    }
+                ?>  
+                </TD>
+            </tr>
+            
+            <?php
+        }	
+    }
+    ?>
+    </table>
+	</div>
+</div>
+</div>

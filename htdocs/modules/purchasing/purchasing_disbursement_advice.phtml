@@ -1,0 +1,205 @@
+<?
+include("../../../framework/theme.css");
+include("purchasing_cash_disbursements.css");
+framework::navbar();
+framework::warning($WARNING);
+?>
+<div class="portlet">
+    <div class="divheader">Unapplied Disbursement</div>
+    <div class="row" id="search_results">
+        <table>
+                <TR>
+                    <TD>
+                         Date Recieved
+                    </TD>
+                    <TD>
+                          Customer Name
+                    </TD>
+                    <TD>
+                          Amount Recieved
+                    </TD>
+                    <TD>
+                          Amount Applied
+                    </TD>
+                    <TD>
+                          Amount Remaining
+                    </TD>
+                </TR>
+                <TR>
+                    <TD>
+                          <? echo $disbursement['cd_date'] ?>
+                    </TD>
+                    <TD>
+                          <? echo $disbursement['cv_name'] ?>
+                    </TD>
+                    <TD>
+                          <? echo $disbursement['total_amount'] ?>
+                    </TD>
+                    <TD>
+                          <? echo $disbursement['total_applied'];
+                         $remaining = $disbursement['total_amount']-$disbursement['total_applied'];?>
+                    </TD>
+                    <TD>
+                          <? echo $remaining ?>
+                    </TD>
+                </TR>
+        </table>
+    </div>    
+</div>
+<?php 
+if($disbursement['is_refund'] == 1)
+{
+?>
+<div class="portlet">
+    <div class="divheader">Unapplied Remittances</div>
+    <div class="row" >
+        <table>
+                <TR>
+                    <TD>
+                         Remit No#
+                    </TD>
+                    <TD>
+                         Charged
+                    </TD>
+                    <TD>
+                         Comment
+                    </TD>
+                    <TD>
+                          Customer Name
+                    </TD>
+                    <TD>
+                         Invoice Total
+                    </TD>
+                    <TD>
+                          Total Remitted
+                    </TD>
+                    <TD>
+                          Remaining Balance
+                    </TD>
+                </TR>
+<?
+            foreach($remittances as $row)
+            {
+                ?>
+                <form action="<? echo $BASE_DIR ?>/purchasing/purchasing_disbursement_advice.php"  method=POST>
+                <TR>
+                    <TD><a href="<? echo $BASE_DIR ?>/purchasing/purchasing_items.php?pr_id=<? echo $row['pr_id'] ?>" target="_blank" >
+                          <? echo $row['remit_no'] ?></a>
+                    </TD>
+                    <TD>
+                          <? echo $row['remit_date'] ?>
+                    </TD>
+                    <TD>
+                          <? echo $row['comment'] ?>
+                    </TD>
+                    <TD>
+                          <? echo $row['cv_name'] ?>
+                    </TD>
+                    <TD>
+                          <? echo $row['total_received'] ?>
+                    </TD>
+                    <TD>
+                          <? echo $row['total_applied'] ?>
+                    </TD>
+                    <TD>
+                          <? echo $row['total_received']-$row['total_applied'] ?>
+                    </TD>
+                    <TD>
+                          <input type="TEXT"  name="apply_amount"  size=5 value="<? echo $remaining ?>" >
+                    </TD>
+                    <TD>
+                        <input type="SUBMIT"  name="ACTION" value="Apply Refund Amount" >
+                        <input type=hidden name="remit_no" value=<? echo $row['remit_no']?>>
+                        <input type=hidden name="cd_no" value=<? echo $disbursement['cd_no']?>>
+                    </TD>
+                    
+                </TR>
+                </form>
+                <?
+            }
+?>	
+        </table>
+    </div>    
+</div>
+
+<?php 
+}
+else
+{
+?>
+<div class="portlet">
+    <div class="divheader">Outstanding Invoices</div>
+    <div class="row" >
+        <table>
+                <TR>
+                    <TD>
+                         PO#
+                    </TD>
+                    <TD>
+                         Date Charged
+                    </TD>
+                    <TD>
+                         Description
+                    </TD>
+                    <TD>
+                          Customer Name
+                    </TD>
+                    <TD>
+                         Invoice Total
+                    </TD>
+                    <TD>
+                          Total Remitted
+                    </TD>
+                    <TD>
+                          Remaining Balance
+                    </TD>
+                </TR>
+<?
+            foreach($purchases as $row)
+            {
+                ?>
+                <form action="<? echo $BASE_DIR ?>/purchasing/purchasing_disbursement_advice.php"  method=POST>
+                <TR>
+                    <TD><a href="<? echo $BASE_DIR ?>/purchasing/purchasing_items.php?pr_id=<? echo $row['pr_id'] ?>" target="_blank" >
+                          <? echo $row['po_id'] ?></a>
+                    </TD>
+                    <TD>
+                          <? echo $row['po_date'] ?>
+                    </TD>
+                    <TD>
+                          <? echo $row['purchase_description'] ?>
+                    </TD>
+                    <TD>
+                          <? echo $row['cv_name'] ?>
+                    </TD>
+                    <TD>
+                          <? echo $row['po_total'] ?>
+                    </TD>
+                    <TD>
+                          <? echo $row['total_disbursed'] ?>
+                    </TD>
+                    <TD>
+                          <? echo $row['po_total']-$row['total_disbursed'] ?>
+                    </TD>
+                    <TD>
+                          <input type="TEXT"  name="apply_amount"  size=5 value="<? echo $remaining ?>" >
+                    </TD>
+                    <TD>
+                        <input type="SUBMIT"  name="ACTION" value="Apply Amount" >
+                        <input type=hidden name="po_id" value=<? echo $row['po_id']?>>
+                        <input type=hidden name="cd_no" value=<? echo $disbursement['cd_no']?>>
+                    </TD>
+                    
+                </TR>
+                </form>
+                <?
+            }
+?>	
+        </table>
+    </div>    
+</div>
+
+<?php 
+}
+?>
+

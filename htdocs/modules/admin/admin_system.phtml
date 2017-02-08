@@ -1,0 +1,158 @@
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="admin_main.css" media="screen" >
+
+<?php
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+
+?>
+
+<div class="module_container">
+<div class="portlet">
+    <form action="<?php echo $BASE_DIR ?>/admin/admin_system.php"  method=POST>
+    <div class="divheader">Update System Info</div>
+        <div class="row">
+            <span class="label">
+                System Name:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="system_name"  value="<?php echo @$system_name; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                Company Name:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="SYS_INFO[COMPANY_NAME]"  value="<?php echo @$SYS_INFO['COMPANY_NAME']; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                Company Name(2nd Line):
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="SYS_INFO[COMPANY_NAME2]"  value="<?php echo @$SYS_INFO['COMPANY_NAME2']; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                Company CO:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="SYS_INFO[COMPANY_CO]"  value="<?php echo @$SYS_INFO['COMPANY_CO']; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                Mailing Address Line 1:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="SYS_INFO[COMPANY_MAILADDRESS1]"  value="<?php echo @$SYS_INFO['COMPANY_MAILADDRESS1']; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                 Mailing Address Line 2:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="SYS_INFO[COMPANY_MAILADDRESS2]"  value="<?php echo @$SYS_INFO['COMPANY_MAILADDRESS2']; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                Physical Address Line 1:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="SYS_INFO[COMPANY_PHYSADDRESS1]"  value="<?php echo @$SYS_INFO['COMPANY_PHYSADDRESS1']; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                Physical Address Line 2:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="SYS_INFO[COMPANY_PHYSADDRESS2]"  value="<?php echo @$SYS_INFO['COMPANY_PHYSADDRESS2']; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                Main Phone Number:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="SYS_INFO[COMPANY_PHONE]"  value="<?php echo @$SYS_INFO['COMPANY_PHONE']; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                Fax Number:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="SYS_INFO[COMPANY_FAX]"  value="<?php echo @$SYS_INFO['COMPANY_FAX']; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                Base URL:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="SYS_INFO[COMPANY_BASE_URL]"  value="<?php echo @$SYS_INFO['COMPANY_BASE_URL']; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                General Email:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="SYS_INFO[COMPANY_GENERALEMAIL]"  value="<?php echo @$SYS_INFO['COMPANY_GENERALEMAIL']; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                TAX ID:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="SYS_INFO[COMPANY_EIN]"  value="<?php echo @$SYS_INFO['COMPANY_EIN']; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                Business Days and Times:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="SYS_INFO[COMPANY_BUSINESSDT]"  value="<?php echo @$SYS_INFO['COMPANY_BUSINESSDT']; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+            </span>
+            <span class="formw">
+                <input type="hidden"  name="system_id"  value="<?php echo $system_id?>" >
+                <input type="SUBMIT"  name="ACTION"  value="Update Info" >
+            </span>
+        </div>        
+    </form>
+</div>
+<div class="portlet2">
+    <div class="divheader">Systems</div>
+        <div class="row">
+            <span class="col1"><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=username" ?>">System Name</a></span>
+        </div>    
+    <?php
+        foreach($systems as $sys)
+        {
+        ?>
+        <div class="row">
+        <form action="<?php echo $BASE_DIR ?>/admin/admin_system.php" method=POST>
+            <span class="col1"><?php echo $sys['system_name'] ?></span>
+            <span class="col1">
+                <input type="HIDDEN"  name="system_id"  value="<?php echo $sys['system_id'] ?>" >
+                <input type="SUBMIT"  name="ACTION"  value="EDIT SYSTEM" >
+            </span>
+        </form>
+        </div>    
+        <?php
+    }
+    ?>	
+</div>
+</div>
+

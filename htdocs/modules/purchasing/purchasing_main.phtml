@@ -1,0 +1,194 @@
+<?php
+include("../../../framework/theme.css");
+include("purchasing_main.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_rcreate.php"  method=POST>
+    <div class="divheader">Create Purchase Request</div>
+    <div class="row">
+        <span class="label">Vendor:</span>
+        <span class="formw">
+            <SELECT class="smallsans" NAME="vendor_id">
+            <?php
+            foreach($vendors as $vendor)
+            {
+                ?>
+                <OPTION VALUE="<?php echo $vendor['cv_id'] ?>"><?php echo $vendor['cv_name'] ?></OPTION>
+                <?php 
+            }
+            
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <input type="SUBMIT"  name="ACTION"  value="Create Purchase Request" >
+    </div>    
+</form>
+</div>
+
+<div class="portlet2">
+    <div class="divheader">Open Purchase Requisition(not yet approved)</div>
+    <div class="row">
+        <table>
+        <?php  foreach($invoices as $invoice)
+            {
+            ?>
+                <form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_items.php"  method=POST>
+                <TR>
+                <TD>
+                    <TD><?php echo $invoice['cv_name'] ?></TD>
+                    <TD><?php echo $invoice['pr_total'] ?></TD>
+                    <TD>
+                    <input type=SUBMIT name="ACTION" value="Edit Purchase Requisition" >
+                    <input type=SUBMIT name="ACTION" value="Delete Purchase Requisition" >
+                     <input type=SUBMIT name="ACTION" value="Approve" >
+                    <input type=hidden name="pr_id" value=<?php echo $invoice['pr_id']?>>
+                </TD>
+                </TR>
+                </form>
+            <?php
+            }
+            ?>
+        </table>
+</div>
+<?php
+/*
+<div class="portlet2">
+    <div class="divheader">Approved Requisitions</div>
+    <div class="row">
+        <table>
+            <TR>
+                <TD>PR No</TD>
+                <TD>Vendor</TD>
+                <TD>Total</TD>
+            </TR>
+        <?php  foreach($unpaid_invoices as $unpaid_invoice)
+            {
+            ?>
+                <form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_view.php"  method=POST>
+                <TR>
+                    <TD><?php echo $unpaid_invoice['pr_id'] ?></TD>
+                    <TD><?php echo $unpaid_invoice['cv_name'] ?></TD>
+                    <TD align=right><?php echo $unpaid_invoice['pr_total'] ?></TD>
+                    <TD>
+                    <input type=SUBMIT name="ACTION" value="VIEW INVOICE" >
+                    <input type=hidden name="pr_id" value=<?php echo $unpaid_invoice['pr_id']?>>
+                </TR>
+                </form>
+            <?php
+            }
+            ?>
+        </table>
+</div>
+*/
+?> 
+<div class="portlet2">
+    <div class="divheader">Approved/No PO Requisitions</div>
+    <div class="row">
+        <table>
+            <TR>
+                <TD>PR No</TD>
+                <TD>Vendor</TD>
+                <TD>Total</TD>
+            </TR>
+        <?php  foreach($approved_no_po as $approved_no)
+            {
+            	?>
+                <form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_items.php"  method=POST>
+                <TR>
+                    <TD><?php echo $approved_no['pr_id'] ?></TD>
+                    <TD><?php echo $approved_no['cv_name'] ?></TD>
+                    <TD align=right><?php echo $approved_no['pr_total'] ?></TD>
+                    <TD>
+                    <input type=SUBMIT name="ACTION" value="VIEW INVOICE" >
+                    <input type=SUBMIT name="ACTION" value="GENERATE PO" >
+                    <input type=hidden name="pr_id" value=<?php echo $approved_no['pr_id']?>>
+                </TR>
+                </form>
+            <?php
+            }
+            ?>
+        </table>
+</div>
+<div class="portlet2">
+    <div class="divheader">Unpaid Purchase Orders</div>
+    <div class="row">
+        <table>
+            <TR>
+                <TD>PO No</TD>
+                <TD>Vendor</TD>
+                <TD>SubTotal</TD>
+                <TD>Discount</TD>
+                <TD>Total</TD>
+                <TD>Disbursed</TD>
+                <TD>Total Remaining</TD>
+            </TR>
+        <?php  foreach($unpaid_purchase as $purchase_order)
+            {
+            ?>
+                <TR>
+                    <TD><?php echo $purchase_order['po_id'] ?></TD>
+                    <TD><a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<?php echo $purchase_order['cv_id'] ?>" target="_blank" method=POST><?php echo $purchase_order['cv_name'] ?></a>
+                    </TD>
+                    <TD align=right><?php echo $purchase_order['po_subtotal'] ?></TD>
+                    <TD align=right><?php echo $purchase_order['po_discount_total'] ?></TD>
+                    <TD align=right><?php echo $purchase_order['po_total'] ?></TD>
+                    <TD align=right><?php echo $purchase_order['total_disbursed'] ?></TD>
+                    <TD align=right><?php echo number_format($purchase_order['po_total']-$purchase_order['total_disbursed'], 2) ?></TD>
+                    <TD>
+                    <form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_view.php"  method=POST>
+                	<input type=hidden name="po_id" value=<?php echo $purchase_order['po_id']?>>
+                    <input type=hidden name="pr_id" value=<?php echo $purchase_order['pr_id']?>>
+                    <input type=SUBMIT name="ACTION" value="VIEW INVOICE" >
+	                </form>
+                    </TD>
+                    <TD>
+                    <form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_items.php"  method=POST>
+                	<input type=SUBMIT name="ACTION" value="PRINT" >
+                    <input type=SUBMIT name="ACTION" value="SUMMARY" >
+                    <?php 
+                    if($purchase_order['purchase_gl_entry'] == '')
+                    {
+                    ?><input type=SUBMIT name="ACTION" value="POST TO LEDGER" >
+                    <?php	
+                    	
+                    }
+                    ?>
+                    <input type=hidden name="po_id" value=<?php echo $purchase_order['po_id']?>>
+                    <input type=hidden name="pr_id" value=<?php echo $purchase_order['pr_id']?>>
+	                </form>
+	                </TD>
+                </TR>
+            <?php
+            }
+            ?>
+        </table>
+</div>
+<div class="portlet2">
+    <div class="divheader">Recurring Purchases</div>
+    <div class="row">
+        <table>
+        <?php  foreach($recurring_purchase as $recurring_invoice)
+            {
+            ?>
+                <form action="<?php echo $BASE_DIR ?>/invoices/invoices_recurring_items.php"  method=POST>
+                <TR>
+                <TD>
+                    <TD><?php echo $recurring_invoice['cv_name'] ?></TD>
+                    <TD><?php echo $recurring_invoice['invoice_total'] ?></TD>
+                    <TD><?php echo $recurring_invoice['lastcharged'] ?></TD>
+                    <TD>
+                    <input type=SUBMIT name="ACTION" value="EDIT INVOICE" >
+                    <input type=SUBMIT name="ACTION" value="DELETE INVOICE" >
+                    <input type=hidden name="recurringinvoice_id" value=<?php echo $recurring_invoice['recurringinvoice_id']?>>
+                </TD>
+                </TR>
+                </form>
+            <?php
+            }
+            ?>
+        </table>
+</div>

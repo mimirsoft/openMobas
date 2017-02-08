@@ -1,0 +1,80 @@
+
+<div class="portlet2">
+        <table>
+            <TR>
+                <TD>CV ID:</TD>
+                <TD>CV Name:</TD>
+                <TD>CV Number:</TD>
+                <TD>Tags:</TD>
+            </TR>
+      <?
+        foreach($customers as $customer)
+        {
+        ?>
+            <TR>
+                <TD>
+                    <? echo $customer['cv_id'] ?>
+                </TD>
+                <TD>
+                    <? echo $customer['cv_name'] ?>
+                </TD>
+                <TD>
+                    <? echo $customer['cv_number'] ?>
+                </TD>
+                <TD>
+                <?
+                    if($customer['cv_tag_string'] != "")
+                    {
+                        $cv_tags = explode(",", $customer['cv_tag_string']);
+                        foreach($cv_tags as $cv_tag)
+                        {
+                            ?>
+                               <div class="cvtag"><? echo $tag_id_to_name[$cv_tag]; ?>&nbsp;|</div>
+                            <?
+                        }
+                    }
+                ?>  
+                </TD>
+            </TR>
+        <?
+        }
+    ?>	
+        </table>
+        </form>
+
+<?php  if(is_array($purchasers))
+{
+?>
+    <div class="divheader">Purchasers of Item</div>
+    <form action="<? echo $BASE_DIR ?>/cv_master/cv_master_main.php"  method=POST>
+        <table>
+            <TR>
+                <TD>Customer Name:</TD>
+                <TD>Customer Number:</TD>
+            </TR>
+      <?
+        foreach($purchasers as $row)
+        {
+        ?>
+            <TR>
+                <TD>
+                    <input type=checkbox name="cv_id[]" value=<? echo $row['cv_id'] ?>/>
+                    <a href="<? echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<? echo $row['cv_id'] ?>" target="_blank" method=POST><? echo $row['cv_name'] ?></a>
+                </TD>
+                <TD>
+                    <a href="<? echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<? echo $row['cv_id'] ?>" target="_blank" method=POST><? echo $row['cv_number'] ?></a>
+                </TD>
+                <TD>
+                    <a href="<? echo $BASE_DIR ?>/cv_master/cv_master_summary_statement.php?cv_id=<? echo $row['cv_id'] ?>" target="_blank" method=POST>PRINT SUMMARY STATEMENT</a>
+                </TD>
+                
+            </TR>
+        <?
+        }
+    	?>	
+		</table>
+<?php 
+}
+?>
+    </form>
+</div>

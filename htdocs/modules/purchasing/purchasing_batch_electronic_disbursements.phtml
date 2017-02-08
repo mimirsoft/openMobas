@@ -1,0 +1,59 @@
+<?
+include("../../../framework/theme.css");
+include("purchasing_batch_electronic_disbursements.css");
+framework::navbar();
+framework::warning($WARNING);
+
+if(count($remittance_accounts) > 0)
+{
+?>
+
+<div class="portlet">
+    <div class="divheader">Unpaid Purchase Orders</div>
+    <div class="row">
+        <table>
+            <TR>
+                <TD></TD>
+                <TD>Type</TD>
+                <TD>PO No</TD>
+                <TD>Vendor</TD>
+                <TD>Total</TD>
+                <TD>Remaining Balance</TD>
+                <TD>Amount To Disburse</TD>
+            </TR>
+        <?  foreach($unpaid_purchase as $purchase_order)
+            {
+            ?>
+                <form action="<? echo $BASE_DIR ?>/purchasing/purchasing_disburse.php" method=POST>
+                <TR>
+                    <TD><input type=checkbox name="po_id[]" value=<? echo $purchase_order['po_id'] ?>/></TD>
+                    <TD><? echo $purchase_order['cv_default_payment_type'] ?></TD>
+                    <TD><? echo $purchase_order['po_id'] ?></TD>
+                    <TD><a href="<? echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<? echo $purchase_order['cv_id'] ?>" target="_blank" method=POST><? echo $purchase_order['cv_name'] ?></a></TD>
+                    <TD class="td_right"><? echo $purchase_order['po_total'] ?></TD>
+                    <TD class="td_right"><? echo number_format($purchase_order['po_total']-$purchase_order['total_disbursed'], 2); ?></TD>
+                    <TD><input type="TEXT"
+                            name="check_amounts[<? echo $purchase_order['po_id'] ?>]"
+                            id="<? echo $purchase_order['po_id'] ?>" size="4"
+                            value="<? echo $purchase_order['po_total']-$purchase_order['total_disbursed'] ?>"
+                            onchange="verify_clear_amount(this, '<? echo $purchase_order['po_id']?>')">
+                    </TD> 
+                    <TD>
+                    <input type=hidden name="po_id" value=<? echo $purchase_order['po_id']?>>
+                    <input type=hidden name="vendor_id" value=<? echo $purchase_order['vendor_id']?>>
+                    </TD>
+                </TR>
+                </form>
+            <?
+            }
+            ?>
+        </table>
+</div>
+ 
+<?
+}
+else
+{
+
+?><div class="warning">ERROR:NO REMITTANCE DEPOSIT ACCOUNTS DEFINED!</div><?
+}

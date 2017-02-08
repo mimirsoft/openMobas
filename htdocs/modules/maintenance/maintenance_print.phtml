@@ -1,0 +1,35 @@
+<?php require_once("maintenance_print.css");
+?>
+
+<div class="portlet3">
+    <div class="divheader">Case History</div>
+    <div class="row">
+        <span class="col2">Case Title:</span>
+        <span class="col3"><span class="bold"><? echo $caseinfo['case_title'] ?></span></span>
+    </div>    
+        <?
+    if(is_array($caseentrys))
+    {
+        foreach($caseentrys as $row)
+        {
+            ?>
+    <div class="row">
+        <span class="col2">
+            <span class="bold">   <? echo $userArray[$row['user_id']] ?>   </span>
+            <BR /><? echo $row['caseentry_date'] ?>
+         </span>
+     
+        <span class="col3">
+            <span class="shown">
+                <? echo $row['casesystem_txt'] ?><HR></span>
+           
+        </span>
+     
+    </div>
+            <?
+        }
+    }
+    ?>
+</div>
+<p class="page">&nbsp</p>     
+     

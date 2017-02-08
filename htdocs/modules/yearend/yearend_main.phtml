@@ -1,0 +1,137 @@
+<?
+include("../../../framework/theme.css");
+framework::navbar();
+?>
+<form action="<? echo $BASE_DIR ?>/yearend/yearend_main.php"  method=POST>
+
+<TABLE align="center">
+	<TR>
+		<TD ALIGN="center" COLSPAN="1" BGCOLOR="#CCCCCC"><B>Start Date</B></TD>
+		<TD ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+		<?
+		Framework::date_selectors($startdate_year, $startdate_month, $startdate_day, "start", "");
+		?>
+		</TD>
+	</TR>
+    <TR>
+        <TD ALIGN="center" COLSPAN="1" BGCOLOR="#CCCCCC"><B>End Date</B></TD>
+        <TD ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+        <?
+        Framework::date_selectors($enddate_year, $enddate_month, $enddate_day, "end", "");
+        ?>
+        </TD>
+    </TR>
+    <TR>
+        <TD ALIGN="center" COLSPAN="1" BGCOLOR="#CCCCCC"><B>Split Date</B></TD>
+        <TD ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+        <?
+        Framework::date_selectors($splitdate_year, $splitdate_month, $splitdate_day, "split", "");
+        ?>
+        </TD>
+    </TR>
+	<TR>
+		<TD COLSPAN="2" BGCOLOR="#CCCCCC">
+			<input type="SUBMIT"  name="ACTION"  value="Set Working Date" >
+		</TD>
+	</TR>
+</TABLE>
+</form>
+
+<?
+if ($enddate == "--")
+{
+	echo "YOU FORGOT TO SET THE DATE!";
+	exit;
+}
+?>	
+
+<TABLE ALIGN="center" BORDER="0">
+	<form action="<? echo $BASE_DIR ?>/yearend/yearend_main.php"  method=POST>
+	<TR>
+		<TD ALIGN="center" COLSPAN="10" BGCOLOR="#CCCCCC"><B>RENTS</B>(Print Total?        <input type="checkbox"  name="print_total"  value="yes" >)
+</TD>
+	</TR>
+	<TR>
+		<TD BGCOLOR="#CCCCCC"><B>Owner</B></TD>
+		<TD BGCOLOR="#CCCCCC"><B>Property</B></TD>
+		<TD BGCOLOR="#CCCCCC"><B>Amount</B></TD>
+	</TR>
+
+<?
+	foreach($vendors_1099 as $row)
+	{
+		?>
+		<TR>
+			<TD><? echo $row['cv_name']?></TD>
+			<TD><? echo $row['account_name'] ?></TD>
+			<TD align="right"><? echo $row['income'] ?></TD>
+			<TD align="right"><? echo $row['tax_id'] ?></TD>
+			<TD ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+				<input type="checkbox"  name="cv_list[]"  value="<? echo $row['cv_id'] ?>" >
+			</TD>
+		</TR>
+		<?	
+	}
+?>	
+	<TR>
+		<TD ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+			<input type="HIDDEN"  name="enddate_year"  value="<? echo $enddate_year ?>" >
+			<input type="HIDDEN"  name="enddate_month"  value="<? echo $enddate_month ?>" >
+			<input type="HIDDEN"  name="enddate_day"  value="<? echo $enddate_day ?>" >
+			<input type="HIDDEN"  name="startdate_year"  value="<? echo $startdate_year ?>" >
+			<input type="HIDDEN"  name="startdate_month"  value="<? echo $startdate_month ?>" >
+			<input type="HIDDEN"  name="startdate_day"  value="<? echo $startdate_day ?>" >
+			<input type="SUBMIT"  name="ACTION"  value="MAKE STATEMENTS GL" >
+            <input type="HIDDEN"  name="splitdate_year"  value="<? echo $splitdate_year ?>" >
+            <input type="HIDDEN"  name="splitdate_month"  value="<? echo $splitdate_month ?>" >
+            <input type="HIDDEN"  name="splitdate_day"  value="<? echo $splitdate_day ?>" >
+		</TD>
+	</TR>
+	</form>
+</TABLE>
+    
+
+<TABLE ALIGN="center" BORDER="0">
+    <form action="<? echo $BASE_DIR ?>/yearend/yearend_main.php"  method=POST>
+    <TR>
+        <TD ALIGN="center" COLSPAN="10" BGCOLOR="#CCCCCC"><B>RENTS</B>(Print Total?        <input type="checkbox"  name="print_total"  value="yes" >)
+</TD>
+    </TR>
+    <TR>
+        <TD BGCOLOR="#CCCCCC"><B>Owner</B></TD>
+        <TD BGCOLOR="#CCCCCC"><B>Property</B></TD>
+        <TD BGCOLOR="#CCCCCC"><B>Amount</B></TD>
+    </TR>
+
+<?
+    foreach($vendors_1099po as $row)
+    {
+        ?>
+        <TR>
+            <TD><? echo $row['cv_name']?></TD>
+            <TD><? echo $row['account_name'] ?></TD>
+            <TD align="right"><? echo $row['income'] ?></TD>
+            <TD align="right"><? echo $row['tax_id'] ?></TD>
+            <TD ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+                <input type="checkbox"  name="cv_list[]"  value="<? echo $row['cv_id'] ?>" >
+            </TD>
+        </TR>
+        <?  
+    }
+?>  
+    <TR>
+        <TD ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+            <input type="HIDDEN"  name="enddate_year"  value="<? echo $enddate_year ?>" >
+            <input type="HIDDEN"  name="enddate_month"  value="<? echo $enddate_month ?>" >
+            <input type="HIDDEN"  name="enddate_day"  value="<? echo $enddate_day ?>" >
+            <input type="HIDDEN"  name="startdate_year"  value="<? echo $startdate_year ?>" >
+            <input type="HIDDEN"  name="startdate_month"  value="<? echo $startdate_month ?>" >
+            <input type="HIDDEN"  name="startdate_day"  value="<? echo $startdate_day ?>" >
+            <input type="HIDDEN"  name="splitdate_year"  value="<? echo $splitdate_year ?>" >
+            <input type="HIDDEN"  name="splitdate_month"  value="<? echo $splitdate_month ?>" >
+            <input type="HIDDEN"  name="splitdate_day"  value="<? echo $splitdate_day ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="MAKE STATEMENTS PO" >
+        </TD>
+    </TR>
+    </form>
+</TABLE>

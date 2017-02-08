@@ -1,0 +1,45 @@
+<?php
+include("../../../framework/theme.css");
+include("mailing_configure.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/mailing/mailing_configure.php"  method=POST>
+    <div class="divheader">Create New Mailing</div>
+    <div class="row">
+        <span class="label">Name:</span>
+        <span class="formw"><input type="TEXT"  name="mailing_name"  value="<?php echo $mailing_name; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Body:</span>
+        <span class="formw"><TEXTAREA name="mailing_body" id="mailing_body" rows="10" cols="63"><?php echo $mailing_body ?></TEXTAREA></span>
+    </div>    
+    <div class="row">
+        <span class="label"><input type="SUBMIT"  name="ACTION"  value="Edit Mailing"></span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="mailing_edit" >
+            <?php
+            foreach ($mailings as $row)
+            {
+                ?>
+                <OPTION value="<?php echo $row['mailing_id'] ?>"><?php echo $row['mailing_name'] ?></OPTION>
+                <?php
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">
+            <input type="HIDDEN"  name="mailing_id"  value="<?php echo $mailing_id ?>">
+            <input type="SUBMIT"  name="ACTION"  value="Save Mailing">
+        </span>
+    </div>    
+</form>
+</div>
+
+
+ 

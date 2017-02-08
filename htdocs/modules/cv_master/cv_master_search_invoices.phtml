@@ -1,0 +1,259 @@
+<?
+include("../../../framework/theme.css");
+include("cv_master_search_invoices.css");
+framework::navbar();
+?>
+<div class="leftcol">
+
+<div class="portlet">
+<form action="<? echo $BASE_DIR ?>/cv_master/cv_master_search_invoices.php"  method=POST>
+    <div class="divheader">Search</div>
+    <div class="row">
+        <span class="label">Item:</span>
+        <span class="formw"><select name="search_item">
+        <? foreach($items as $row)
+        {   
+            ?>
+            <OPTION <?php if($search_item ==  $row['inventory_id']){echo " SELECTED ";}?> VALUE="<? echo $row['inventory_id'] ?>"><? echo $row['item_name']." (".$row['cv_name'].")" ?></OPTION>
+            <?
+        }
+        ?>
+        </select>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Starting Date(YYYY-MM-DD):</span>
+        <span class="formw">
+            <?
+            Framework::date_selectors($startdate_year, $startdate_month, $startdate_day, "start", "")
+            ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Ending Date(YYYY-MM-DD):</span>
+        <span class="formw">
+            <?
+            Framework::date_selectors($enddate_year, $enddate_month, $enddate_day, "end", "")
+            ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label"></span>
+        <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Get Data" ></span>
+        <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Print Data" ></span>
+        <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Monthly Interval" ></span>
+    </div>    
+</form>
+</div>
+
+</div>
+
+<div class="portlet2">
+    <div class="divheader">Invoices</div>
+    <div class="row">
+        <table>
+            <TR>
+                <TD>#:</TD>
+                <TD>Customer Name:</TD>
+                <TD>Sales:</TD>
+                <TD>Charged:</TD>
+                <TD>Running:</TD>
+                <TD>Paid:</TD>
+                <TD>Running::</TD>
+                
+            </TR>
+         <?        $total = 0 ;
+        $total_applied = 0;
+        $invoice_count = 0;
+            if(is_array($invoices))
+            {
+            foreach($invoices as $invoice_row)
+            {
+                $invoice_count++;
+            ?>
+                <TR <?php if($invoice_row['invoice_total']!= $invoice_row['total_remitted']){ echo "class=\"red\"";}?>>
+                <TD class="right"><?php echo $invoice_count;?></TD>
+                <TD><?  
+                echo $invoice_row['date_charged'] ?></TD>
+                <TD>
+				    <a href="<? echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<? echo $invoice_row['cv_id'] ?>" target="_blank" method=POST><? echo $invoice_row['cv_name'] ?></a>
+				</TD>
+                <TD class="right"><?  $total += $invoice_row['invoice_total'];
+                echo $invoice_row['invoice_total'] ?></TD>
+                <TD class="right"><?php echo $total;?></TD>
+                <TD class="right"><?  $total_applied += $invoice_row['total_remitted'];
+                echo $invoice_row['total_remitted'] ?></TD>
+                <TD class="right"><?php echo $total_applied;?></TD>
+                <TD>
+                    <form action="<? echo $BASE_DIR ?>/invoices/invoices_items.php"  method=POST>
+                	<input type=SUBMIT name="ACTION" value="EDIT INVOICE" >
+                    <input type=hidden name="invoice_id" value=<? echo $invoice_row['invoice_id']?>>
+                     </form>
+                </TD>
+                </TR>
+               
+            <?
+            }
+            }
+            ?>
+        </table>
+        Invoices:<?php echo $invoice_count;?> TOTAL: $<?php echo $total;?> TOTAL PAID: $<?php echo $total_applied;?>
+    </div>
+</div>
+<div class="portlet3">
+    <div class="divheader">Purchases</div>
+    <div class="row">
+        <table>
+            <TR>
+                <TD>Date:</TD>
+                <TD>PO:</TD>
+                <TD>Customer Name:</TD>
+                <TD>Sales:</TD>
+                <TD>Charged:</TD>
+                <TD>Paid:</TD>
+            </TR>
+        <?        $total = 0 ;
+        $total_applied = 0;
+            if(is_array($purchases))
+            {
+            foreach($purchases as $purchase_row)
+            {
+            ?>
+                <TR>
+                <TD><?  
+                echo $purchase_row['po_date'] ?></TD>
+                <TD><?  
+                echo $purchase_row['po_id'] ?></TD>
+                <TD>
+				    <a href="<? echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<? echo $purchase_row['cv_id'] ?>" target="_blank" method=POST><? echo $purchase_row['cv_name'] ?></a>
+				</TD>
+                <TD><?  $total += $purchase_row['po_total'];
+                echo $purchase_row['po_total'] ?></TD>
+                <TD><?  $total_applied += $purchase_row['total_disbursed'];
+                echo $purchase_row['total_disbursed'] ?></TD>
+                <TD>
+                    <form action="<? echo $BASE_DIR ?>/invoices/invoices_items.php"  method=POST>
+                	<input type=SUBMIT name="ACTION" value="EDIT INVOICE" >
+                    <input type=hidden name="invoice_id" value=<? echo $invoice_row['invoice_id']?>>
+                     </form>
+                </TD>
+                <TD>
+                         	<a href="<? echo $BASE_DIR ?>/invoices/invoices_view.php?invoice_id=<? echo $purchase_row['invoice_id']?>&ACTION=VIEW" target="_blank"><? echo $purchase_row['invoice_id']?>
+                </TD>
+                
+               
+            <?
+            }
+            }
+            ?>
+        </table>
+        TOTAL: $<?php echo $total;?> TOTAL PAID: $<?php echo $total_applied;?>
+    </div>
+</div>
+
+<div class="portlet2">
+    <div class="divheader">Grouped Purchases To Invoice</div>
+    <div class="row">
+        <table>
+            <TR>
+                <TD>PR:</TD>
+                <TD>Date:</TD>
+                <TD>Invoice:</TD>
+                <TD>Customer Name:</TD>
+                <TD>Invoiced:</TD>
+                <TD>Purchased:</TD>
+            </TR>
+        <?        $total = 0 ;
+        $total_applied = 0;
+            if(is_array($purchaseGroupInvoice))
+            {
+            foreach($purchaseGroupInvoice as $purchase_row)
+            {
+            ?>
+                <TR <?php if($purchase_row['purchase_total'] > $purchase_row['invoiceitem_price_total']){ echo "class=red";}
+            if($purchase_row['purchase_total'] < $purchase_row['invoiceitem_price_total']){ echo "class=green";} ?>>
+                <TD>                <?
+                    if(@$purchase_row['pr_string'] != "")
+                    {
+                        $pr_id_array = explode(",", $purchase_row['pr_string']);
+                        foreach($pr_id_array as $pr_id)
+                        {
+                            ?>
+                               <a href="<? echo $BASE_DIR ?>/purchasing/purchasing_view.php?pr_id=<? echo $pr_id?>&ACTION=VIEW" target="_blank"><? echo $pr_id?>
+                            <?
+                        }
+                    }
+                ?>  
+                         	
+                </TD>
+                <TD><?  
+                echo $purchase_row['pr_date'] ?></TD>
+                <TD>
+                         	<a href="<? echo $BASE_DIR ?>/invoices/invoices_view.php?invoice_id=<? echo $purchase_row['invoice_id']?>&ACTION=VIEW" target="_blank"><? echo $purchase_row['invoice_id']?>
+                </TD>
+                <TD>
+				    <a href="<? echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<? echo $purchase_row['cv_id'] ?>" target="_blank" method=POST><? echo $purchase_row['cv_name'] ?></a>
+				</TD>
+                <TD><?  $total_applied += $purchase_row['invoiceitem_price_total'];
+                echo $purchase_row['invoiceitem_price_total'] ?></TD>
+                <TD><?  $total += $purchase_row['purchase_total'];
+                echo $purchase_row['purchase_total'] ?></TD>
+                <TD>
+                    <form action="<? echo $BASE_DIR ?>/invoices/invoices_items.php"  method=POST>
+                	<input type=SUBMIT name="ACTION" value="EDIT INVOICE" >
+                    <input type=hidden name="invoice_id" value=<? echo $invoice_row['invoice_id']?>>
+                     </form>
+                </TD>
+                </TR>
+               
+            <?
+            }
+            }
+            ?>
+        <TR>
+                <TD></TD>
+                <TD></TD>
+                <TD></TD>
+                <TD></TD>
+                <TD><?php echo $total_applied;?></TD>
+                <TD><?php echo $total;?></TD>
+            </TR></table>
+    </div>
+</div>
+<div class="portlet3">
+    <div class="divheader">Monthly Numbers</div>
+    <div class="row">
+        <table>
+            <TR>
+                <TD>Date:</TD>
+                <TD>Sold:</TD>
+                <TD>$</TD>
+                <TD>Purchased:</TD>
+                <TD>$</TD>
+                
+            </TR>
+        <?        $total = 0 ;
+        $total_applied = 0;
+            if(is_array($month_set))
+            {
+            foreach($month_set as $purchase_row)
+            {
+            ?>
+                <TR>
+                <TD><? echo $purchase_row['date'] ?></TD>
+                <TD><? echo $purchase_row['sales_count'] ?></TD>
+                <TD><?  $total += $purchase_row['sales_total'];
+                echo $purchase_row['sales_total'] ?></TD>
+                <TD><? echo $purchase_row['purchase_count'] ?></TD>
+                <TD><?  $total_applied += $purchase_row['purchases_total'];
+                echo $purchase_row['purchases_total'] ?></TD>
+                
+               
+            <?
+            }
+            }
+            ?>
+        </table>
+        TOTAL: $<?php echo $total;?> TOTAL PAID: $<?php echo $total_applied;?>
+    </div>
+</div>

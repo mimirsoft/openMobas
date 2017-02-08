@@ -1,0 +1,81 @@
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="admin_rbac.css" media="screen" >
+<?php
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+include("admin_rbac_navbar.phtml");
+?>
+
+<form  action="" method="POST">
+<div class="portlet">
+    <div class="divheader">Objects</div>
+    <div class="data">
+    <table border="0" cellpadding="2" cellspacing="2" class="tbl_data">
+	<tr >
+	   <td>
+            </td>
+            <td align="left">
+            <b><a href="admin_rbac_privileges_has_actions.php?&sortby=name+DESC">Privi
+            lege</a></b>
+            </td>
+            <td align="left">
+                <b><a href="admin_rbac_privileges_has_actions.php?&sortby=description+DESC">Action</a></b>
+            </td>
+            <td align="left">
+                <b><a href="admin_rbac_privileges_has_actions.php?&sortby=description+DESC">Is Singular</a></b>
+            </td>
+	</tr>
+<?php
+$class = "green";
+foreach($pmtma as $row)
+{
+    ?>
+    <tr  class="<?php echo $class?>">
+        <td>
+            <?php if($row['is_singular'] == 0)
+            {
+            ?>
+            <INPUT type="checkbox" name="edit_ids[]" value="<?php echo $row['id'] ?>">
+            <?php
+            }
+            ?>
+        </td>
+        <td>
+            <?php echo $row['privilege_name'] ?>
+        </td>
+        <td>
+            <?php echo $row['action_name'] ?>
+        </td>
+        <td>
+            <?php if($row['is_singular'] == 1){echo "YES";} else{ echo "NO";} ?>
+        </td>
+    </tr>
+<?php
+    switch ($class)
+    {
+        case "green":
+            $class = "yellow";
+            break;
+        
+        case "yellow":
+            $class = "green";
+            break;
+    }
+
+
+
+
+}
+?>
+    </table>
+    </div>
+    <div class="pager">
+        <span id="pager_links"></span>
+        <span id="pager_info"> Total number of rows:<?php echo $pmtma_count['count'] ?></span>
+    </div>
+    <div class="button">
+        <INPUT name="ACTION" type="submit" value="Delete" >
+    </div>
+</div>
+</form>
+
+

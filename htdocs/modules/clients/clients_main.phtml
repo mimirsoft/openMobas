@@ -1,0 +1,490 @@
+<?php
+include("../../../framework/theme.css");
+include("clients_main.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<body>
+<div class="col_left">
+    
+<div class="portlet2">
+   <div class="divheader">Information</div>
+
+
+        <div class="row">
+            <span class="label">Email:</span>
+            <span class="formw"><?php echo $customer_info['cv_default_email']; ?></span>
+        </div>    
+        <div class="row">
+            <span class="label">Phone:</span>
+            <span class="formw"><?php echo $customer_info['cv_default_phone']; ?></span>
+        </div>    
+         <div class="row">
+            <span class="label">Care Of:</span>
+            <span class="formw"><?php echo $customer_info['cv_default_careof']; ?></span>
+        </div>    
+         <div class="row">
+            <span class="label">Address:</span>
+            <span class="formw"><?php echo $customer_info['cv_default_address']; ?></span>
+        </div>    
+        <div class="row">
+            <span class="label">City:</span>
+            <span class="formw"><?php echo $customer_info['cv_default_city']; ?></span>
+        </div>    
+        <div class="row">
+            <span class="label">State:</span>
+            <span class="formw"><?php echo $customer_info['cv_default_state']; ?></span>
+        </div>    
+        <div class="row">
+            <span class="label">Zip:</span>
+            <span class="formw"><?php echo $customer_info['cv_default_zip']; ?></span>
+        </div>    
+        <div class="row">
+            <span class="label">Statement Type:</span>
+            <span class="formw"><?php echo $customer_info['cv_default_statement_type'] ?></span>
+        </div>    
+        <div class="row">
+            <span class="label">Payment Type:</span>
+            <span class="formw"><?php echo $customer_info['cv_default_payment_type']?></span>
+        </div>
+
+</div>
+
+<div class="portlet2">
+
+    <div class="divheader">Print Statement</div>
+    <form action="<?php echo $BASE_DIR ?>/clients/clients_statement_handler.php"  target="_blank" method=POST>
+            <div class="row">
+            <span class="label">Statement Type:</span>
+            <span class="formw"><SELECT class="smallsans" NAME="statementtype">
+                <OPTION VALUE="itemized_outstanding">Itemized Outstanding</OPTION>
+                
+                </SELECT>
+            </span>
+        </div>    
+    <div class="row" >
+ 
+    </div> 
+        <div class="row">
+            <span class="label">Starting Date(YYYY-MM-DD):</span>
+            <span class="formw">
+                <?php
+                Framework::date_selectors($startdate_year, $startdate_month, $startdate_day, "start", "")
+                ?>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Ending Date(YYYY-MM-DD):</span>
+            <span class="formw">
+                <?php
+                Framework::date_selectors($enddate_year, $enddate_month, $enddate_day, "end", "")
+                ?>
+            </span>
+        </div>    
+    <div class="row">
+       	<span class="label"></span>
+   	    <span class="formw">    
+        	<input type="HIDDEN"  name="cv_id"  value="<?php echo $customer_info['cv_id']; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="PRINT SUMMARY STATEMENT">
+    	</span>
+	</div>
+    </form>
+</div>
+<div class="portlet2">
+    <div class="divheader">Print Report</div>
+    <form action="<?php echo $BASE_DIR ?>/clients/clients_report_handler.php"  target="_blank" method=POST>
+			<div class="row">
+            <span class="label">Report:</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="statement_id" ID="statement_id">
+                <?php
+                foreach($statement_list AS $row)
+                {
+                    echo "<OPTION value=\"".$row['statement_id']."\">".$row['statement_name']."</OPTION>\n";
+                }
+                ?>
+                </SELECT>
+                
+            </span>
+        </div>  
+		<div class="row">
+            <span class="label">Accounts:</span>
+            <span class="formw">
+                <SELECT NAME="account_array[]" multiple>
+                <?php
+                foreach($account_array AS $key => $value)
+                {
+                    echo "<OPTION value=\"".$key."\"";
+                    if($first_only)
+                    {
+                        $first_only = false;
+                        echo " selected";
+                    }
+                    echo ">".$value."</OPTION>\n";
+                }
+                ?>
+                </SELECT>
+            </span>
+        </div>  
+    <div class="row" >
+    </div> 
+        <div class="row">
+            <span class="label">Starting Date(YYYY-MM-DD):</span>
+            <span class="formw">
+                <?php
+                Framework::date_selectors($startdate_year, $startdate_month, $startdate_day, "start", "")
+                ?>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Ending Date(YYYY-MM-DD):</span>
+            <span class="formw">
+                <?php
+                Framework::date_selectors($enddate_year, $enddate_month, $enddate_day, "end", "")
+                ?>
+            </span>
+        </div>    
+    <div class="row">
+       	<span class="label"></span>
+   	    <span class="formw">    
+        	<input type="HIDDEN"  name="cv_id"  value="<?php echo $customer_info['cv_id']; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="PRINT REPORT">
+    	</span>
+	</div>
+    </form>
+</div>
+
+<?php if($customer_info['is_customer'])
+{
+    ?>
+    <div class="portlet2">
+        <div class="divheader">Invoices</div>
+        <div class="row" >
+            <table>
+                    <TR>
+                        <TD>
+                             Invoice#
+                        </TD>
+                        <TD>
+                             Date Charged
+                        </TD>
+                        <TD>
+                              Description
+                        </TD>
+                        <TD>
+                              Customer Name
+                        </TD>
+                        <TD class='right'>
+                             Invoice</BR>Total
+                        </TD>
+                        <TD class='right'>
+                              Total</BR>Remitted
+                        </TD>
+                        <TD class='right'>
+                              Remaining<BR/>Balance
+                        </TD>
+                        <TD>
+                            Scans
+                        </TD>
+                    </TR>
+    <?php
+                                $invoice_total = 0;
+                $invoice_remit_total = 0;
+                $invoice_remaining_total = 0;
+                foreach($invoices as $row)
+                {
+                    ?>
+                    <TR>
+                        <TD>
+                              <?php echo $row['invoice_id'] ?></a>
+                        </TD>
+                        <TD>
+                              <?php echo $row['date_charged'] ?>
+                        </TD>
+                        <TD>
+                              <?php echo $row['invoice_description'] ?>
+                        </TD>
+                        <TD>
+                              <?php echo $row['cv_name'] ?>
+                        </TD>
+                         <TD class="right">
+                              <?php 
+                                 echo $row['invoice_total'];
+                                 $invoice_total += $row['invoice_total'];
+                                  ?>
+                        </TD>
+                        <TD class="right">
+                              <?php echo $row['total_remitted'];
+                                 $invoice_remit_total += $row['total_remitted'];
+                              ?>
+                        </TD>
+                        <TD class="right">
+                              <?php echo $row['invoice_total']-$row['total_remitted'] ;
+                                 $invoice_remaining_total += ($row['invoice_total']-$row['total_remitted']);
+                              ?>
+                        </TD>
+                    	<TD><?php
+                            if(@$row['file_string'] != "")
+                            {
+                                $files = explode(",", $row['file_string']);
+                                foreach($files as $file_id)
+                                {
+                                    ?>
+                                      <a href="../interface/download_file.php?file=<?php echo $file_id ?>&permission=invoice"><?php echo $file_id ?>
+                                    <?php
+                                }
+                            }
+                ?>
+                              
+                        </TD>
+                        <TD>
+                            <form action="<?php echo $BASE_DIR ?>/clients/clients_invoices_view.php" target="_blank" METHOD=POST>
+                        		<input type=SUBMIT name="ACTION" value="VIEW/PRINT" >
+       							<input type=hidden name="invoice_id" value=<?php echo $row['invoice_id']?>>
+                            </form>    
+                       	</TD>
+                        
+                        
+                    </TR>
+                    
+                    <?php
+                }
+    ?>	
+<TR>
+                        <TD>
+                              
+                        </TD>
+                        <TD>
+                             
+                        </TD>
+                        <TD>
+                             
+                        </TD>
+                        <TD>
+                              TOTAL
+                        </TD>
+                        <TD  class="right">
+                        <?php 
+                                 echo number_format($invoice_total, 2);
+                        ?>
+                        </TD>
+                        <TD class="right">
+                        <?php 
+                                 echo number_format($invoice_remit_total, 2);
+                        ?>
+                        </TD>
+                        <TD class="right">
+                        <?php 
+                                 echo number_format($invoice_remaining_total, 2);
+                        ?>
+                        </TD>
+                        
+                </TR>
+            </table>
+        </div>    
+    </div>    
+    <?php 
+}
+if($customer_info['is_vendor'])
+{
+    ?>
+    <div class="portlet2">
+        <div class="divheader">Purchase Orders</div>
+        <div class="row" >
+            <table>
+                    <TR>
+                        <TD>
+                             Invoice#
+                        </TD>
+                        <TD>
+                             Date Charged
+                        </TD>
+                        <TD>
+                              Description
+                        </TD>
+                        <TD>
+                              Customer Name
+                        </TD>
+                        <TD class='right'>
+                             Invoice</BR>Total
+                        </TD>
+                        <TD class='right'>
+                              Total</BR>Remitted
+                        </TD>
+                        <TD class='right'>
+                              Remaining</BR>Balance
+                        </TD>
+                    </TR>
+                <?php
+                $po_total = 0;
+$po_remit_total = 0;
+$po_remaining_total = 0;
+                foreach($purchases as $row)
+                {
+                    ?>
+                    <TR>
+                        <TD>
+                              <?php echo $row['po_id'] ?></a>
+                        </TD>
+                        <TD>
+                              <?php echo $row['po_date'] ?>
+                        </TD>
+                        <TD>
+                              <?php echo $row['purchase_description'] ?>
+                        </TD>
+                        <TD>
+                              <?php echo $row['cv_name'] ?>
+                        </TD>
+                        <TD class="right">
+                              <?php echo $row['po_total'];
+                                 $po_total += $row['po_total'];
+                              ?>
+                        </TD>
+                        <TD class="right">
+                              <?php echo $row['total_disbursed'] ;
+                                 $po_remit_total += $row['total_disbursed'];
+                              ?>
+                              </TD>
+                        <TD class="right">
+                              <?php echo $row['po_total']-$row['total_disbursed'];
+                                 $po_remaining_total += ($row['po_total']-$row['total_disbursed']);
+                              ?>
+                        </TD>
+                        <TD>
+                            <form action="<?php echo $BASE_DIR ?>/clients/clients_purchasing_view.php" target="_blank" METHOD=POST>
+                                <input type=SUBMIT name="ACTION" value="VIEW/PRINT" >
+                                <input type=hidden name="po_id" value=<?php echo $row['po_id']?>>
+                            </form>    
+                        </TD>
+                        
+                        
+                    </TR>
+                    
+                    <?php
+                }
+            ?>                                           
+                <TR>
+                        <TD>
+                              
+                        </TD>
+                        <TD>
+                             
+                        </TD>
+                        <TD>
+                             
+                        </TD>
+                        <TD>
+                              TOTAL
+                        </TD>
+                        <TD class="right">
+                        <?php 
+                                 echo number_format($po_total, 2);
+                        ?>
+                        </TD>
+                        <TD class="right">
+                        <?php 
+                                 echo number_format($po_remit_total, 2);
+                        ?>
+                        </TD>
+                        <TD class="right">
+                        <?php 
+                                 echo number_format($po_remaining_total, 2);
+                        ?>
+                        </TD>
+                        
+                </TR>
+            </table>
+        </div>    
+   </div>    
+    <div class="portlet2">
+        <div class="divheader">Disbursements</div>
+        <div class="row" >
+            <table>
+                    <TR>
+                        <TD>
+                             Disbursement#
+                        </TD>
+                        <TD>
+                              Date
+                        </TD>
+                        <TD>
+                              Check No
+                        </TD>
+                        <TD>
+                              Comment
+                        </TD>
+                        <TD class='right'>
+                             Total Amount
+                        </TD>
+                        <TD class='right'>
+                              Total Applied
+                        </TD>
+                    </TR>
+                <?php
+                $disburse_total = 0;
+$applied_disburse_total = 0;
+               
+                foreach($disbursements as $row)
+                {
+                    ?>
+                    <TR>
+                        <TD>
+                              <?php echo $row['cd_no'] ?></a>
+                        </TD>
+                        <TD>
+                              <?php echo $row['cd_date'] ?>
+                        </TD>
+                        <TD>
+                              <?php echo $row['checkno'] ?>
+                        </TD>
+                        <TD>
+                              <?php echo $row['comment'] ?>
+                        </TD>
+                        <TD class="right">
+                              <?php echo $row['total_amount'];
+                              $disburse_total += $row['total_amount']; ?>
+                        </TD>
+                        <TD class="right">
+                              <?php echo $row['total_applied'];
+                              $applied_disburse_total += $row['total_applied']; ?>
+                        </TD>
+                        
+                    </TR>
+                    
+                    <?php
+                }
+            ?>  
+                             <TR>
+                        <TD>
+                              
+                        </TD>
+                        <TD>
+                             
+                        </TD>
+                        <TD>
+                             
+                        </TD>
+                        <TD>
+                              TOTAL
+                        </TD>
+                        <TD class="right">
+                        <?php 
+                                 echo number_format($disburse_total, 2);
+                        ?>
+                        </TD>
+                        <TD class="right">
+                        <?php 
+                                 echo number_format($applied_disburse_total, 2);
+                        ?>
+                        </TD>
+
+                        
+                        
+                </TR>
+            </table>
+        </div>    
+   </div>    
+    <?php 
+}
+?>
+</div>

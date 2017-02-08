@@ -1,0 +1,34 @@
+<? 
+include("../../../framework/theme.css");
+include("contacts_activity.css");
+?>
+
+
+<div class="portlet3">
+    <div class="divheader">Activity Log</div>
+    <?
+    if(is_array($caseentrys))
+    {
+        foreach($caseentrys as $row)
+        {
+            ?>
+    <div class="row">
+        <span class="col2">
+             <span class="bold">   <? echo $row['firstname']." ".$row['lastname'] ?>   </span><BR />
+            
+             entered by:<span class="bold">   <? echo $userArray[$row['user_id']]['username'] ?>   </span>
+            <BR />
+            <? echo $row['contact_activity_date'] ?>
+        </span>
+     
+        <span class="col3">
+                 <span class="bold"> <? echo $row['contact_activity_title'] ?></span><BR />
+                <? echo $row['contact_activity_txt'] ?>
+        </span>
+    </div>
+<HR>
+            <?
+        }
+    }
+    ?>
+</div>

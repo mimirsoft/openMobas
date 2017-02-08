@@ -1,0 +1,42 @@
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="transactions_main.css" media="screen" >
+<?php 
+
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+
+if(!($rbac_user->IsAllowedTo($USER->GetUserID(), "view_accounttree", "transactions_module")))
+{
+    echo "PERMISSION DENIED TO VIEW ACCOUNTTREE IN TRANSACTIONS MODULE!!";
+    exit;
+}
+?>
+
+<a href="<?php echo $MODULE_NAME?>_main.php?VIEWALL=Y">View All</A>
+    <div class="portlet" >
+        <div class="divheader">Select Account</div>
+        <div class="row">
+            <form action="<?php echo $BASE_DIR ?>/transactions/transactions_main.php"  method=POST>
+            <span class="formw"><input ALIGN="center" type="SUBMIT"  name="EDIT"  value="REBALANCE"></span>
+            <span class="formw"><input ALIGN="center" type="SUBMIT"  name="EDIT"  value="UPDATESPLITS"></span>
+            </form>
+        </div>    
+        <?php
+        foreach($account_info as $dbRow)
+        {
+                ?>
+                <div class="row">
+                <span class="label"><a href=transactions_account.php?id=<?php echo $dbRow['account_id']?> target="_BLANK"><?php echo $dbRow['account_fullname'] ?></a></span>
+                <span class="<?php
+                if ($dbRow['account_balance'] < 0)
+                {
+                        echo "neg";
+                }
+                else
+                {
+                        echo "black";
+                }?>" ALIGN="right"><?php echo $dbRow['account_balance']?></span>
+                </div>
+                <?php
+        }
+        ?>      
+    </div>

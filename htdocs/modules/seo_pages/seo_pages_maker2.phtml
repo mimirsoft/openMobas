@@ -1,0 +1,60 @@
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="seo_pages_maker" media="screen" >
+<?php
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/seo_pages/seo_pages_maker2.php" method=POST>
+    <div class="divheader">Enter SEO Service Term</div>
+    <div class="row">
+        <span class="label">Seo ServiceTerm:</span>
+        <span class="formw"><input type="TEXT"  name="seoservice[seo_serviceterm]"  size=50 value="<?php echo $seo_service['seo_serviceterm']; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Seo ServiceTerm URL:</span>
+        <span class="formw"><input type="TEXT"  name="seoservice[seo_serviceterm_url]"  size=50  value="<?php echo $seo_service['seo_serviceterm_url']; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Seo ServiceTerm Title:</span>
+        <span class="formw"><input type="TEXT"  name="seoservice[seo_serviceterm_title]"  size=50  value="<?php echo $seo_service['seo_serviceterm_title']; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Seo ServiceTerm Page Content:</span>
+        <span class="formw"><textarea type="TEXT"  style="width: 35em; height: 10em" name="seoservice[seo_serviceterm_content]"  ><?php echo $seo_service['seo_serviceterm_content']; ?></textarea></span>
+    </div>    
+    <div class="row">
+       <span class="label">Save/Update:</span> <span><input type="HIDDEN"  name="seoservice[seo_serviceterm_id]"  value="<?php echo $seo_service['seo_serviceterm_id']; ?>" >
+       <input type="SUBMIT"  name="ACTION"  value="Save Service Term" ></span>
+    </div>    
+</form>
+</div>
+<div class="portlet">
+	<div class="divheader">SEO Pages</div>
+<table>
+	<tr>
+		<td>serviceterm</td>
+    	<td>url</td>
+    	<td>title</td>
+    	<td>content</td>
+	</tr>
+<?php 
+foreach($seo_data as $row)
+{
+    ?><tr>
+    	<td><?php echo $row['seo_serviceterm'] ; ?></td>
+    	<td><?php echo $row['seo_serviceterm_url'] ; ?></td>
+    	<td><?php echo $row['seo_serviceterm_title'] ; ?></td>
+    	<td><?php echo $row['seo_serviceterm_content'] ; ?></td>
+    	<td><form action="<? echo $BASE_DIR ?>/seo_pages/seo_pages_maker2.php" method=POST>
+    		<input type="HIDDEN"  name="seo_serviceterm_edit"  value="<? echo $row['seo_serviceterm_id']; ?>" >
+       		<input type="SUBMIT"  name="ACTION"  value="Edit" >
+    		<input type="SUBMIT"  name="ACTION"  value="Delete" >
+    		</form></td>
+    </tr>
+    <?php 
+}
+?>
+
+</table>
+</div>

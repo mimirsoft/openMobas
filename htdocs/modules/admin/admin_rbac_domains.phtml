@@ -1,0 +1,114 @@
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="admin_rbac.css" media="screen" >
+<?php
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+include("admin_rbac_navbar.phtml");
+?>
+
+<form  action="" method="POST">
+<div class="portlet">
+    <div class="divheader">Domains</div>
+    <div class="data">
+    <table border="0" cellpadding="2" cellspacing="2" class="tbl_data">
+	<tr >
+	   <td>
+            </td>
+            <td align="left">
+            <b><a href="admin_rbac_domains.php?&order_by=name">Name</a></b>
+            </td>
+            <td align="left">
+                <b><a href="admin_rbac_domains.php?&order_by=description">Description</a></b>
+            </td>
+	</tr>
+<?php
+$class = "green";
+foreach($domains as $row)
+{
+    ?>
+    <tr  class="<?php echo $class?>">
+        <td>
+            <INPUT type="radio" name="edit_id" value="<?php echo $row['domain_id'] ?>">
+        </td>
+        <td>
+            <?php echo $row['name'] ?>
+        </td>
+        <td>
+            <?php echo $row['description'] ?>
+        </td>
+    </tr>
+<?php
+    switch ($class)
+    {
+        case "green":
+            $class = "yellow";
+            break;
+        
+        case "yellow":
+            $class = "green";
+            break;
+    }
+
+
+
+
+}
+?>
+    </table>
+    </div>
+    <div class="pager">
+        <span id="pager_links"></span>
+        <span id="pager_info"> Total number of rows:<?php echo $dom_count['count'] ?></span>
+    </div>
+    <div class="button">
+        <INPUT name="ACTION" type="submit" value="View / Edit" >
+        <INPUT name="ACTION" type="submit" value="Delete" >
+    </div>
+</div>
+</form>
+
+
+<form  action="" method="POST">
+<div class="portlet">
+    <div class="divheader">Add/Edit Domain</div>
+    <div class="data">
+    <table border="0" class="tbl_frm">
+        <tr >
+            <td width="30%" class="lbl">
+                    Name<span style="color:red">*</span>
+            </td>
+            <td>
+                    <INPUT name="name" type="text" size="30" class="inp" maxlength="50" alt="Name" value="<?php echo $name ?>">
+            </td>
+        </tr>
+        <tr >
+            <td class="lbl">
+                    Description
+            </td>
+            <td>
+                    <TEXTAREA name="description" type="textarea" cols="40" rows="10" class="inp" alt="Description" ><?php echo $description ?></TEXTAREA>
+            </td>
+        </tr>
+        <tr >
+            <td class="lbl">
+                    Objects<span style="color:red">*</span>
+            </td>
+            <td>
+                    <SELECT name="domain_objects[]" multiple size="8">
+                    <?php foreach($objects as $obj)
+                    {
+                        ?><OPTION value="<?php echo $obj['object_id'] ?>"><?php echo $obj['name'] ?></OPTION><?php  
+                    }  
+                    ?></SELECT>
+                
+            </td>
+        </tr>
+        <tr >
+            <td colspan="2" align="center" id="button">
+                <INPUT name="ACTION" type="submit" value="<?php echo $ACTION_VALUE ?>">
+                <INPUT name="id" type="hidden" value="<?php echo $id?>">
+            </td>
+        </tr>
+    </table>
+    </div>
+</div>
+</FORM>

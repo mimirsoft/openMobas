@@ -1,0 +1,183 @@
+<?php
+include("../../../framework/theme.css");
+include("purchasing_cash_disbursements.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<!--
+ -->
+<SCRIPT LANGUAGE="JavaScript" type="text/javascript">
+
+<?php 
+if($ACTION == "Print and Record Check")
+{
+	//on load, spawn the check window	
+	?>
+	window.open('<?php echo $BASE_DIR ?>/purchasing/purchasing_print_disburse_check.php?check_total=<?php 
+	echo $check_total?>&disbursement_account=<?php echo $disbursement_account?>&comment=<?php echo urlencode($comment) ?>
+	&check_no=<?php echo $check_no?>&date=<?php echo $date?>
+	&careof=<?php echo $check_info['careof'];?>&checkname=<?php echo urlencode($check_info['checkname']);?>&checkname2=<?php echo urlencode($check_info['checkname']);?>
+	&address=<?php echo urlencode($check_info['address']);?>&city=<?php echo $check_info['city'];?>&state=<?php echo $check_info['state'];?>
+	&zip=<?php echo $check_info['zip'];?>')
+	<?php 
+}	
+?>
+var po_remainder = new Array();
+ <?php
+ foreach($remittances as $row)
+ {
+ 	?>
+ 	po_remainder[<?php echo $row['remit_no']?>] = <?php echo $row['total_received']-$row['total_applied']; ?>;
+ 	<?php 
+ }
+ ?>
+
+ 
+function add_PO() {
+     // is it checked?
+     // we need a new way to recalc estimated check total
+     // each time a new one it check, or an amount is changed
+     // call the check total checker
+    running_total = 0;
+ 	comfList = document.getElementsByName('remit_no_array[]');
+ 	for (i = 0; i < comfList.length; i++) 
+    {
+    	if(comfList[i].checked)
+        {
+    		this_PO = document.getElementById(comfList[i].value);
+    		PO = parseFloat(this_PO.value);
+            
+    		running_total = PO + running_total;
+ 		}
+	}
+	check_total_disp = document.getElementById("check_total_display");
+	check_total = document.getElementById("check_total");
+    check_total_disp.innerHTML = running_total.toFixed(2);
+    check_total.value = running_total;
+
+}
+
+function verify_clear_amount(el, po_id) {
+    el.value = parseFloat(el.value);
+	if(el.value > po_remainder[po_id])
+	{
+		el.value = po_remainder[po_id];
+	}
+	//call the check total checker
+	// to retotal it, now that the value is changed
+	add_PO();	
+}
+
+</SCRIPT>
+
+
+<div class="portlet">
+<div class="divheader">Write Refund Check</div>
+<form id='disburse_form'
+	action="<?php echo $BASE_DIR ?>/purchasing/purchasing_disburse_refund.php"
+	method="POST">
+<div class="row"><span class="label">Date of Check:</span> <span
+	class="formw"><?php
+	Framework::date_selectors($recorddate_year, $recorddate_month, $recorddate_day, "record", "")
+	?> </span></div>
+<div class="row"><span class="label">From GL Disbursement Account:</span>
+<span class="formw"><SELECT class="smallsans" SIZE="1"
+	NAME="disbursement_account" id="disbursement_account">
+	<?php
+	foreach($disbursement_accounts as $disbursement_account)
+	{
+		?>
+	<OPTION value="<?php echo $disbursement_account['account_id'];?>"
+	<?php if($disbursement_account['default_account']== 1)echo " SELECTED ";?>><?php echo $disbursement_account['account_fullname']?>
+	</OPTION>
+
+	<?php
+	}
+	?>
+</SELECT> </span></div>
+<div class="row">
+        <span class="label">Pay to:</span>
+        <span class="formw"><input type="TEXT"  name="check_info[checkname]"  value="<?php echo $customer_info['cv_name']; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Check Number:</span>
+        <span class="formw"><input type="TEXT"  name="check_info[check_no]"  value="" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Memo:</span>
+        <span class="formw"><input type="TEXT"  name="check_info[memo]"  value="" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Care Of:</span>
+        <span class="formw"><input type="TEXT"  name="check_info[careof]"  value="<?php echo $customer_info['cv_default_careof']; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Address:</span>
+        <span class="formw"><input type="TEXT"  name="check_info[address]"  value="<?php echo $customer_info['cv_default_address']; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">City:</span>
+        <span class="formw"><input type="TEXT"  name="check_info[city]"  value="<?php echo $customer_info['cv_default_city']; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">State:</span>
+        <span class="formw"><input type="TEXT"  name="check_info[state]"  value="<?php echo $customer_info['cv_default_state']; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Zip:</span>
+        <span class="formw"><input type="TEXT"  name="check_info[zip]"  value="<?php echo $customer_info['cv_default_zip']; ?>" ></span>
+    </div>  
+<div class="row"><span class="label">Amount:</span> <span class="formw"
+	id='check_total_display'>0.00 </span> <input type="hidden"
+	name="check_total" id='check_total' value="0.00"><input type="HIDDEN"
+	name="cv_id" value="<?php echo $customer_info['cv_id'] ?>"></div>
+
+<div class="row"><?php  echo $customer_info['cv_name']?>
+<table>
+	<TR>
+
+		<TD>Remit NO:</TD>
+		<TD>Date:</TD>
+		<TD>Total</TD>
+		<TD>Remaining Balance</TD>
+		<TD>Amount to Pay</TD>
+		<TD>Comment</TD>
+	</TR>
+	<?php foreach($remittances as $remittance)
+	{
+		?>
+	<TR>
+		<TD><?php echo $remittance['remit_no'] ?></TD>
+		<TD><?php echo $remittance['remit_date'] ?></TD>
+		<TD><?php echo $remittance['total_received'];?></TD>
+		<TD><?php echo number_format($remittance['total_received']-$remittance['total_applied'], 2); ?>
+		</TD>
+		<TD><input type="TEXT"
+			name="check_amounts[<?php echo $remittance['remit_no'] ?>]"
+			id="<?php echo $remittance['remit_no'] ?>" size="4"
+			value="<?php echo $remittance['total_received']-$remittance['total_applied'] ?>"
+			onchange="verify_clear_amount(this, '<?php echo $remittance['remit_no']?>')">
+		</TD>
+		<TD><input type="TEXT"
+			name="comment[<?php echo $remittance['remit_no'] ?>]" size="20"
+			value="<?php echo "REMIT NO#".$remittance['remit_no'] ?>"></TD>
+
+		<TD><input type="checkbox" onclick='javascript:add_PO(this)'
+			name="remit_no_array[]" id="remit_no_array[]"
+			value="<?php echo $remittance['remit_no'] ?>"> 
+			
+		</TD>
+	</TR>
+	<?php
+
+	}
+	?>
+</table>
+</div>
+<div class="row"><span class="label"></span> <span class="formw"> <input
+	type="SUBMIT" name="ACTION" size="5" value="Print and Record Check"><input type="HIDDEN" name="vendor_id"
+			value="<?php echo $customer_info['cv_id'] ?>"> </span></div>
+
+</form>
+
+</div>

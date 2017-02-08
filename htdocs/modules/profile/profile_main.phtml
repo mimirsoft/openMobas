@@ -1,0 +1,78 @@
+<?php
+include("../../../framework/theme.css");
+include("profile_main.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+
+
+<div class="portlet">
+    <form action="<?php echo $BASE_DIR ?>/profile/profile_main.php"  method=POST>
+<?php if($update_err != '')
+{
+    echo $update_err;
+}
+
+?>
+    <div class="divheader">User Info</div>
+        <div class="row">
+            <span class="label">
+                User Name:
+            </span>
+            <span class="formw"><?php echo $user['username']; ?>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                Old Password:
+            </span>
+            <span class="formw">
+                <input type="password"  name="old_pass"  value="" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                New Password:
+            </span>
+            <span class="formw">
+                <input type="password"  name="new_pass1"  value="" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                New Password Again:
+            </span>
+            <span class="formw">
+                <input type="password"  name="new_pass2"  value="" >
+            </span>
+        </div>    
+         <div class="row">
+            <span class="label">
+                First Name:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="user_firstname"  value="<?php echo $user['user_firstname']; ?>" >
+            </span>
+        </div>    
+         <div class="row">
+            <span class="label">
+                Last Name:
+            </span>
+            <span class="formw">
+               <input type="TEXT"  name="user_lastname"  value="<?php echo $user['user_lastname']; ?>" >
+           </span>
+        </div>    
+         <div class="row">
+            <span class="label">
+            </span>
+            <span class="formw">
+                <input type="HIDDEN"  name="user_id"  value="<?php echo $user['user_id']; ?>" >
+                <input type="SUBMIT"  name="ACTION"  value="Save User" >
+           </span>
+        </div>    
+    </form>
+</div>
+
+
+
+

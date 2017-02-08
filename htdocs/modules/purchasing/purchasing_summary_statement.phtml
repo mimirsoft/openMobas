@@ -1,0 +1,80 @@
+        <div style="position: static; height: 85mm; ">
+
+        <div class="block1">
+        <p class="coname"><? echo $SYS_INFO['COMPANY_NAME'] ?></p>
+        <p class="coaddy"><? echo $SYS_INFO['COMPANY_MAILADDRESS1'] ?></p>
+        <p class="coaddy2"><? echo $SYS_INFO['COMPANY_MAILADDRESS2'] ?></p>
+        <p class="cophone"><? echo $SYS_INFO['COMPANY_PHONE'] ?></p>
+        <p class="maildate"><? echo $statement['date'] ?></p>
+        </div>
+        <?
+    
+        if($po_info['cv_default_city'] != ""){$po_info['cv_default_city'] .= ",";}
+        ?>
+        <div class="block3">
+        <p class="mailaddress1"><? echo $po_info['cv_name'] ?></p>
+        <? if($po_info['careof'] != "")
+        {
+            ?><p class="mailaddress1"><? echo $statement['mh']['careof'] ?></p><?
+        }
+        ?>
+        <p class="mailaddress2"><? echo $po_info['cv_default_address'] ?></p>
+        <p class="mailaddress3"><? echo $po_info['cv_default_city']." ".$po_info['cv_default_state']." ".$po_info['cv_default_zip'] ?></p>
+        </div>
+    </div>
+
+    <table>
+    	<colgroup>
+    	<col class="col1"/>
+     	<col class="col2"/>
+     	<col class="col3"/>
+     	<col class="col4"/>
+     	<col class="col5"/>
+     	</colgroup>
+     	<tr>
+    	        <TD class="lefttop">Description</TD>
+    	        <TD class="lefttop">Unit Price</TD>
+    	        <TD class="lefttop">Quantity</TD>
+    	        <TD class="endcolumntop">Amount</TD>
+    	</tr>
+    <?php foreach($invoice_items as $invoice_item)
+    {?>
+    	<tr>
+    	        <TD class="left"><? echo $invoice_item['inventorytype_name']?>-<? echo $invoice_item['item_name']?></TD>
+                <TD class="left" align=right><? echo $invoice_item['purchaseitem_price_per']?> </TD>
+                <TD class="left" align=right><? echo $invoice_item['purchaseitem_count']?> </TD>
+                <TD class="endcolumn" align=right><? echo $invoice_item['purchaseitem_price_total']?></TD>
+    
+    	</tr>
+    <?php 
+    }?>
+     	<tr>
+    	        <TD class="leftbottom">&nbsp;</TD>
+    	        <TD class="leftbottom">&nbsp;</TD>
+    	        <TD class="leftbottom">&nbsp;</TD>
+    	        <TD class="endcolumnbottom">&nbsp;</TD>
+    	</tr>
+ 	</table>
+    <table>
+    
+     	<tr>
+    	        <TD class="lefttop">Payments/Credits</TD>
+    	        <TD class="endcolumntop">&nbsp;</TD>
+    	</tr>
+    <?php 
+    foreach($disbursements as $disbursement)
+    {?>
+    	<tr>
+    	        <TD class="left"><? echo $disbursement['comment']?> </TD>
+                <TD class="endcolumn" align=right>-<? echo $disbursement['amount_applied']?></TD>
+    
+    	</tr>
+    <?php 
+    }
+    
+    ?>
+    	<tr>
+	        <TD>Remaining Balance</TD>
+            <TD align=right><? echo number_format($po_info['po_total']-$po_info['total_disbursed'], 2) ?></TD>
+		</tr>
+    </table>

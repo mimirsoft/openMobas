@@ -1,0 +1,53 @@
+<style type="text/css">
+* {padding: 0; margin: 0;}
+
+	div.block1 {
+	position: relative;
+	font-size: 12pt;
+	height: 30mm;
+    top: 19mm;
+	left: 10mm;
+	}
+	div.block1 .checkname {
+	position: relative;
+	font-size: 12pt;
+	top: 0mm;
+	left: 0mm;
+	}
+    .checknet {
+    position: relative;
+    font-size: 12pt;
+    top: 0mm;
+    left: 0mm;
+    }   
+    .check_no {
+    position: relative;
+    font-size: 12pt;
+    top: 0mm;
+    left: 0mm;
+    }   
+div.block1 .checkamount {
+	position: relative;
+	font-size: 12pt;
+	top: 0mm;
+	left: 0mm;
+	}
+	div.block1 .checkmemo {
+	position: relative;
+	font-size: 12pt;
+	top: 0mm;
+	left: 0mm;
+	}
+	div.block1 .date {
+	position: relative;
+	font-size: 12pt;
+	top: 0mm;
+	left: 0mm;
+	}
+	div.block1 .remit_no {
+	position: relative;
+	font-size: 12pt;
+	top: 0mm;
+	left: 0mm;
+	}	
+</style>

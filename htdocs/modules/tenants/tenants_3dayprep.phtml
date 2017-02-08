@@ -1,0 +1,86 @@
+<?php
+include("../../../framework/theme.css");
+include("tenants_3dayprep.css");
+?>
+<html>
+<body>         
+           
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/tenants/tenants_3dayprint.php"  method=POST>
+    <div class="divheader">3 Day Notice</div>
+    <div class="row">
+        <span >Today's Date
+            <?php
+                Framework::date_selectors($date_year, $date_month, $date_day, "notice", "");
+            ?>
+        </span>
+    </div>    
+    <div class="block"><span class="bold_clear">Owner</span>
+    <span class="clear">
+          <?php    echo $owners;
+          ?></span>
+    </div>
+    <div class="block"><span class="bold_clear">Tenant Names and Address</span>
+          <span class="clear"><?php    echo $names;
+                echo $prop['property_address']." ".$prop['property_aptnum']." <BR> ";
+                echo $prop['property_city']." ".$prop['property_state'].", ".$prop['property_zip']." <BR> ";
+                echo $prop['property_county']." County"
+          ?></span>
+    </div>
+    <table>
+        <tr>
+        <th>Start Date  <BR />(YYYY-MM-DD): </th>
+        <th>Comment:</th>
+        <th>Amount:</th>
+
+        
+<?php
+if(is_array($transactions))
+{	
+    foreach($transactions as $row)
+    {
+        ?>
+        <TR>
+            <TD>
+                <?php
+                    Framework::date_selectors(substr($row['date_charged'], 0 ,4), substr($row['date_charged'], 5 ,2), substr($row['date_charged'], 8 ,2), $row['invoice_id'], "");
+                    ?>
+            </TD>
+            <TD>
+                <?php
+                    Framework::date_selectors(substr($row['date_charged'], 0 ,4), substr($row['date_charged'], 5 ,2), substr($row['date_charged'], 8 ,2), $row['invoice_id']."end", "");
+                    ?>
+            </TD>
+            <TD>
+               <input type="TEXT"  name="transaction_comment<?php echo $row['invoice_id'] ?>"  value="<?php echo $row['invoice_description']; ?>" size="20">
+            </TD>
+            <TD>
+                <input type="TEXT"  name="transaction_amount<?php echo $row['invoice_id'] ?>"  value="<?php echo $row['remaining_balance']; ?>" size="7">
+            </TD>
+            <TD>
+                <input type="checkbox"  name="transactions_list[]"  value="<?php echo $row['invoice_id']; ?>">
+            </TD>
+        </TR>
+        <?php
+    }
+}
+?>
+</table>
+    <div class="row">    
+        <span class="col1">
+            <input type="HIDDEN"  name="owners"  value="<?php echo $owners; ?>">
+            <input type="HIDDEN"  name="names"  value="<?php echo $names; ?>">
+            <input type="HIDDEN"  name="property_address"  value="<?php echo $prop['property_address']; ?>">
+            <input type="HIDDEN"  name="property_aptnum"  value="<?php echo $prop['property_aptnum']; ?>">
+            <input type="HIDDEN"  name="property_city"  value="<?php echo $prop['property_city']; ?>">
+            <input type="HIDDEN"  name="property_county"  value="<?php echo $prop['property_county']; ?>">
+            <input type="HIDDEN"  name="property_state"  value="<?php echo $prop['property_state']; ?>">
+            <input type="HIDDEN"  name="property_zip"  value="<?php echo $prop['property_zip']; ?>">
+            <input type="SUBMIT"  name="action"  value="Print">
+         </span>
+    </div>
+</form>
+</div>
+
+</body>
+</html>

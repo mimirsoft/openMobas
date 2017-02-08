@@ -1,0 +1,11 @@
+<A HREF="<?php echo $BASE_DIR; ?>/statements/statements_main.php">Main</A>
+<?php
+if(Rbac_User::IsAllowedTo($USER->GetUserID(), "configure_statement", "statements_module"))
+{
+    ?>
+    <A HREF="<?php echo $BASE_DIR; ?>/statements/statements_config.php">Configure Statements</A>
+    <A HREF="<?php echo $BASE_DIR; ?>/statements/statements_budget.php">Build Budget</A>
+    <?php
+}
+?>
+

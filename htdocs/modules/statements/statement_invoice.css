@@ -1,0 +1,75 @@
+<style type="text/css">
+* {padding: 0; margin: 0;}
+
+td
+{
+
+    font-size:12pt;
+font-family:sans-serif;
+
+}
+.invoice_block1 {
+    clear: both;
+    position: relative;
+    font-size: 12pt;
+    height: 30mm;
+    top: 5mm;
+    left: 125mm;
+}
+.invoice_block2 {
+    position: relative;
+    font-size: 12pt;
+    top: -25mm;
+    height: 30mm;
+    left: 170mm;
+}
+.invoice_block3 {
+    clear: both;
+    position: relative;
+    font-size: 12pt;
+    height: 30mm;
+    top: -15mm;
+    left: 10mm;
+}
+.invoice_block4 {
+    position: relative;
+    font-size: 14pt;
+    height: 30mm;
+    top: -55mm;
+    left: 110mm;
+}
+.invoice_block5 {
+    position: relative;
+    font-size: 10pt;
+    height: 30mm;
+    top: -57mm;
+    left: 165mm;
+}
+.invoice_block6 {
+    position: relative;
+    font-size: 14pt;
+    height: 30mm;
+    top: -150mm;
+    left: 0mm;
+}
+.invoice_block7 {
+    position: relative;
+    font-size: 8pt;
+    height: 30mm;
+    top: -175mm;
+    left: 80mm;
+}
+
+.element {
+width: 100%;
+margin-left: 8mm;
+margin-top: 20mm;
+}
+.body
+ {
+    position: relative;
+    top: -25mm;
+}
+
+</style>
+

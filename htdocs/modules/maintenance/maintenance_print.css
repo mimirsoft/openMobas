@@ -1,0 +1,37 @@
+<style type="text/css">
+
+   .portlet3 {
+        width: auto;
+        display: block;
+        float: left;
+        clear: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+div.row {
+  clear: both;
+  padding-top: .5em;
+  }
+
+
+div.row span.col2 {
+  float: left;
+  text-align: right;
+  margin-right: .5em;
+  width: 10em;
+  }
+
+div.row span.col3 {
+  float: left;
+  text-align: left;
+  width: 40em;
+  }
+  
+ p.page
+ { 
+ clear: both;
+ page-break-after: always; }
+</style>
+

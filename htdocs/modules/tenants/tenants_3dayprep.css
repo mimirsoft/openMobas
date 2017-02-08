@@ -1,0 +1,59 @@
+<style type="text/css">
+	.portlet {
+		width: auto;
+		display: block;
+		float: left;
+		border-top: 1px solid #035156;
+		border-bottom: 1px solid #035156;
+		border-left: 1px solid #035156;
+		border-right: 1px solid #035156;
+  	}
+  div.row {
+	clear: both;
+  }
+  div.block {
+  float: left;
+	
+  }
+  span.bold_clear {
+	float: left;
+	font-weight: bold;
+	clear: both;
+	}
+  span.clear {
+	float: left;
+	clear: both;
+	}
+
+div.rowright {
+        clear: both;
+        text-align: right;
+    }
+    #rowhead
+    {
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    th
+    {
+        font-size: 10pt;
+
+    }
+    div.row span.right {
+        font-weight: bold;
+        float: right;
+        text-align: right;
+    }
+div.row span.label {
+  float: left;
+  width: 10em;
+  text-align: right;
+  }
+div.row span.formw {
+  float: left;
+  width: 20em;
+  text-align: left;
+  } 
+</style>
+

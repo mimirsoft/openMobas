@@ -1,0 +1,127 @@
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="admin_user_list.css" media="screen" >
+
+<?php
+
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+?>
+
+<div class="module_container">
+<div class="portlet">
+    <form action="<?php echo $BASE_DIR ?>/admin/admin_user_list.php"  method=POST>
+    <div class="divheader">Get Users</div>
+        <div class="row">
+            <span class="label">
+                Interested Item:
+            </span>
+            <span class="formw">
+               <select id="user_search_interest" name="user_search[interest]" size="5" >
+        <?php
+        foreach($available as $row)
+        {
+            
+            ?><OPTION value="<?php echo $row['inventory_id']?>" > <?php echo $row['item_name']; ?></OPTION> 
+
+
+            <?php
+
+        }
+        ?>
+        </select>
+           </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+            </span>
+            <span class="formw">
+                <input type="SUBMIT"  name="ACTION"  value="Search" >
+            </span>
+        </div>    
+    </form>
+</div>
+
+<div class="portlet2">
+    <div class="divheader">Users---<a href="admin_user_list_print.php?user_search[interest]=<? echo $user_search['interest']?>&ACTION=Print">PRINT</a>---<a href="admin_user_list_print.php?user_search[interest]=<? echo $user_search['interest']?>&ACTION=Print Email">PRINT EMAIL LIST</a></div>
+        <table>
+        <tr>
+        <td><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=username" ?>">User Name</a>
+        </td>
+        <td><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=user_lastname" ?>">Last Name</a>
+        </td>
+        <td>
+        <a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=user_firstname" ?>">First Name</a>
+        </td>
+        </tr>
+
+    <?php
+        if(is_array($users)){
+        foreach($users as $user)
+        {
+        ?>
+			<tr>
+                <td><?php echo $user['username'] ?>
+                </td>
+                <td><?php echo $user['user_email'] ?>
+                </td>
+    			<td><?php echo $user['user_lastname'] ?>
+    			</td>
+    			<td><?php echo $user['user_firstname'] ?>
+    			</td>
+    			<td><?php echo framework::inet_dtop($user['ip']) ?>
+    			</td>
+    			<td><?php echo $user['last_login'] ?>
+    			</td>
+    			<td>
+    			<form action="<?php echo $BASE_DIR ?>/admin/admin_edit.php" target="_blank" method=POST>
+                    <input type="HIDDEN"  name="user_id"  value="<?php echo $user['user_id'] ?>" >
+                    <input type="SUBMIT"  name="CONTACT"  value="EDIT" >
+                    </form>
+    			</td>
+			</tr>
+        <?php
+        }
+        }
+    ?>	
+    </table>
+</div>
+<div class="portlet2">
+    <div class="divheader">Unconfirmed Users</div>
+        <div class="row">
+        <table>
+        <tr>
+        <td><a href="<? echo $_SERVER["PHP_SELF"]."?SORTBY=username" ?>">User Name</a></td>
+        <td><a href="<? echo $_SERVER["PHP_SELF"]."?SORTBY=user_lastname" ?>">Last Name</a></td>
+        <td><a href="<? echo $_SERVER["PHP_SELF"]."?SORTBY=user_firstname" ?>">First Name</a></td>
+        </tr>
+    <?php
+        foreach($unconfirmed_users as $unconfirmed)
+        {
+        ?>
+        <tr>
+            <td><?php echo $unconfirmed['username'] ?></td>
+            <td><?php echo $unconfirmed['email'] ?></td>
+            <td><?php echo $unconfirmed['lastname'] ?></td>
+            <td><?php echo $unconfirmed['firstname'] ?></td>
+            <td> <form action="<?php echo $BASE_DIR ?>/admin/admin_main.php" target="_blank" method=POST>
+            
+            
+                <input type="HIDDEN"  name="confirm_code"  value="<?php echo $unconfirmed['confirm_code'] ?>" >
+                <input type="SUBMIT"  name="ACTION"  value="Confirm" >
+                <input type="SUBMIT"  name="ACTION"  value="Delete Unconfirmed User" >
+                </form>
+            </td>
+        </tr>
+            
+       
+        <?php
+    }
+    ?>	
+
+
+                </table>
+        </div>    
+    
+</div>
+
+</div>
+

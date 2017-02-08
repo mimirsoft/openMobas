@@ -1,0 +1,41 @@
+<style type="text/css">
+
+*{
+font-size : 10pt;	
+}    
+    .portlet {
+        width: auto;
+        display: block;
+        float: left;
+        clear: both;
+   }
+div.row {
+  padding-top: .5em;
+  clear: both;
+  }
+div.title{
+	text-align: center;
+	margin: 2em;
+}
+div.right{
+	text-align: right;
+}
+div.left{
+	text-align: left;
+	float:left;
+}
+div.signed{
+	text-align: right;
+	margin: 3em;
+}
+div.approved{
+	text-align: right;
+	margin: 3em;
+}
+div.pto{
+	text-align: right;
+
+}
+
+</style>
+

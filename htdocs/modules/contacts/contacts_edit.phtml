@@ -1,0 +1,291 @@
+<?
+include("../../../framework/theme.css");
+include("contacts_edit.css");
+framework::navbar();
+?>
+
+
+<div class="portlet">
+<form action="<? echo $BASE_DIR ?>/contacts/contacts_edit.php"  method=POST>
+    <div class="divheader">Contact</div>
+    <div class="row">
+        <span class="label">First Name:</span>
+        <span class="formw">
+            <input type="TEXT"  name="firstname"  value="<? echo $contact_info['firstname']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Last Name or Company Name:</span>
+        <span class="formw">
+            <input type="TEXT"  name="lastname"  value="<? echo $contact_info['lastname']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">SSN:</span>
+        <span class="formw">
+            <input type="TEXT"  name="ssn"  value="<? echo $contact_info['ssn']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Notes:</span>
+        <span class="formw">
+            <textarea name="contact_notes" ><? echo $contact_info['contact_notes']; ?></textarea>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Catagory:</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="contacttype_id" >
+    <?
+                foreach($types as $row)
+                {
+                    ?>
+                        <OPTION VALUE="<? echo $row['contacttype_id']; ?>"<? 
+                        if ($contact_info['contacttype_id'] == $row['contacttype_id'])
+                        {
+                            echo " SELECTED";
+                        }
+                        ?>
+                        >
+                        <? echo $row['contacttype_name']; ?></OPTION>
+                    <?
+                }
+    ?>	
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">
+            <input type="SUBMIT"  name="ACTION"  value="Delete Contact" >
+        </span>
+        <span class="formw">
+            <input type="HIDDEN"  name="contacts_id"  value="<? echo $contacts_id; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Save Contact" >
+        </span>
+    </div>    
+</form>
+</div>
+
+<div class="portlet">
+    <div class="divheader">Phone</div>
+<table>
+    <TR>
+        <TD></TD>
+        <TD>Type</TD>
+        <TD>Number </TD>
+        <TD></TD>
+    </TR>
+
+    <?
+    if(is_array($phones))
+    {
+        foreach($phones as $row)
+        {
+            ?>
+            <form action="<? echo $BASE_DIR ?>/contacts/contacts_edit.php"  method=POST>
+            <tr>
+            <TD><span class="label"><? echo $row['phonetype_name'] ?></span></TD>
+            <TD><? echo $row['phone_num'] ?></TD>
+            <TD><input type="SUBMIT"  name="ACTION"  value="Edit Phone Number" >
+            <input type="HIDDEN"  name="contacts_phone_edit"  value="<? echo $row['phone_id']; ?>"></TD>
+            <TD>
+            <input type="HIDDEN"  name="contacts_id"  value="<? echo $contacts_id; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Delete Phone Number" ></span></TD>
+            </tr>        
+            </form>
+            <?
+        }
+    }
+    ?>
+</table>     
+</div>
+
+<div class="portlet">
+    <form action="<? echo $BASE_DIR ?>/contacts/contacts_edit.php"  method=POST>
+    <div class="divheader">Add Phone Number</div>
+    <div class="row">
+        <span class="label">
+        <SELECT  SIZE="1" NAME="phonetype_id" >
+        <?
+        foreach($phonetypes as $row)
+        {	
+            ?>
+            <OPTION 
+            <? if( $phonetype_id == $row['phonetype_id'])
+            {
+                echo " selected ";
+            }
+            ?>
+            value="<? echo $row['phonetype_id'] ?>"><? echo $row['phonetype_name'] ?></OPTION>
+            <?
+        }
+        ?>	
+        </SELECT>
+        </span>
+        <span class="formw">
+            <input type="TEXT"  name="phone_num"  value="<? echo $phone_num; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">
+        </span>
+        <span class="formw">
+            <input type="HIDDEN"  name="phone_id"  value="<? echo $phone_id; ?>" >
+            <input type="HIDDEN"  name="contacts_id"  value="<? echo $contacts_id; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Add Phone Number" >
+         </span>
+    </div>    
+</form>
+</div>
+<div class="portlet">
+    <div class="divheader">Email</div>
+    <table>
+    <TR>
+                <TD>TYPE</TD>
+                <TD>ADDRESS</TD>
+    </TR>
+    <?
+    if(is_array($emails))
+    {
+        foreach($emails as $row)
+        {
+            ?>
+            <form action="<? echo $BASE_DIR ?>/contacts/contacts_edit.php"  method=POST>
+            <TR>
+                <TD><? echo $row['emailtype_name'] ?></TD>
+                <TD><? echo $row['email_address'] ?></TD>
+                <TD> <input type="HIDDEN"  name="contacts_email_edit"  value="<? echo $row['email_id']; ?>" >
+                    <input type="HIDDEN"  name="contacts_id"  value="<? echo $contacts_id; ?>" >
+                    <input type="SUBMIT"  name="ACTION"  value="Edit Email" >
+                </TD>
+                <TD> <input type="SUBMIT"  name="ACTION"  value="Delete Email" ></TD>
+            </TR>
+            </form>
+            <?
+        }
+    }
+    ?>
+    </table>
+</div>
+
+<div class="portlet">
+    <form action="<? echo $BASE_DIR ?>/contacts/contacts_edit.php"  method=POST>
+    <div class="divheader">Add Email Address</div>
+    <div class="row">
+        <span class="label">
+        <SELECT  SIZE="1" NAME="emailtype_id" >
+        <?
+        foreach($emailtypes as $row)
+        {	
+            ?>
+            <OPTION value="<? echo $row['emailtype_id'] ?>"><? echo $row['emailtype_name'] ?></OPTION>
+            <?
+        }
+        ?>	
+        </SELECT>
+        </span>
+        <span class="formw">
+            <input type="TEXT"  name="email_address"  value="<? echo $email_address; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">
+        </span>
+        <span class="formw">
+            <input type="HIDDEN"  name="email_id"  value="<? echo $email_id; ?>" >
+            <input type="HIDDEN"  name="contacts_id"  value="<? echo $contacts_id; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Add Email Address" >
+         </span>
+    </div>    
+</form>
+</div>
+
+<div class="portlet">
+    <div class="divheader">Addresses</div>
+
+<table>
+<TR>
+<TD>Type:</TD>
+<TD>Address:</TD>
+</TR>
+    <?
+    if(is_array($addresses))
+    {
+        foreach($addresses as $row)
+        {	
+            ?>
+            <form action="<? echo $BASE_DIR ?>/contacts/contacts_edit.php"  method=POST>
+            <TR>
+            <TD><? echo $row['addresstype_name'] ?></TD>
+            <TD><? echo $row['careof'] ?><BR/><? echo $row['street'] ?><BR/><? echo $row['city']." ".$row['state'].", ".$row['zip'] ?></TD>
+            <TD><input type="HIDDEN"  name="contacts_id"  value="<? echo $contacts_id; ?>" >
+                    <input type="HIDDEN"  name="contacts_address_edit"  value="<? echo $row['address_id']; ?>" >
+                    <input type="SUBMIT"  name="ACTION"  value="Edit Address" >
+            </TD>
+            <TD> <input type="SUBMIT"  name="ACTION"  value="Delete Address" > </TD>
+            </TR>
+            </form>
+            <?
+        }
+    }
+    ?>
+</table>
+</div>
+
+<div class="portlet">
+<form action="<? echo $BASE_DIR ?>/contacts/contacts_edit.php"  method=POST>
+    <div class="divheader">Add Address</div>
+    <div class="row">
+        <span class="label">Type</span>
+        <span class="formw">
+        <SELECT  SIZE="1" NAME="addresstype_id" >
+            <?
+            foreach($addresstypes as $row)
+            {	
+                ?>
+                <OPTION value="<? echo $row['addresstype_id'] ?>"><? echo $row['addresstype_name'] ?></OPTION>
+                <?
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Care Of:</span>
+        <span class="formw">
+            <input type="TEXT"  name="careof"  value="<? echo $careof; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Address:</span>
+        <span class="formw">
+            <input type="TEXT"  name="street"  value="<? echo $street; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">City</span>
+        <span class="formw">
+                <input type="TEXT"  name="city"  value="<? echo $city; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">State:</span>
+        <span class="formw">
+            <input type="TEXT"  name="state"  value="<? echo $state; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Zip:</span>
+        <span class="formw">
+            <input type="TEXT"  name="zip"  value="<? echo $zip; ?>" >  
+        </span>
+    </div>    
+    <div class="row">
+        <span class="formw">
+            <input type="HIDDEN"  name="address_id"  value="<? echo $address_id; ?>" >
+            <input type="HIDDEN"  name="contacts_id"  value="<? echo $contacts_id; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Add Address" >
+        </span>
+    </div>    
+</form>
+</div>

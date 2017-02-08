@@ -1,0 +1,900 @@
+<link rel="stylesheet" type="text/css"
+ media="screen" href="../../css/theme.css.php">
+<link rel="stylesheet" type="text/css"
+ media="screen" href="maintenance_update.css.php">
+<?php
+
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+
+?>
+
+<SCRIPT language="JavaScript" type="text/javascript" SRC="../../js/CheckLogin.class.js">
+</SCRIPT>
+<script language="JavaScript"
+
+type="text/javascript">
+var maintenance_id ="<?php echo $maintenanceinfo['maintenance_id'] ?>"
+
+function removeMaintenanceCVTag(tag_id) {
+  var myForm = document.createElement("form");
+  myForm.method="post" ;
+  myForm.action = '<?php echo $_SERVER['PHP_SELF']?>' ;
+  var myInput = document.createElement("input") ;
+  myInput.setAttribute("name", 'ACTION') ;
+  myInput.setAttribute("value", 'Remove MaintenanceCVTag');
+  myForm.appendChild(myInput) ;
+  var myInput = document.createElement("input") ;
+  myInput.setAttribute("name", 'maintenance_id') ;
+  myInput.setAttribute("value", maintenance_id);
+  myForm.appendChild(myInput) ;
+  var myInput = document.createElement("input") ;
+  myInput.setAttribute("name", 'cv_id') ;
+  myInput.setAttribute("value", tag_id);
+  myForm.appendChild(myInput) ;
+  document.body.appendChild(myForm) ;
+  myForm.submit() ;
+  document.body.removeChild(myForm) ;
+}
+
+var xmlHttp;
+var caseid;
+
+function removeCVTag(tag_id) {
+  var myForm = document.createElement("form");
+  myForm.method="post" ;
+  myForm.action = '<?php echo $_SERVER['PHP_SELF']?>' ;
+  var myInput = document.createElement("input") ;
+  myInput.setAttribute("name", 'ACTION') ;
+  myInput.setAttribute("value", 'Remove CV Tag');
+  myForm.appendChild(myInput) ;
+  var myInput = document.createElement("input") ;
+  myInput.setAttribute("name", 'case_id') ;
+  myInput.setAttribute("value", caseid);
+  myForm.appendChild(myInput) ;
+  var myInput = document.createElement("input") ;
+  myInput.setAttribute("name", 'cv_id') ;
+  myInput.setAttribute("value", tag_id);
+  myForm.appendChild(myInput) ;
+  document.body.appendChild(myForm) ;
+  myForm.submit() ;
+  document.body.removeChild(myForm) ;
+}
+
+		
+function createXMLHttpRequest() {
+  try {
+    xmlHttp = new XMLHttpRequest();
+  } catch (trymicrosoft) {
+    try {
+      xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (othermicrosoft) {
+      try {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (failed) {
+        xmlHttp = false;
+      }
+    }
+  }
+
+  if (!xmlHttp)
+    alert("Error initializing XMLHttpRequest!");
+}
+function check_date(evt, datetype)
+{ 
+    createXMLHttpRequest();
+    var objectID = (evt.target) ? evt.target.id : ((evt.srcElement) ? evt.srcElement.id :null);
+    var date = document.getElementById(objectID);
+    var url = "../tools/validate_date.php?type="+datetype+"&target="+objectID+"&num=" + escape(date.value);
+    xmlHttp.open("GET", url, true);
+    xmlHttp.onreadystatechange = callback;
+    xmlHttp.send(null);
+}
+function callback()
+{
+    if (xmlHttp.readyState == 4) {
+        if (xmlHttp.status == 200) {
+            var xmlDoc = xmlHttp.responseXML;
+            var objectID = xmlDoc.getElementsByTagName("target")[0].childNodes[0].nodeValue;
+            var num = xmlDoc.getElementsByTagName("num")[0].childNodes[0].nodeValue;
+            var currentElement = document.getElementById(objectID);
+            currentElement.value = num;
+        }
+    }
+}
+
+function add_update(id) {
+    createXMLHttpRequest();
+    var hiddenCaseSystem = "";
+    var caseTitle =  document.getElementById("case_title["+id+"]").value;
+    var caseSystem = document.getElementById("casesystem_txt["+id+"]").value;
+    var action_needed = document.getElementById("action_needed["+id+"]").value;
+    var status_text = document.getElementById("status_text["+id+"]").value;
+    if(document.getElementById("hiddencasesystem_txt"))
+    {
+        hiddenCaseSystem =   document.getElementById("hiddencasesystem_txt").value;
+    }
+    var whoAssigned =   document.getElementById("whoassigned_id["+id+"]").value;
+    var queryString = "ACTION=add_update&case_id=" + id + "&case_title=" + caseTitle + "&casesystem_txt=" + encodeURIComponent(caseSystem)
+        + "&status_text=" + encodeURIComponent(status_text) + "&action_needed=" +action_needed
+        + "&hiddencasesystem_txt=" + encodeURIComponent(hiddenCaseSystem) + "&whoassigned_id=" +whoAssigned    
+        + "&maintenance_id=" + maintenance_id;  
+    xmlHttp.open("POST", "maintenance_savecase.php", true);
+    xmlHttp.onreadystatechange = handleStateChange;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    
+}
+function getCheckedValue(radioObj) {
+	if(!radioObj)
+		return "";
+	var radioLength = radioObj.length;
+	if(radioLength == undefined)
+		if(radioObj.checked)
+			return radioObj.value;
+		else
+			return "";
+	for(var i = 0; i < radioLength; i++) {
+		if(radioObj[i].checked) {
+			return radioObj[i].value;
+		}
+	}
+	return "";
+}
+
+function set_followup(id) {
+    createXMLHttpRequest();
+    var hiddenCaseSystem = "";
+    var year =  document.getElementById("followup_date_year").value;
+    var month =  document.getElementById("followup_date_month").value;
+    var day =  document.getElementById("followup_date_day").value;
+    var hour =  parseInt(document.getElementById("followup_date_hour").value);
+    var minute =  document.getElementById("followup_date_minute").value;
+    ampm = getCheckedValue(document.forms['caseForm'].elements['ampm']);
+    if(ampm == "pm")
+    {
+        hour = hour+12;
+    }
+    time = year+"-"+month+"-"+day+" "+hour+":"+minute+":00";
+    var queryString = "ACTION=set_followup&case_id=" + id + "&followup=" + time                
+    + "&maintenance_id=" + maintenance_id;            
+    xmlHttp.open("POST", "maintenance_savecase.php", true);
+    xmlHttp.onreadystatechange = handleStateChange;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    
+}
+function set_followup_case(id) {
+    createXMLHttpRequest();
+    var hiddenCaseSystem = "";
+    var year =  document.getElementById("followup_date_year["+id+"]").value;
+    var month =  document.getElementById("followup_date_month["+id+"]").value;
+    var day =  document.getElementById("followup_date_day["+id+"]").value;
+    var hour =  parseInt(document.getElementById("followup_date_hour["+id+"]").value);
+    var minute =  document.getElementById("followup_date_minute["+id+"]").value;
+    ampm = getCheckedValue(document.forms['caseForm'].elements['ampm['+id+']']);
+    if(ampm == "pm")
+    {
+        hour = hour+12;
+    }
+    time = year+"-"+month+"-"+day+" "+hour+":"+minute+":00";
+    var queryString = "ACTION=set_followup&case_id=" + id + "&followup=" + time                
+    + "&maintenance_id=" + maintenance_id;            
+    xmlHttp.open("POST", "maintenance_savecase.php", true);
+    xmlHttp.onreadystatechange = handleStateChange;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    
+}
+
+
+function close_case(id) {
+    createXMLHttpRequest();
+    var hiddenCaseSystem = "";
+    var caseTitle =  document.getElementById("case_title["+id+"]").value;
+    var caseSystem = document.getElementById("casesystem_txt["+id+"]").value;
+    if(document.getElementById("hiddencasesystem_txt"))
+    {
+        hiddenCaseSystem =   document.getElementById("hiddencasesystem_txt").value;
+    }
+    var whoAssigned =   document.getElementById("whoassigned_id["+id+"]").value;
+    var queryString = "ACTION=close_case&case_id=" + id + "&case_title=" + caseTitle + "&casesystem_txt=" + encodeURIComponent(caseSystem)
+        + "&hiddencasesystem_txt=" + encodeURIComponent(hiddenCaseSystem) + "&whoassigned_id=" +whoAssigned + "&maintenance_id=" + maintenance_id;            
+    xmlHttp.open("POST", "maintenance_savecase.php", true);
+    xmlHttp.onreadystatechange = handleStateChange;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    
+}
+function handleStateChange() {
+     if (xmlHttp.readyState == 4) {
+       if (xmlHttp.status == 200)
+       {
+            var xmlDoc = xmlHttp.responseXML;
+            if(xmlDoc.getElementsByTagName("transaction").length > 0)
+            {
+                var transaction_status = xmlDoc.getElementsByTagName("transaction")[0].childNodes[0].nodeValue;
+                if(transaction_status == "SAVED")
+                { 
+                    draw_table();
+                }
+            }    
+            if(xmlDoc.getElementsByTagName("login").length > 0)
+            {
+                var login_status = xmlDoc.getElementsByTagName("login")[0].childNodes[0].nodeValue;
+                if(login_status == "FAILED")
+                {
+                    
+                    loginwindow = window.open('../interface/login_popup.html', 'Login', 'height=100,width=300');
+                }
+            }
+               
+       }
+       else if (xmlHttp.status == 404)
+         alert("Request URL does not exist");
+       else
+         alert("Error: status code is " + xmlHttp.status);
+      }
+}
+function draw_table() {
+         window.location = '<?php echo $_SERVER['SCRIPT_NAME']."?".$_SERVER['QUERY_STRING']?>';
+}
+</script> 
+<div class="column_left">
+<?php 
+
+if($item_info['service_policy'] == 'none')
+{
+    ?>
+    <div class="row">
+        <span class="warning">WARNING:</span>
+        <span class="warning">NO MAINTENANCE ALLOWED ON THIS PROPERTY <BR/>CONTACT OWNER</span>
+    </div>    
+    <?php
+}
+if($item_info['service_policy'] == 'by_vendor')
+{
+    ?>
+    <div class="row">
+        <span class="warning">WARNING:</span>
+        <span class="warning">ALL MAINTENANCE DONE BY OWNER<BR/>CONTACT OWNER</span>
+    </div>    
+    <?php
+}
+if($item_info['service_policy'] == 'third_party_warranty')
+{
+    ?>
+    <div class="row">
+        <span class="warning">WARNING:</span>
+        <span class="warning">THIRD PARTY WARRANTY<BR/>CONTACT OWNER AND WARRANTY CO</span>
+    </div>    
+    <?php
+}if($item_info['item_notes'] != '')
+{
+    ?>
+    <div class="row">
+        <span class="warning"><?php echo $item_info['item_notes']?></span>
+    </div>    
+    <?php
+}
+/*if(!($item_info['service_policy'] == 'by_us' || $item_info['service_policy'] == 'by_us_with_approval'))
+{
+    ?>
+    <div class="row">
+        <span class="warning">WARNING:</span>
+        <span class="warning">NO MAINTENANCE ALLOWED ON THIS PROPERTY <BR/>CONTACT OWNER</span>
+    </div>    
+    <?
+}
+
+*/
+
+
+?>
+    <form action="<?php echo $BASE_DIR ?>/maintenance/maintenance_update.php"  method=POST>
+    <div class="mportlet">
+        <div class="divheader">Update Maintenance Issue</div>
+        <div class="row">
+            <span class="label">Property:</span>
+            <span class="bold"><a href="<?php echo $BASE_DIR ?>/properties/properties_edit.php?property_id=<?php echo $prop['property_id'] ?>" target="_blank" method=POST><?php echo $prop['property_address']."  ".$prop['property_aptnum']?></a></span>
+        </div>    
+		<div class="row">
+            <span class="label">Owner:</span>
+            <span class="bold"><a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<?php echo $item_info['cv_id'] ?>" target="_blank" method=POST><?php echo $item_info['cv_name'] ?></a>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Tenant:</span>
+            <span class="bold"><a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<?php echo $customer_info['cv_id'] ?>" target="_blank" method=POST><?php echo $customer_info['cv_name'] ?></a>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Notes:</span>
+            <span class="bold"><?php echo $item_info['cv_notes'] ?></span>
+        </div>    
+        <div class="row">
+            <span class="label">Case Title:</span>
+            <span class="bold"><INPUT type=TEXT name="maintenance_title" id="maintenance_title" value="<?php echo $maintenanceinfo['maintenance_title'] ?>"></span>
+        </div>    
+        <div class="row">
+            <span class="label">Action/Response:</span>
+            <span class="formw">
+            <SELECT  SIZE="1" NAME="action_needed" >
+            <OPTION VALUE="0" <?php if($maintenanceinfo['action_needed'] == 0){echo "SELECTED";}?>>NONE</OPTION>
+            <OPTION VALUE="1" <?php if($maintenanceinfo['action_needed'] == 1){echo "SELECTED";}?>>Action Needed</OPTION>
+            <OPTION VALUE="2" <?php if($maintenanceinfo['action_needed'] == 2){echo "SELECTED";}?>>Awaiting Response</OPTION>
+            <OPTION VALUE="3" <?php if($maintenanceinfo['action_needed'] == 3){echo "SELECTED";}?>>Awaiting Invoice</OPTION>
+            </SELECT>
+            </span>
+        </div>   
+        <div class="row">
+            <span class="label">When To Follow Up:</span>
+            <span class="formw">
+                <?php
+                Framework::date_selectors($followup_date_year, $followup_date_month, $followup_date_day, "followup_", "")
+                ?>
+            <input type="text" name="followup_date_hour" ID="followup_date_hour" size="2" value="<?php echo $followup_date_hour ?>" maxlength="2" />:
+            <input type="text" name="followup_date_minute" ID="followup_date_minute" size="2" value="<?php echo $followup_date_minute ?>" maxlength="2" />
+            <input type="radio" name="ampm" id="ampm"  value="am" <?php if( date('H', $followup_date_hour) < 12){ echo " checked";} ?> />am
+            <input type="radio" name="ampm" id="ampm" value="pm" <?php if( date('H', $followup_date_hour) >= 12){ echo " checked";} ?> />pm
+            <input type="BUTTON"  onclick="checkLoginSubmitForm(this.form, this.value)" value="Set Follow Up" >
+            </span>
+        </div>        
+        <div class="row">
+            <span class="label">Comments:</span>
+            <span class="formw"><TEXTAREA name="maintenance_txt" id="maintenance_txt" rows="10" cols="60"><?php echo $maintenanceinfo['maintenance_txt']?></TEXTAREA></span>
+        </div>    
+        <div class="row">
+        
+    <?php
+    if($maintenanceinfo['closed_yn'] == 'YES')
+    {
+            
+    ?>      <span class="formw">
+            <input type="HIDDEN"  name="maintenance_id"  value="<?php echo $maintenanceinfo['maintenance_id'] ?>" >
+            <input type="HIDDEN"  name="ACTION" value="" ">
+            <input type="BUTTON"  onclick="checkLoginSubmitForm(this.form, this.value)"  value="Reopen" >
+            </span>
+    <?php    
+        
+    }
+    if($maintenanceinfo['closed_yn'] != 'YES')
+    {
+    if(Rbac_User::IsAllowedTo($USER->GetUserID(), "access_module", "maintenance_module"))
+    {
+    ?>
+            <span class="label">
+            <input type="BUTTON"  onclick="checkLoginSubmitForm(this.form, this.value)" value="Save and Close"></span>
+    <?php
+     }
+    ?>
+            <span class="formw">
+            
+            <input type="HIDDEN"  name="maintenance_id"  value="<?php echo $maintenanceinfo['maintenance_id'] ?>" >
+            <input type="HIDDEN"  name="ACTION" value="" ">
+            <input type="BUTTON"  onclick="checkLoginSubmitForm(this.form, this.value)" value="Save Changes" >
+            </span>
+    <?php 
+    }
+    ?> 
+     
+        </div>    
+    </div>    
+    </form>
+	      
+    <div class="mportlet">
+        <div class="divheader">Attached Troubleticket Cases</div>
+        <div class="row">
+            <span class="colleft"><a href="<?php echo $_SERVER["PHP_SELF"]."?maintenance_id=".$maintenanceinfo['maintenance_id']."VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=YES" ?>" >VIEW CLOSED CASES</a></span>
+            <span class="colright"><a href="<?php echo $_SERVER["PHP_SELF"]."?maintenance_id=".$maintenanceinfo['maintenance_id']."VIEW_ALL=YES&VIEW_CLOSED=".$VIEW_CLOSED ?>">VIEW ALL CASES</a></span>
+        </div>    
+        <div class="row">
+        <table>
+            <TR>
+                <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&maintenance_id=".$maintenanceinfo['maintenance_id']."VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=case_title" ?>">CASE TITLE</A></TD>
+                <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&maintenance_id=".$maintenanceinfo['maintenance_id']."VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whoupdated_id" ?>">WHO UPDATED</A></TD>
+                <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&maintenance_id=".$maintenanceinfo['maintenance_id']."VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whoassigned_id" ?>">WHO ASSIGNED</A></TD>
+                <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&maintenance_id=".$maintenanceinfo['maintenance_id']."VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whenupdated_date" ?>">WHEN UPDATED</A></TD>
+            </TR>
+     <?php 
+        if(is_array($cases))
+        {
+            foreach($cases as $row)
+            {
+                ?>
+                <tr>
+                    <TD><a href ="<?php echo $BASE_DIR ?>/casesystem/casesystem_update.php?case_id=<?php echo $row['case_id'] ?>" target="_blank"><?php echo $row['case_title'] ?></a></TD>
+                    <TD><?php echo $userArray[$row['whoupdated_id']] ?></TD>
+                    <TD><?php echo $userArray[$row['whoassigned_id']] ?></TD>
+                    <TD><?php echo $row['whenupdated_date'] ?></TD>
+                </tr>
+                
+                <?php
+                
+            }	
+        }
+        ?>
+         </table>
+          </div>
+    </div>     
+            
+    <?php
+        if(is_array($cases))
+        {
+            $users = Rbac_User::getAllAllowedTo("access_module", "maintenance_module");
+            foreach($users as $user)
+            {
+                $userArray[$user['user_id']] = $user['username'];
+            }
+            $userArray[0] = "OPEN";
+            
+            $whenreturn_date_year = date('Y');
+            $whenreturn_date_month = date('m');
+            $whenreturn_date_day = date('d');
+            $whenreturn_date_hour = date("h");
+            $whenreturn_date_minute = date("i");
+            $ampm = '';
+            $callback = '';
+            $print = false;
+            $ACTION = '';
+            $customers = CV_Main::getall_customers();
+            require_once("../../../framework/theme.css");
+            require_once("../casesystem/casesystem.css");
+            ?>
+            
+            <?php 
+            foreach($cases as $row)
+            {
+                $case_id = $row['case_id'];
+                $caseinfo = Casesystem::get_case($case_id);
+                $caseentrys = Casesystem::getAllEntries($case_id);
+                $case_tags = Casesystem::getAllCVTags($case_id);
+
+                ?>
+                <div class="portlet3">
+                    <div class="divheader">Case History</div>
+                    <div class="row">
+                        <span class="col2">Case Title:</span>
+                        <span class="col3"><span class="bold"><?php echo $caseinfo['case_title'] ?></span></span>
+                    </div>    
+                    <div class="row">
+                        <span class="col2">CV Tags:</span>
+                        <span class="col3">
+                <?php 
+                            foreach($case_tags as $row)
+                            {
+                                ?>
+                                   <div class="leadtag"><?php echo $row['cv_name']; ?>|<span onclick="removeCVTag(<?php echo $row['cv_id']; ?>)"> X&nbsp;</span></div>
+                                <?php
+                            }
+                ?>            
+                        </span>
+                    </div>        
+                	<div class="row">
+                         <form action="<?php echo $BASE_DIR ?>/casesystem/casesystem_update.php"  method=POST>
+                        <span class="col2">Tag With Customer:</span>
+                        <span class="col3">
+                            <SELECT class="smallsans" NAME="customer_id">
+                            <OPTION VALUE="none"></OPTION>
+                            <?php
+                            foreach($customers as $customer)
+                            {
+                                ?>
+                                <OPTION VALUE="<?php echo $customer['cv_id'] ?>"><?php echo $customer['cv_name'] ?></OPTION>
+                                <?php 
+                            }
+                            
+                            ?>
+                            </SELECT><input type="SUBMIT"  name="ACTION"  value="Add Tag" >
+                            <input type="HIDDEN"  name="case_id"  value="<?php echo $caseinfo['case_id'] ?>" >
+                        </span>
+                        </form>
+                    </div>
+                    <?php
+                    if(is_array($caseentrys))
+                    {
+                        foreach($caseentrys as $row)
+                        {
+                            ?>
+                            <div class="row">
+                                <span class="col2">
+                                 	<span class="bold">   <?php echo $userArray[$row['user_id']] ?>   </span>
+                                 	<BR /><?php echo $row['caseentry_date'] ?>
+                                 </span>
+                             
+                                <span class="col3">
+                                    <span class="shown">
+                                        <?php echo $row['casesystem_txt'] ?><HR></span>
+                                   
+                                </span>
+                             <HR />
+                            </div>
+                            <?php
+                        }
+                    }
+                    ?>
+                </div>
+                <div class="portlet3">
+                <form name="caseForm" method="post" action="" onsubmit="return false;">
+                
+                    <div class="divheader">Update Case</div>
+                    <div class="row">
+                        <span class="label">Case Title:</span>
+                        <span class="bold"><INPUT type=TEXT name="case_title" id="case_title[<?php echo $caseinfo['case_id'] ?>]" value="<?php echo $caseinfo['case_title'] ?>"></span>
+                    </div>    
+                    <div class="row">
+                        <span class="label">Status:</span>
+                        <span class="formw">
+                        <SELECT  SIZE="1" NAME="action_needed" id="action_needed[<?php echo $caseinfo['case_id'] ?>]" >
+                        <OPTION VALUE="0" <?php if($caseinfo['action_needed'] == 0){echo "SELECTED";}?>>NONE</OPTION>
+                        <OPTION VALUE="1" <?php if($caseinfo['action_needed'] == 1){echo "SELECTED";}?>>Action Needed</OPTION>
+                        <OPTION VALUE="2" <?php if($caseinfo['action_needed'] == 2){echo "SELECTED";}?>>Waiting Response</OPTION>
+                        </SELECT>
+                        </span>
+                    </div>   
+                    <div class="row">
+                            <span class="label">When To Follow Up:</span>
+                            <span class="formw">
+                                <?php
+                                Framework::date_selectors($whenreturn_date_year, $whenreturn_date_month, $whenreturn_date_day, "followup_", "[".$caseinfo['case_id']."]")
+                                ?>
+                            <input type="text" name="followup_date_hour" ID="followup_date_hour[<?php echo $caseinfo['case_id'] ?>]" size="2" value="<?php echo $whenreturn_date_hour ?>" maxlength="2" />:
+                            <input type="text" name="followup_date_minute" ID="followup_date_minute[<?php echo $caseinfo['case_id'] ?>]" size="2" value="<?php echo $whenreturn_date_minute ?>" maxlength="2" />
+                            <input type="radio" name="ampm" id="ampm[<?php echo $caseinfo['case_id'] ?>]"  value="am" <?php if( date('H', $whenreturn_date_hour) < 12){ echo " checked";} ?> />am
+                            <input type="radio" name="ampm" id="ampm[<?php echo $caseinfo['case_id'] ?>]" value="pm" <?php if( date('H', $whenreturn_date_hour) >= 12){ echo " checked";} ?> />pm
+                            <input type="BUTTON"  name="ACTION"  value="Set Follow Up" onclick="set_followup_case(<?php echo $caseinfo['case_id'] ?>)">
+                            </span>
+                        </div>        
+                    <div class="row">
+                        <span class="label">Next Action/Waiting:</span>
+                        <span class="bold"><TEXTAREA name="status_text" id="status_text[<?php echo $caseinfo['case_id'] ?>]" rows=3 cols=63 ><?php echo $caseinfo['status_text'] ?></TEXTAREA></span>
+                    </div>    
+                    <div class="row">
+                        <span class="label">Comments:</span>
+                        <span class="formw"><TEXTAREA name="casesystem_txt" id="casesystem_txt[<?php echo $caseinfo['case_id'] ?>]" rows="10" cols="63"></TEXTAREA></span>
+                    </div>    
+                
+                    <div class="row">
+                        <span class="label">Assign To:</span>
+                        <span class="formw"><SELECT  SIZE="1" NAME="whoassigned_id" id="whoassigned_id[<?php echo $caseinfo['case_id'] ?>]" >
+                        <?php foreach($users as $row)
+                        {	
+                            ?><OPTION VALUE="<?php echo $row['user_id'] ?>" <?php if($row['user_id'] == $caseinfo['whoassigned_id']){echo " SELECTED";}?> ><?php echo $row['username'] ?></OPTION>
+                            <?php
+                        }
+                        ?>
+                        </SELECT>
+                        </span>
+                    </div>    
+                    <div class="row">
+                        <span class="label"><input type="BUTTON"  name="ACTION"  value="Close Case" onclick="close_case(<?php echo $caseinfo['case_id'] ?>)"></span>
+                        <span class="formw"><input type="BUTTON"  name="ACTION"  value="Add Update" onclick="add_update(<?php echo $caseinfo['case_id'] ?>)">
+                        </span>
+                    </div>    
+                </form>
+                </div>    
+             <?php                    
+                
+            }	
+        }
+        ?>
+         
+    <div class="mportlet">
+        <div class="divheader">Vendors ON TICKET</div>
+            <?php
+            foreach($maintenance_mtm_vendors as $row)
+            {
+                ?>
+                <div class="row">
+                     <div class="cvtag" ><span class="label"><?php echo $row['cv_name']?></span>
+                    <span class="formw"><?php echo $row['cv_default_phone']?>|<span onclick="removeMaintenanceCVTag(<?php echo $row['cv_id']; ?>)"> X&nbsp;</span>
+    				</span>
+    				</div>
+                </div>    
+                <?php 
+            }
+            ?>    
+    </div>  
+    <div class="mportlet">
+        <form action="<?php echo $BASE_DIR ?>/maintenance/maintenance_update.php"  method=POST>
+        <div class="divheader">Commonly Used Vendors</div>
+            <div class="row">
+                <span class="label">VENDOR</span>
+                <span class="formw">
+                <SELECT class="smallsans" NAME="vendor_id">
+                <?php
+                foreach($maintenance_vendors as $row)
+                {
+                    ?>
+                    <OPTION VALUE="<?php echo $row['cv_id'] ?>"><?php echo $row['cv_name']."(".$row['cv_default_email'].")" ?></OPTION>
+                    <?php 
+                }
+                ?>
+                </SELECT>
+                </span>           
+            </div>    
+            <div class="row">
+                <span>
+                    <input type="HIDDEN"  name="maintenance_id"  value="<?php echo $maintenanceinfo['maintenance_id'] ?>" >
+                    <input type="HIDDEN"  name="ACTION" value="" ">
+            		<input type="BUTTON"  onclick="checkLoginSubmitForm(this.form, this.value)" value="Add Vendor to Ticket" size="15"></span>
+            </div>
+    </form>
+    </div>
+    
+    <?php if($item_info['service_policy'] == 'none' || $item_info['service_policy'] == 'by_vendor')
+    {
+    
+        ?>
+        <div class="mportlet">
+            <div class="divheader">Owner Contact Info</div>
+               <div class="row">
+                    <span class="label">Default Name:</span>
+                    <span class="formw"><?php echo $item_info['cv_name']."&#13;"; ?></span>
+                </div>
+               <div class="row">
+                    <span class="label">Default Phone:</span>
+                    <span class="formw"><?php echo $item_info['cv_default_phone']."&#13;"; ?></span>
+                </div>
+               <div class="row">
+                    <span class="label">Default Email:</span>
+                    <span class="formw"><?php echo $item_info['cv_default_email']."&#13;"; ?></span>
+                </div>
+            <?php  
+            foreach($owners as $owner)
+            {    
+                ?>
+                <div class="row">
+                    <span class="label">Name:</span>
+                    <span class="formw"><?php echo $owner['firstname']." ".$owner['lastname']."&#13;"; ?></span>
+                </div>
+                <?php
+                foreach($owner_phone_array[$owner['contacts_id']] as $o_phone)
+                {
+                    ?>
+                    <div class="row">
+                        <span class="label"><?php echo $o_phone['phonetype_name'] ?></span>
+                        <span class="formw"><?php echo $o_phone['phone_num'] ?></span>
+                    </div>
+                    <?php
+                }
+    
+            }
+            ?>
+            </div>   
+        <?php
+    }
+    ?>
+    
+    
+    <div class="mportlet">
+    <form action="<?php echo $BASE_DIR ?>/maintenance/maintenance_update.php"  method=POST>
+        <div class="divheader">Create Another Attached Case</div>
+        <div class="row">
+            <span class="label">Case Title:</span>
+            <span class="formw"><INPUT type=TEXT name="case_title" value="<?php echo $prop['property_address']."  ".$prop['property_aptnum']."- ".$maintenanceinfo['maintenance_title'] ?>"></span>
+        </div>    
+        <div class="row">
+            <span class="label">Assign To:</span>
+            <span class="formw">
+            <SELECT  SIZE="1" NAME="casesystem_main_assigned" >
+            <?php foreach($users as $row)
+            {   
+                ?><OPTION VALUE="<?php echo $row['user_id'] ?>" ><?php echo $row['username'] ?></OPTION><?php
+            }
+            ?>
+            </SELECT>
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Comments:</span>   
+            <span class="formw"><TEXTAREA name="casesystem_txt" rows="10" cols="60"><?php echo $body ?></TEXTAREA></span>
+        </div>
+        <div class="row">
+            <span>
+                <input type="HIDDEN"  name="maintenance_id"  value="<?php echo $maintenanceinfo['maintenance_id'] ?>" >
+                <input type="HIDDEN"  name="VIEW_ALL"  value="<?php echo $VIEW_ALL ?>" >
+                <input type="HIDDEN"  name="ACTION" value="" ">
+            	<input type="BUTTON"  onclick="checkLoginSubmitForm(this.form, this.value)"  value="Create Case" size="15"></span>
+        </div>
+    </form>
+    </div> 
+</div>
+<div class="column_right">
+    <div class="mportlet_r">
+    <form action="<?php echo $BASE_DIR ?>/maintenance/maintenance_update.php"  method=POST>
+        <div class="divheader">Email Vendor</div>
+        <div class="row">
+            <span class="label">Vendor:</span>
+            <span class="formw">
+                <SELECT class="smallsans" NAME="vendor_id">
+                <OPTION VALUE="">PLEASE SELECT</OPTION>
+                <OPTION VALUE="fill_in">FILL IN</OPTION>
+                <?php
+                foreach($maintenance_vendors as $maintenance_vendor)
+                {
+                    ?>
+                    <OPTION VALUE="<?php echo $maintenance_vendor['cv_id'] ?>"><?php echo $maintenance_vendor['cv_name']."(".$maintenance_vendor['cv_default_email'].")" ?></OPTION>
+                    <?php 
+                }
+                ?>
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">FILL IN TO:</span>
+            <span class="formw"><INPUT type=TEXT name="fill_in_to" value=""></span>
+        </div>    
+        <div class="row">
+            <span class="label">Email Subject:</span>
+            <span class="formw"><INPUT type=TEXT name="email_subject" value="<?php echo $prop['property_address']."  ".$prop['property_aptnum']."- ".$maintenanceinfo['maintenance_title'] ?>"></span>
+        </div>    
+        <div class="row">
+            <span class="label">Email Body:</span>   
+            <span class="formw"><TEXTAREA name="email_txt" rows="15" cols="70"><?php echo $email_body ?></TEXTAREA></span>
+        </div>
+        <div class="row">
+            <span class="label">Add to Case:</span>   
+            <span class="formw"><SELECT class="smallsans" NAME="case_id_to_email">
+                <?php
+                foreach($cases as $row)
+                {
+                    ?>
+                    <OPTION VALUE="<?php echo $row['case_id'] ?>"><?php echo $row['case_title'] ?></OPTION>
+                    <?php 
+                }
+                ?>
+                </SELECT>
+                </TEXTAREA></span>
+        </div>
+        <div class="row">
+            <span>
+                <input type="HIDDEN"  name="maintenance_id"  value="<?php echo $maintenanceinfo['maintenance_id'] ?>" >
+                <input type="HIDDEN"  name="VIEW_ALL"  value="<?php echo $VIEW_ALL ?>" >
+                <input type="HIDDEN"  name="ACTION" value="" ">
+            	<input type="BUTTON"  onclick="checkLoginSubmitForm(this.form, this.value)" value="Email Vendor" size="15"></span>
+        </div>
+    </form>
+    </div>   
+    <div class="mportlet_r">
+    <form action="<?php echo $BASE_DIR ?>/maintenance/maintenance_update.php"  method=POST>
+        <div class="divheader">Email Owner</div>
+        <div class="row">
+            <span class="label">Owner:</span>
+            <span class="formw">
+            <a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<?php echo $item_info['cv_id'] ?>" target="_blank" method=POST><?php  echo $item_info['cv_name']."&lt;".$item_info['cv_default_email']."&gt;";?></a>
+			<input type="checkbox" name="email_cv_email" value="1"  />
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Additional Emails:</span>
+            <span class="formw"></span>
+        </div>
+            
+            <?php foreach($owners as $owner)
+            {
+                ?>
+                <div class="row">
+            		<span class="label"><?php echo $owner['firstname']." ".$owner['lastname'];?>:</span>
+            		<span class="formw">
+                <?php $e_addys = contact::getall_emailaddys_from_contact_id($owner['contacts_id']);
+                foreach($e_addys as $e_ad)
+                {
+                    
+                    echo $e_ad['email_address']; ?>
+                    <input type="checkbox" name="cv_contact_emails[]" value="<?php echo $e_ad['email_id'] ?>"  /><BR />
+                    
+                    <?php 
+                }
+                ?>
+                </span>                
+                </div>    
+        		<?php 
+            }
+            ?>
+        
+                    
+        
+        <div class="row">
+            <span class="label">Email Subject:</span>
+            <span class="formw"><INPUT type=TEXT name="email_subject" value="<?php echo $prop['property_address']."  ".$prop['property_aptnum']."- ".$maintenanceinfo['maintenance_title'] ?>"></span>
+        </div>    
+        <div class="row">
+            <span class="label">Email Body:</span>   
+            <span class="formw"><TEXTAREA name="email_txt" rows="25" cols="70"><?php echo $email_owner_body ?></TEXTAREA></span>
+        </div>
+        <div class="row">
+            <span class="label">Add to Case:</span>   
+            <span class="formw"><SELECT class="smallsans" NAME="case_id_to_email">
+                <?php
+                foreach($cases as $row)
+                {
+                    ?>
+                    <OPTION VALUE="<?php echo $row['case_id'] ?>"><?php echo $row['case_title'] ?></OPTION>
+                    <?php 
+                }
+                ?>
+                </SELECT>
+                </span>
+        </div>
+        <div class="row">
+            <span>
+                <input type="HIDDEN"  name="maintenance_id"  value="<?php echo $maintenanceinfo['maintenance_id'] ?>" >
+                <input type="HIDDEN"  name="VIEW_ALL"  value="<?php echo $VIEW_ALL ?>" >
+                <input type="HIDDEN"  name="ACTION" value="" ">
+            	<input type="BUTTON"  onclick="checkLoginSubmitForm(this.form, this.value)" value="Email Owner" size="15"></span>
+        </div>
+    </form>
+    </div>
+        <div class="mportlet_r">
+    <form action="<?php echo $BASE_DIR ?>/maintenance/maintenance_update.php"  method=POST>
+        <div class="divheader">Email Tenant</div>
+        <div class="row">
+            <span class="label">Tenant:</span>
+            <span class="formw">
+            <a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<?php echo $customer_info['cv_id'] ?>" target="_blank" method=POST><?php  echo $customer_info['cv_name']."&lt;".$customer_info['cv_default_email']."&gt;";?></a>
+            
+            					<input type="checkbox" name="email_cv_email" value="1"  />
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Additional Emails:</span>
+            <span class="formw"></span>
+        </div>
+            
+            <?php foreach($customer_contacts as $customer_contact)
+            {
+                ?>
+                <div class="row">
+            		<span class="label"><?php echo $customer_contact['firstname']." ".$customer_contact['lastname'];?>:</span>
+            		<span class="formw">
+                <?php $e_addys = contact::getall_emailaddys_from_contact_id($customer_contact['contacts_id']);
+                foreach($e_addys as $e_ad)
+                {
+                    
+                    echo $e_ad['email_address']; ?>
+                    <input type="checkbox" name="cv_contact_emails[]" value="<?php echo $e_ad['email_id'] ?>"  /><BR />
+                    
+                    <?php 
+                }
+                ?>
+                </span>                
+                </div>    
+        		<?php 
+            }
+            ?>
+        
+                    
+        
+        <div class="row">
+            <span class="label">Email Subject:</span>
+            <span class="formw"><INPUT type=TEXT name="email_subject" value="<?php echo $prop['property_address']."  ".$prop['property_aptnum']."- ".$maintenanceinfo['maintenance_title'] ?>"></span>
+        </div>    
+        <div class="row">
+            <span class="label">Email Body:</span>   
+            <span class="formw"><TEXTAREA name="email_txt" rows="25" cols="70"><?php echo $email_owner_body ?></TEXTAREA></span>
+        </div>
+        <div class="row">
+            <span class="label">Add to Case:</span>   
+            <span class="formw"><SELECT class="smallsans" NAME="case_id_to_email">
+                <?php
+                foreach($cases as $row)
+                {
+                    ?>
+                    <OPTION VALUE="<?php echo $row['case_id'] ?>"><?php echo $row['case_title'] ?></OPTION>
+                    <?php 
+                }
+                ?>
+                </SELECT>
+                </span>
+        </div>
+        <div class="row">
+            <span>
+                <input type="HIDDEN"  name="maintenance_id"  value="<?php echo $maintenanceinfo['maintenance_id'] ?>" >
+                <input type="HIDDEN"  name="VIEW_ALL"  value="<?php echo $VIEW_ALL ?>" >
+                <input type="HIDDEN"  name="ACTION" value="Email Tenant" ">
+            	<input type="BUTTON"  onclick="checkLoginSubmitForm(this.form, this.value)" value="Email Tenant" size="15"></span>
+        </div>
+    </form>
+    </div>
+</div>

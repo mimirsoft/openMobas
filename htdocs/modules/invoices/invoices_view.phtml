@@ -1,0 +1,210 @@
+<?php
+include("../../../framework/theme.css");
+include("invoices_view.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<div class="portlet2">
+    <div class="divheader">Invoice Info</div>
+    <div class="row">
+        <span class="label">Invoice Num:</span>
+        <span class="formw"><?php echo $invoice_info['invoice_id']; ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Invoice Date:</span>
+        <span class="formw"><?php echo $invoice_info['date_charged']; ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Customer:</span>
+        <span class="formw"><?php echo $invoice_info['cv_name']; ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Customer No:</span>
+        <span class="formw"><?php echo $invoice_info['cv_number']; ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Invoice Description:</span>
+        <span class="formw">
+        <form action="<?php echo $BASE_DIR ?>/invoices/invoices_view.php"  method=POST>
+                <textarea id="invoice_description" name="invoice_description" type="text" cols="80" rows=6 /><?php echo $invoice_info['invoice_description']; ?></textarea>
+                <input type=SUBMIT name="ACTION" value="Update" >
+                <input type=hidden name="invoice_id" value=<?php echo $invoice_info['invoice_id']?>>
+                </form>
+        </span>
+    </div>    
+	<form action="<?php echo $BASE_DIR ?>/invoices/invoices_view.php" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <span class="label">Upload Files</span>
+        <span class="formw"><input type="file" name="userfile" /> </span>
+    </div>
+	<div class="row">
+        <span class="formw">
+    	    <input type=hidden name="invoice_id" value=<?php echo $invoice_info['invoice_id']?>>
+            <input type="submit"  name="ACTION"  value="Upload Files" />
+        </span>
+    </div>    
+    </form>
+    <div class="row">
+    <table>
+    <?php
+
+if(is_array($files))
+{
+    foreach($files as $row)
+    {
+        ?>
+        <tr>
+        	<td><a href="../interface/download_file.php?file=<?php echo $row['file_id'] ?>&permission=invoice"><?php echo $row['fileName'] ?></a>
+            </td>
+            <td><form action="<?php echo $BASE_DIR ?>/invoices/invoices_view.php" method="post">
+            <input type="HIDDEN"  name="file_id"  value="<?php echo $row['file_id'] ?>" >
+            <input type="HIDDEN"  name="invoice_id"  value="<?php echo $invoice_id ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Delete File">
+        	</form>
+        	</td>
+        </tr>
+        	    
+       <?php
+    }
+}
+?>
+	</table>
+	</div>
+    <div class="row">
+        <span class="label">Sales Account:</span>
+        <span class="formw"><?php echo $invoice_info['revenueaccount_fullname']; ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Customer Account:</span>
+        <span class="formw"><?php echo $invoice_info['customeraccount_fullname']; ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="bill_col">Bill To
+            <div class="row">
+                <span class="label">Care Of:</span>
+                <span class="formw"><?php echo $invoice_info['billto_name']; ?>
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">Address 1:</span>
+                <span class="formw"><?php echo $invoice_info['billto_address1']; ?>
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">Address 2:</span>
+                <span class="formw"><?php echo $invoice_info['billto_address2']; ?>
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">City:</span>
+                <span class="formw"><?php echo $invoice_info['billto_city']; ?>
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">State:</span>
+                <span class="formw"><?php echo $invoice_info['billto_state']; ?>
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">Zip:</span>
+                <span class="formw"><?php echo $invoice_info['billto_zip']; ?>
+                </span>
+            </div>    
+        </span>
+        <span class="ship_col">Ship To
+            <div class="row">
+                <span class="label">Care Of:</span>
+                <span class="formw"><?php echo $invoice_info['shipto_name']; ?>
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">Address 1:</span>
+                <span class="formw"><?php echo $invoice_info['shipto_address1']; ?>
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">Address 2:</span>
+                <span class="formw"><?php echo $invoice_info['shipto_address2']; ?>
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">City:</span>
+                <span class="formw"><?php echo $invoice_info['shipto_city']; ?>
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">State:</span>
+                <span class="formw"><?php echo $invoice_info['shipto_state']; ?>
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">Zip:</span>
+                <span class="formw"><?php echo $invoice_info['shipto_zip']; ?>
+                </span>
+            </div>    
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Items:</span>
+        <span>
+        <table>
+            <?php foreach($invoice_items as $invoice_item)
+            {
+            ?>
+            <TR>
+                <TD><?php echo $invoice_item['inventorytype_name']?></TD>
+                <TD><?php echo $invoice_item['item_name']."(". $invoice_item['cv_name'].")"?></TD>
+                <TD><?php echo $invoice_item['invoiceitem_price_per']?>  </TD>
+                <TD><?php echo $invoice_item['invoiceitem_count']?>  </TD>
+                <TD><?php echo $invoice_item['invoiceitem_price_total']?></TD>
+            </TR>
+            <?php
+            }
+            ?>
+            <TR>
+                <TD></TD>
+                <TD></TD>
+                <TD></TD>
+                <TD></TD>
+                <TD>$<?php echo $invoice_info['invoice_total']?></TD>
+                <TD>TOTAL<form action="<?php echo $BASE_DIR ?>/invoices/invoices_items.php"  method=POST>
+                <input type=SUBMIT name="ACTION" value="Uncharge and Edit" >
+                <input type=hidden name="invoice_id" value=<?php echo $invoice_info['invoice_id']?>>
+                
+                </TD>
+            </TR>
+        </table>
+       </span>
+    </div>    
+</div>
+<div class="portlet2">
+    <div class="divheader">Associated Requisitions</div>
+    <div class="row">
+        <table>
+            <TR>
+                <TD>PR No</TD>
+                <TD>Vendor</TD>
+                <TD>Total</TD>
+            </TR>
+        <?php  foreach($invoice_requisitions as $invoice_requisition)
+            {
+            ?>
+                <TR>
+                    <TD><?php echo $invoice_requisition['pr_id'] ?></TD>
+                    <TD><?php echo $invoice_requisition['cv_name'] ?></TD>
+                    <TD><?php echo $invoice_requisition['pr_total'] ?></TD>
+                    <TD>
+                    <input type=SUBMIT name="ACTION" value="VIEW INVOICE" >
+                    <input type=hidden name="pr_id" value=<?php echo $invoice_requisition['pr_id']?>>
+                </TR>
+            <?php
+            }
+            ?>
+        </table>
+</div>

@@ -1,0 +1,82 @@
+<style type="text/css">
+    .portlet {
+        width: auto;
+        clear: both;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+   .portlet4 {
+        width: auto;
+        clear: both;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+div.row {
+  padding-top: .5em;
+  clear: both;
+  }
+div.float {
+  float: left;
+  }
+
+div.row span.label {
+  float: left;
+  width: 18em;
+  text-align: right;
+  }
+
+div.row span.formw {
+  float: left;
+  width: auto;
+  text-align: left;
+  } 
+
+div.row span.col1 {
+  float: left;
+  width: 12em;
+  text-align: right;
+  }
+div.row span.col1h {
+  float: left;
+  width: 12em;
+  text-align: center;
+  }
+
+div.row span.col2 {
+  float: left;
+  width: auto;
+  text-align: left;
+  } 
+div.row span.col2h {
+  float: left;
+  width: auto;
+  text-align: center;
+  } 
+div.row span.col3 {
+  float: left;
+  text-align: left;
+  width: 12em;
+  } 
+div.row span.col3h {
+  float: left;
+  width: 12em;
+  text-align: left;
+  } 
+    
+table tr td{
+    border-right:0px solid #ccc;
+    border-bottom:0px solid #ccc;
+    padding:0px 0px;
+    vertical-align: top;
+}
+
+</style>
+

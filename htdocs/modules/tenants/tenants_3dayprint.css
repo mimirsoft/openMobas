@@ -1,0 +1,104 @@
+<style type="text/css">
+    body {
+        font-family: sans-serif;
+        color: black;
+        font-size: 10pt;
+ }
+    
+   .break {
+        float: none;
+    }
+   .portlet {
+        width: 20em;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+        padding-bottom: 1em;
+        margin-bottom: .5em;
+    }
+    
+    .portlet2nb {
+        width: auto;
+        display: block;
+        clear:both;
+        float:none;
+        margin-bottom: .5em;
+    }
+    .portlet2 {
+        margin-bottom: .5em;
+        width: 50em;
+        clear:both;
+        display: block;
+        float:none;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+    }
+    .portlet3nb {
+        width: 50em;
+        display: block;
+        clear:both;
+        float:none;
+        margin-bottom: 2em;
+    }
+    div.p2col2 {
+        float: left;
+        padding-top: 4em;
+        padding-left: 2em;
+        width: 24em;
+        display: block;
+    }
+    .portlet3 {
+        margin-top: .5em;
+        width: 25em;
+        display: block;
+        float: left;
+    }
+   .portlet4 {
+        margin-top: 0em;
+        padding-bottom: 1em;
+        clear:both;
+        width: auto;
+        display: block;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+    }
+ div.row {
+  padding-top: .5em;
+  clear: both;
+  }
+div.rowheader {
+  padding-top: .5em;
+  clear: both;
+  }
+div.row span.col1 {
+  float: left;
+  text-align: left;
+  width: 10em;
+  }
+div.row span.col1r {
+  float: left;
+  text-align: right;
+  width: 24em;
+  }
+span.bigbold {
+  font-weight: bold;
+  font-size: 300%;
+  }
+span.mediumbold {
+  font-weight: bold;
+  font-size: 200%;
+  }
+span.bold {
+  font-weight: bold;
+  }
+       
+     
+</style>
+

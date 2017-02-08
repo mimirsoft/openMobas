@@ -1,0 +1,76 @@
+<style type="text/css">
+* {padding: 0; margin: 0;}
+
+td
+{
+font-size: 10pt;
+font-family:sans-serif;
+
+} 
+
+        .yardi_block1 {
+        clear: both;
+        position: relative;
+        font-size: 12pt;
+        height: 30mm;
+        top: 0mm;
+        left: 0mm;
+        }
+        .yardi_block2 {
+        clear: both;
+        position: relative;
+        font-size: 12pt;
+        height: 30mm;
+        top: 0mm;
+        left: 10mm;
+        }
+       .yardi_block3 {
+        position: relative;
+        font-size: 12pt;
+        height: 30mm;
+        top: -30mm;
+        left: 120mm;
+        }
+        .yardi_block4 {
+        position: relative;
+        font-size: 12pt;
+        top: -90mm;
+        left: -25mm;
+        }
+        .yardi_head_reg {
+        position: relative;
+        font-family: sans-serif;
+        font-size: 12pt;
+        top: 0mm;
+        left: 0mm;
+        text-align: center;
+        }
+        .yardi_reg {
+        position: relative;
+        font-family: sans-serif;
+        font-size: 10pt;
+        top: 0mm;
+        left: 0mm;
+        }
+        .yardi_reg_indent {
+        position: relative;
+        font-family: sans-serif;
+        font-size: 10pt;
+        top: 0mm;
+        left: 0mm;
+        padding-left: 5mm;
+        }
+        .yardi_small {
+        position: relative;
+        font-family: sans-serif;
+        font-size: 8pt;
+        top: 0mm;
+        left: 0mm;
+        text-align: right;
+        }
+
+
+
+
+</style>
+

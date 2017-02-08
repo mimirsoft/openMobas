@@ -1,0 +1,204 @@
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="transactions_configure_accounts.css" media="screen" >
+
+
+<?php
+
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+if(!($rbac_user->IsAllowedTo($USER->GetUserID(), "configure_accounts", "transactions_module")))
+{
+    echo "PERMISSION DENIED TO CONFIGURE ACCOUNTS IN TRANSACTIONS MODULE!!";
+    exit;
+}
+?>
+<div class="portlet">
+    <form action="<?php echo $BASE_DIR ?>/transactions/transactions_configure_accounts.php"  method=POST>
+        <div class="divheader">Create New Account</div>
+        <div class="row">
+            <span class="label">Parent Account:</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="account_parent" >
+                <OPTION value="0" >TOP LEVEL</OPTION>
+                <?php
+                $transaction->build_accountstree_selectoptions($account_stack_all);
+                ?>
+                </SELECT>
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Name:</span>
+            <span class="formw">
+                <input type="TEXT"  name="account_name"  value="<?php echo $account_name; ?>">
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Type:</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="accounttype_id" >
+                <?php
+                foreach($accounttypes as $row)
+                {
+                    ?>
+                    <OPTION value="<?php echo $row['accounttype_id'] ?>"<?php
+                    if($row['accounttype_id'] == $accounttype_id)
+                    {
+                        echo " SELECTED";
+                    }
+                    ?> > <?php echo $row['accounttype_name'] ?> </OPTION> 
+                    <?php
+                }
+                ?>
+                </SELECT>
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Memo:</span>
+            <span class="formw"><input type="TEXT"  name="account_memo"  value="<?php echo $account_memo; ?>">
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Current:</span>
+            <span class="formw"><SELECT NAME="account_current">
+                <OPTION <?php
+                if ($account_current == 'Y')
+                {
+                    echo "SELECTED";
+                }
+                ?> VALUE="Y">YES</OPTION>
+                <OPTION <?php
+                if ($account_current == 'N')
+                {
+                    echo "SELECTED";
+                }
+                ?> VALUE="N">NO</OPTION>
+                </SELECT>
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Default Statement Type:</span>
+            <span class="formw"><SELECT NAME="defaultstatement_type">
+                <OPTION <?php
+                if ($defaultstatement_type == 'Print')
+                {
+                    echo "SELECTED";
+                }
+                ?> VALUE="Print">Print</OPTION>
+                <OPTION <?php
+                if ($defaultstatement_type == 'Email')
+                {
+                    echo "SELECTED";
+                }
+                ?> VALUE="Email">Email</OPTION>
+                </SELECT>
+            </span>
+        </div>
+        <div class="row">
+            <span class="label"></span>
+            <span class="formw">    <input type="HIDDEN"  name="account_id"  value="NULL">
+                <input type="SUBMIT"  name="action"  value="Save Account">
+            </span>
+        </div>
+    <input type="SUBMIT"  name="action"  value="Verify Names">
+    <input type="SUBMIT"  name="action"  value="Verify Tree">
+    <input type="SUBMIT"  name="action"  value="Verify Parents">
+    </form>
+    </div>
+    
+    <?php
+    if (!is_array($account_array))
+    {
+        ?>
+        <div class="portlet2">
+        <p class="warning" align="center" >YOU MUST CREATE AT LEAST ONE ACCOUNT<p>
+        </div>
+        <?php
+        exit;
+    }
+    ?>
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/transactions/transactions_configure_accounts.php"  method=POST>
+    <div class="divheader">Search Accounts</div>
+    <div class="row">
+        <span class="label">Search String:</span>
+        <span class="formw"><input type="TEXT"  name="search_string"  value="" ></span>
+    </div>    
+    <div class="row">
+            <input type="SUBMIT"  name="action"  value="Search" >
+    </div>    
+</form>
+</div>
+<div class="portlet">
+    <div class="divheader">Search Results</div>
+    <div class="row" id="search_results">
+    <table>
+    <TR>
+        <TD></TD>
+        <TD>Name</TD>
+        <TD>Balance</TD>
+        <TD>Left</TD>
+        <TD>Right</TD>
+        <TD>Parent</TD>
+    </TR>
+            <?php
+            foreach($results AS $row)
+            {
+                ?>
+                <form action="<?php echo $BASE_DIR ?>/transactions/transactions_accountedit.php"  target="_blank" method=POST>
+                <TR>
+                    <TD>
+                        <input type="HIDDEN"  name="account_id"  value="<?php echo $row['account_id'] ?>">
+                        <input type="SUBMIT"  name="action"  value="Edit Account">
+                    </TD>
+                    <TD><?php echo $row['account_fullname'] ?></TD>
+                    <TD><?php echo $row['account_balance'] ?></TD>
+                    <TD><?php echo $row['account_left'] ?></TD>
+                    <TD><?php echo $row['account_right'] ?></TD>
+                    <TD><?php echo $row['account_parent'] ?></TD>
+                </TR>
+                </form>
+                <?php
+            }
+            ?>
+    </table>
+    </div>    
+</div>        
+        
+    <div class="portlet">
+        <div class="divheader">Accounts </div>
+<table>
+<TR>
+    <TD> Page:<?php for($i = 0; $i <= $page_count; $i++)
+            {
+                ?>
+                <a href="<?php echo $BASE_DIR ?>/transactions/transactions_configure_accounts.php?page=<?php echo $i?>"><?php echo $i?></a>
+                <?php
+            }
+            ?>    
+            </TD>
+    <TD>Name</TD>
+    <TD>Left</TD>
+    <TD>Right</TD>
+    <TD>Parent</TD>
+</TR>
+        <?php
+        foreach($account_stack AS $row)
+        {
+            ?>
+            <form action="<?php echo $BASE_DIR ?>/transactions/transactions_accountedit.php"  target="_blank" method=POST>
+            <TR>
+                <TD>
+                    <input type="HIDDEN"  name="account_id"  value="<?php echo $row['account_id'] ?>">
+                    <input type="SUBMIT"  name="action"  value="Edit Account">
+                </TD>
+                <TD><?php echo $row['account_fullname'] ?></TD>
+                <TD><?php echo $row['account_left'] ?></TD>
+                <TD><?php echo $row['account_right'] ?></TD>
+                <TD><?php echo $row['account_parent'] ?></TD>
+            </TR>
+            </form>
+            <?php
+        }
+        ?>
+</table>
+</div>    

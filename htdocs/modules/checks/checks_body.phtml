@@ -1,0 +1,43 @@
+<div style="position: static; height: 80mm;">
+    <div class="block1">
+        <p class="checkname"><?php echo $checkname; ?></p>
+        <p class="checkamount"><?php echo $check_amount; ?></p>
+        <p class="checkmemo"><?php echo $memo; ?></p>
+    </div>
+    <div class="block2">
+        <p class="checkdate"><?php echo $checkdate;  ?></p>
+        <p class="checknet"><?php echo $net; ?></p>
+    </div>
+    <div class="block3">
+        <p class="checkaddressname"><?php echo $checkname2." ".$careof; ?></p>
+        <p class="checkaddress"><?php echo $address; ?></p>
+        <p class="checkaddress2"><?php echo $city." ".$state.", ".$zip; ?></p>
+    </div>
+</div>
+
+<div style="position: static; height: 90mm;">
+<p style="position: relative; top: 0mm; font-size: 12pt;"><?php echo $checkdate; ?></p>
+<p style="position: relative; top: 0mm; font-size: 12pt;"><?php echo $checkname." ".$careof; ?></p>
+<p style="position: relative; top: 0mm; font-size: 12pt;"><?php echo $address; ?></p>
+<p style="position: relative; top: 0mm; font-size: 12pt;"><?php echo $city." ".$state.", ".$zip; ?></p>
+<p style="position: relative; top: 0mm; font-size: 12pt;"><?php echo $check_amount; ?></p>
+<p style="position: relative; top: 0mm; font-size: 12pt;"><?php echo $net; ?></p>
+<p style="position: relative; top: 0mm; font-size: 12pt;"><?php echo $memo; ?></p>
+<p style="position: relative; top: 0mm; font-size: 12pt;">From <?php echo $account_name." on ".$checkdate; ?></p>
+</div>
+
+<div style="<?php if( ($NOTLAST) || isset($electronicTrans) )
+{
+ echo "page-break-after:always; "; 
+ } ?>position: static; height: 80mm;">
+<p style="position: relative; top: 0mm; font-size: 12pt;"><?php echo $checkdate; ?></p>
+<p style="position: relative; top: 0mm; font-size: 12pt;"><?php echo $checkname." ".$careof; ?></p>
+<p style="position: relative; top: 0mm; font-size: 12pt;"><?php echo $address; ?></p>
+<p style="position: relative; top: 0mm; font-size: 12pt;"><?php echo $city." ".$state.", ".$zip; ?></p>
+<p style="position: relative; top: 0mm; font-size: 12pt;"><?php echo $check_amount; ?></p>
+<p style="position: relative; top: 0mm; font-size: 12pt;"><?php echo $net; ?></p>
+<p style="position: relative; top: 0mm; font-size: 12pt;"><?php echo $memo; ?></p>
+<p style="position: relative; top: 0mm; font-size: 12pt;">From <?php echo $account_name." on ".$checkdate; ?></p></div>
+</div>
+
+

@@ -1,0 +1,128 @@
+<?php
+include("../../../framework/theme.css");
+include("invoices_cash_receipts.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<SCRIPT LANGUAGE="JavaScript" type="text/javascript">
+
+<?php
+if($ACTION == "Record Check")
+{
+	//on load, spawn the check window	
+	?>
+	window.open('<?php echo $BASE_DIR ?>/invoices/invoices_print_receipt.php?check_amount=<?php 
+	echo $check_amount?>&disbursement_account=<?php echo $remittance_deposit?>&comment=<?php echo urlencode($comment) ?>&cv_id=<?php 
+	echo $cv_id?>&check_no=<?php echo $check_no?>&date=<?php echo $date?>&remit_no=<?php echo $remit_no?>')
+	<?php 
+}	
+?>
+</SCRIPT>
+
+<div class="portlet">
+    <div class="divheader">Unapplied Remittance</div>
+    <div class="row" id="search_results">
+        <table>
+                <TR>
+                    <TD>
+                         Date Recieved
+                    </TD>
+                    <TD>
+                          Customer Name
+                    </TD>
+                    <TD>
+                          Amount Recieved
+                    </TD>
+                    <TD>
+                          Amount Applied
+                    </TD>
+                    <TD>
+                          Amount Remaining
+                    </TD>
+                </TR>
+                <form action="<?php echo $BASE_DIR ?>/invoices/invoices_remittance_advice.php"  method=POST>
+                <TR>
+                    <TD>
+                          <?php echo $remittance['remit_date'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $remittance['cv_name'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $remittance['total_received'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $remittance['total_applied'];
+                         $remaining = $remittance['total_received']-$remittance['total_applied'];?>
+                    </TD>
+                    <TD>
+                          <?php echo $remaining ?>
+                    </TD>
+                </TR>
+                </form>
+                
+        </table>
+    </div>    
+</div>
+
+<div class="portlet">
+    <div class="divheader">Outstanding Invoices</div>
+    <div class="row" >
+        <table>
+                <TR>
+                    <TD>
+                         Date Charged
+                    </TD>
+                    <TD>
+                          Customer Name
+                    </TD>
+                    <TD>
+                         Invoice Total
+                    </TD>
+                    <TD>
+                          Total Remitted
+                    </TD>
+                    <TD>
+                          Remaining Balance
+                    </TD>
+                </TR>
+<?php
+            foreach($invoices as $row)
+            {
+                ?>
+                <form action="<?php echo $BASE_DIR ?>/invoices/invoices_remittance_advice.php"  method=POST>
+                <TR>
+                    <TD>
+                          <?php echo $row['date_charged'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['cv_name'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['invoice_total'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['total_remitted'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['invoice_total']-$row['total_remitted'] ?>
+                    </TD>
+                    <TD>
+                          <input type="TEXT"  name="apply_amount"  size=5 value="<?php echo $remaining ?>" >
+                    </TD>
+                    <TD>
+                        <input type="SUBMIT"  name="ACTION" value="Apply Amount" >
+                        <input type=hidden name="invoice_id" value=<?php echo $row['invoice_id']?>>
+                        <input type=hidden name="remit_no" value=<?php echo $remittance['remit_no']?>>
+                    </TD>
+                    
+                </TR>
+                </form>
+                <?php
+            }
+?>	
+        </table>
+    </div>    
+</div>
+
+

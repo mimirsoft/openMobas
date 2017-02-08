@@ -1,0 +1,1689 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<?
+include("../../../framework/theme.css");
+include("statements_main.css");
+framework::navbar();
+
+?>
+<script language="JavaScript"
+
+
+type="text/javascript">
+
+var e_dimensions = new Array();
+var account_set_count  = <? echo count($statement['body']['arows'])?>;
+var data_set_count = <? echo count($statement['body']['drows'])?>;
+var e_datarows = new Array();
+
+function load_statement_config(evt)
+{ 
+    createXMLHttpRequest();
+    var objectID = (evt.target) ? evt.target.id : ((evt.srcElement) ? evt.srcElement.id :null);
+    var statement_type = document.getElementById(objectID);
+    var url = "statementtype_getconfig.php?type="+escape(statement_type.value);
+    xmlHttp.open("GET", url, true);
+    xmlHttp.onreadystatechange = callback;
+    xmlHttp.send(null);
+}
+function callback()
+{
+    if (xmlHttp.readyState == 4) {
+        if (xmlHttp.status == 200) {
+            var response = xmlHttp.responseText;
+            var currentElement = document.getElementById("config");
+            currentElement.innerHTML = response;
+        }
+    }
+}
+function createXMLHttpRequest() {
+  try {
+    xmlHttp = new XMLHttpRequest();
+  } catch (trymicrosoft) {
+    try {
+      xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (othermicrosoft) {
+      try {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (failed) {
+        xmlHttp = false;
+      }
+    }
+  }
+
+  if (!xmlHttp)
+    alert("Error initializing XMLHttpRequest!");
+}
+
+function load_default(){
+    var default_select = document.getElementById("load_defaults");
+    
+    if(default_select.value == "ar_aging_summary")
+    {
+        StatementArray = new Array(3);
+        StatementArray [1] = "AR AGING REPORT";//name
+        StatementArray [2] = 0;//header type
+        StatementArray [3] = "AGING SUMMARY";//body title
+        A_Count = 1
+        AccountArray = new Array(1);
+        AccountArray [1] = new Array(10);
+        AccountArray [1][0] = "specific";//type
+        AccountArray [1][1] = "null";//group
+        AccountArray [1][2] = "user_defined";//specific
+        AccountArray [1][3] = "all";//subs
+        D_Count = 1
+        DataArray = new Array(1);
+        DataArray [1] = new Array(10);
+        DataArray [1][0] = 0;//account set
+        DataArray [1][1] = "aging";//type
+        DataArray [1][2] = "user_defined";//target
+        DataArray [1][3] = "Y";//subs
+        DataArray [1][4] = "1";//sign
+        DataArray [1][5] = "all";//dates
+        DataArray [1][6] = "date";//sortby
+        R_Count = 2;
+
+        RowArray = new Array(3);
+        RowArray[0] = new Array(4);
+        RowArray[0][0] = 0 ;  // which display row type is this?
+        RowArray[0][1] = 4 ;  // do we need the data row selector? if so, which one? -1 for false, 0 or greater for the row
+        RowArray[0][2] = 1;   // how many datarows are there to select
+        RowArray[0][3] = new Array(2);    
+        RowArray[0][3][0] = 0 ;  //multiple accounts selected for data rows
+        RowArray[0][4] = 8 ;  //cell count
+        RowArray[0][5] = new Array(4);  //cell
+        RowArray[0][5][1] = new Array(4);  //cells
+        RowArray[0][5][1][0] = 1 ;  // which cell type is this?
+        RowArray[0][5][1][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][1][2] = "ACCOUNT" ;  // label
+        RowArray[0][5][1][3] = "" ;  // style
+        RowArray[0][5][2] = new Array(4);  //cells
+        RowArray[0][5][2][0] = 1 ;  // which cell type is this?
+        RowArray[0][5][2][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][2][2] = "CURRENT <BR /\> OWED" ;  // label
+        RowArray[0][5][2][3] = "" ;  // style
+        RowArray[0][5][3] = new Array(4);  //cells
+        RowArray[0][5][3][0] = 1 ;  // which cell type is this?
+        RowArray[0][5][3][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][3][2] = "0-30 <BR /\>OWED" ;  // label
+        RowArray[0][5][3][3] = "" ;  // style
+        RowArray[0][5][4] = new Array(4);  //cells
+        RowArray[0][5][4][0] = 1 ;  // which cell type is this?
+        RowArray[0][5][4][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][4][2] = "30-60 <BR /\>OWED" ;  // label
+        RowArray[0][5][4][3] = "" ;  // style
+        RowArray[0][5][5] = new Array(4);  //cells
+        RowArray[0][5][5][0] = 1 ;  // which cell type is this?
+        RowArray[0][5][5][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][5][2] = "60-90 <BR /\>OWED" ;  // label
+        RowArray[0][5][5][3] = "" ;  // style
+        RowArray[0][5][6] = new Array(4);  //cells
+        RowArray[0][5][6][0] = 1 ;  // which cell type is this?
+        RowArray[0][5][6][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][6][2] = "OVER 90 <BR /\>OWED" ;  // label
+        RowArray[0][5][6][3] = "" ;  // style
+        RowArray[0][5][7] = new Array(4);  //cells
+        RowArray[0][5][7][0] = 1 ;  // which cell type is this?
+        RowArray[0][5][7][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][7][2] = "AS Prepayments" ;  // label
+        RowArray[0][5][7][3] = "" ;  // style
+        RowArray[0][5][8] = new Array(4);  //cells
+        RowArray[0][5][8][0] = 1 ;  // which cell type is this?
+        RowArray[0][5][8][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][8][2] = "AS Total <BR /\> Owed" ;  // label
+        RowArray[0][5][8][3] = "" ;  // style
+
+        RowArray[1] = new Array(4);
+        RowArray[1][0] = 1 ;  // which display row type is this?
+        RowArray[1][1] = 1 ;  // do we need the data row selector? if so, which one? -1 for false, 0 or greater for the row
+        RowArray[1][2] = 1;   // how many datarows are there to select
+        RowArray[1][3] = new Array(1);   // do we need the data row selector? 
+        RowArray[1][3][0] = 0 ;  //multiple accounts selected for data rows
+        RowArray[1][4] = 8 ;  //cell count
+        RowArray[1][5] = new Array(8);  //cell count
+        RowArray[1][5][1] = new Array(4);  //cells
+        RowArray[1][5][1][0] = 10 ;  // which cell type is this?
+        RowArray[1][5][1][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][1][2] = "" ;  // label
+        RowArray[1][5][1][3] = "" ;  // style
+        RowArray[1][5][2] = new Array(4);  //cells
+        RowArray[1][5][2][0] = 25 ;  // which cell type is this?
+        RowArray[1][5][2][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][2][2] = "" ;  // label
+        RowArray[1][5][2][3] = "" ;  // style
+        RowArray[1][5][3] = new Array(4);  //cells
+        RowArray[1][5][3][0] = 26 ;  // which cell type is this?
+        RowArray[1][5][3][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][3][2] = "" ;  // label
+        RowArray[1][5][3][3] = "" ;  // style
+        RowArray[1][5][4] = new Array(4);  //cells
+        RowArray[1][5][4][0] = 27 ;  // which cell type is this?
+        RowArray[1][5][4][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][4][2] = "" ;  // label
+        RowArray[1][5][4][3] = "" ;  // style
+        RowArray[1][5][5] = new Array(4);  //cells
+        RowArray[1][5][5][0] = 28 ;  // which cell type is this?
+        RowArray[1][5][5][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][5][2] = "" ;  // label
+        RowArray[1][5][5][3] = "" ;  // style
+        RowArray[1][5][6] = new Array(4);  //cells
+        RowArray[1][5][6][0] = 29 ;  // which cell type is this?
+        RowArray[1][5][6][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][6][2] = "" ;  // label
+        RowArray[1][5][6][3] = "" ;  // style
+        RowArray[1][5][7] = new Array(4);  //cells
+        RowArray[1][5][7][0] = 30 ;  // which cell type is this?
+        RowArray[1][5][7][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][7][2] = "" ;  // label
+        RowArray[1][5][7][3] = "" ;  // style
+        RowArray[1][5][8] = new Array(4);  //cells
+        RowArray[1][5][8][0] = 31 ;  // which cell type is this?
+        RowArray[1][5][8][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][8][2] = "" ;  // label
+        RowArray[1][5][8][3] = "" ;  // style
+    }
+    if(default_select.value == "invoice")
+    {
+        StatementArray = new Array(3);
+        StatementArray [1] = "INVOICE";//name
+        StatementArray [2] = 2;//header type
+        StatementArray [3] = "Statement for $account_name from $startdate to $enddate";//body title
+        A_Count = 1
+        AccountArray = new Array(1);
+        AccountArray [1] = new Array(10);
+        AccountArray [1][0] = "specific";//type
+        AccountArray [1][1] = "null";//group
+        AccountArray [1][2] = "user_defined";//specific
+        AccountArray [1][3] = "all";//subs
+        D_Count = 1
+        DataArray = new Array(1);
+        DataArray [1] = new Array(10);
+        DataArray [1][0] = 0;//account set
+        DataArray [1][1] = "nettrans";//type
+        DataArray [1][2] = "user_defined";//target
+        DataArray [1][3] = "Y";//subs
+        DataArray [1][4] = "1";//sign
+        DataArray [1][5] = "all";//dates
+        DataArray [1][6] = "date";//sortby
+        R_Count = 3;
+        RowArray = new Array(3);
+        RowArray[0] = new Array(4);
+        RowArray[0][0] = 0 ;  // which display row type is this?
+        RowArray[0][1] = 1 ;  // do we need the data row selector? if so, which one? -1 for false, 0 or greater for the row
+        RowArray[0][2] = 1;   // how many datarows are there to select
+        RowArray[0][3] = new Array(2);
+        RowArray[0][3][0] = 0 ;  //multiple accounts selected for data rows
+        RowArray[0][4] = 4 ;  //cell count
+        RowArray[0][5] = new Array(4);  //cell
+        RowArray[0][5][1] = new Array(4);  //cells
+        RowArray[0][5][1][0] = 1 ;  // which cell type is this?
+        RowArray[0][5][1][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][1][2] = "STARTING BALANCE" ;  // label
+        RowArray[0][5][1][3] = "" ;  // style
+        RowArray[0][5][2] = new Array(4);  //cells
+        RowArray[0][5][2][0] = 0 ;  // which cell type is this?
+        RowArray[0][5][2][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][2][2] = "" ;  // label
+        RowArray[0][5][2][3] = "" ;  // style
+        RowArray[0][5][3] = new Array(4);  //cells
+        RowArray[0][5][3][0] = 0 ;  // which cell type is this?
+        RowArray[0][5][3][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][3][2] = "" ;  // label
+        RowArray[0][5][3][3] = "" ;  // style
+        RowArray[0][5][4] = new Array(4);  //cells
+        RowArray[0][5][4][0] = 14 ;  // which cell type is this?
+        RowArray[0][5][4][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][4][2] = "" ;  // label
+        RowArray[0][5][4][3] = "" ;  // style
+        RowArray[1] = new Array(4);
+        RowArray[1][0] = 2 ;  // which display row type is this?
+        RowArray[1][1] = 0 ;  // do we need the data row selector?
+        RowArray[1][2] = 1;   // how many datarows are there
+        RowArray[1][3] = new Array(2);   // do we need the data row selector? 
+        RowArray[1][3][0] = 0 ;  //multiple accounts selected for data rows
+        RowArray[1][4] = 4 ;  //cell count
+        RowArray[1][5] = new Array(1);  //cell count
+        RowArray[1][5][1] = new Array(4);  //cells
+        RowArray[1][5][1][0] = 2 ;  // which cell type is this?
+        RowArray[1][5][1][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][1][2] = "" ;  // label
+        RowArray[1][5][1][3] = "" ;  // style
+        RowArray[1][5][2] = new Array(4);  //cells
+        RowArray[1][5][2][0] = 4 ;  // which cell type is this?
+        RowArray[1][5][2][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][2][2] = "" ;  // label
+        RowArray[1][5][2][3] = "" ;  // style
+        RowArray[1][5][3] = new Array(4);  //cells
+        RowArray[1][5][3][0] = 6 ;  // which cell type is this?
+        RowArray[1][5][3][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][3][2] = "" ;  // label
+        RowArray[1][5][3][3] = "" ;  // style
+        RowArray[1][5][4] = new Array(4);  //cells
+        RowArray[1][5][4][0] = 13 ;  // which cell type is this?
+        RowArray[1][5][4][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][4][2] = "" ;  // label
+        RowArray[1][5][4][3] = "" ;  // style
+        RowArray[2] = new Array(4);
+        RowArray[2][0] = 0 ;  // which display row type is this?
+        RowArray[2][1] = 1 ;  // do we need the data row selector?
+        RowArray[2][2] = 1;   // how many datarows are there
+        RowArray[2][3] = new Array(2);   // do we need the data row selector? 
+        RowArray[2][3][0] = 0 ;  //multiple accounts selected for data rows
+        RowArray[2][4] = 4 ;  //cell count
+        RowArray[2][5] = new Array(1);  //cell count
+        RowArray[2][5][1] = new Array(4);  //cells
+        RowArray[2][5][1][0] = 1 ;  // which cell type is this?
+        RowArray[2][5][1][2] = "ENDING BALANCE" ;  // label
+        RowArray[2][5][1][3] = "" ;  // style
+        RowArray[2][5][1][1] = true ;  // fillin value
+        RowArray[2][5][2] = new Array(4);  //cells
+        RowArray[2][5][2][0] = 0 ;  // which cell type is this?
+        RowArray[2][5][2][1] = true ;  // fillin value
+        RowArray[2][5][2][2] = "" ;  // label
+        RowArray[2][5][2][3] = "" ;  // style
+        RowArray[2][5][3] = new Array(4);  //cells
+        RowArray[2][5][3][0] = 0 ;  // which cell type is this?
+        RowArray[2][5][3][1] = true ;  // fillin value
+        RowArray[2][5][3][2] = "" ;  // label
+        RowArray[2][5][3][3] = "" ;  // style
+        RowArray[2][5][4] = new Array(4);  //cells
+        RowArray[2][5][4][0] = 15 ;  // which cell type is this?
+        RowArray[2][5][4][1] = true ;  // fillin value
+        RowArray[2][5][4][2] = "" ;  // label
+        RowArray[2][5][4][3] = "" ;  // style
+    }
+    if(default_select.value == "balance_sheet")
+    {
+        StatementArray = new Array(3);
+        StatementArray [1] = "BALANCE SHEET";//name
+        StatementArray [2] = 0;//header type
+        StatementArray [3] = "Balance Sheet Ending $enddate";//body title
+        A_Count = 3
+        AccountArray = new Array(3);
+        AccountArray [1] = new Array(10);
+        AccountArray [1][0] = "group";//type
+        AccountArray [1][1] = "ASSET";//group
+        AccountArray [1][2] = "user_defined";//specific
+        AccountArray [1][3] = "all";//subs
+        AccountArray [2] = new Array(10);
+        AccountArray [2][0] = "group";//type
+        AccountArray [2][1] = "LIABILITY";//group
+        AccountArray [2][2] = "user_defined";//specific
+        AccountArray [2][3] = "all";//subs
+        AccountArray [3] = new Array(10);
+        AccountArray [3][0] = "group";//type
+        AccountArray [3][1] = "EQUITY";//group
+        AccountArray [3][2] = "user_defined";//specific
+        AccountArray [3][3] = "all";//subs
+        D_Count = 3
+        DataArray = new Array(1);
+        DataArray [1] = new Array(10);
+        DataArray [1][0] = 0;//account set
+        DataArray [1][1] = "balance";//type
+        DataArray [1][2] = "user_defined";//target
+        DataArray [1][3] = "Y";//subs
+        DataArray [1][4] = "1";//sign
+        DataArray [1][5] = "all";//dates
+        DataArray [1][6] = "date";//sortby
+        DataArray [2] = new Array(10);
+        DataArray [2][0] = 1;//account set
+        DataArray [2][1] = "balance";//type
+        DataArray [2][2] = "user_defined";//target
+        DataArray [2][3] = "Y";//subs
+        DataArray [2][4] = "1";//sign
+        DataArray [2][5] = "all";//dates
+        DataArray [2][6] = "date";//sortby
+        DataArray [3] = new Array(10);
+        DataArray [3][0] = 2;//account set
+        DataArray [3][1] = "balance";//type
+        DataArray [3][2] = "user_defined";//target
+        DataArray [3][3] = "Y";//subs
+        DataArray [3][4] = "1";//sign
+        DataArray [3][5] = "all";//dates
+        DataArray [3][6] = "date";//sortby
+        R_Count = 2;
+        RowArray = new Array(4);
+        RowArray[0] = new Array(4);
+        RowArray[0][0] = 1 ;  // which display row type is this?
+        RowArray[0][1] = 1 ;  // do we need the data row selector? if so, which one? -1 for false, 0 or greater for the row
+        RowArray[0][2] = 3;   // how many datarows are there
+        RowArray[0][3] = new Array(3);   // do we need the data row selector? 
+        RowArray[0][3][0] = 0 ;  //multiple accounts selected for data rows
+        RowArray[0][3][1] = 1 ;  //multiple accounts selected for data rows
+        RowArray[0][3][2] = 2 ;  //multiple accounts selected for data rows
+        RowArray[0][4] = 2 ;  //cell count
+        RowArray[0][5] = new Array(2);  //cell count
+        RowArray[0][5][1] = new Array(4);  //cells
+        RowArray[0][5][1][0] = 10 ;  // which cell type is this?
+        RowArray[0][5][1][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][1][2] = "" ;  // label
+        RowArray[0][5][1][3] = "" ;  // style
+        RowArray[0][5][2] = new Array(4);  //cells
+        RowArray[0][5][2][0] = 9 ;  // which cell type is this?
+        RowArray[0][5][2][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][2][2] = "" ;  // label
+        RowArray[0][5][2][3] = "" ;  // style
+        RowArray[1] = new Array(4);
+        RowArray[1][0] = 4 ;  // which display row type is this?
+        RowArray[1][1] = 1 ;  // do we need the data row selector? if so, which one? -1 for false, 0 or greater for the row
+        RowArray[1][2] = 2;   // how many datarows are there
+        RowArray[1][3] = new Array(3);   // do we need the data row selector? 
+        RowArray[1][3][0] = 1 ;  //multiple accounts selected for data rows
+        RowArray[1][3][1] = 2 ;  //multiple accounts selected for data rows
+        RowArray[1][4] = 2 ;  //cell count
+        RowArray[1][5] = new Array(2);  //cell count
+        RowArray[1][5][1] = new Array(4);  //cells
+        RowArray[1][5][1][0] = 1 ;  // which cell type is this?
+        RowArray[1][5][1][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][1][2] = "TOTAL LIABILITY AND EQUITY" ;  // label
+        RowArray[1][5][1][3] = "" ;  // style
+        RowArray[1][5][2] = new Array(4);  //cells
+        RowArray[1][5][2][0] = 15 ;  // which cell type is this?
+        RowArray[1][5][2][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][2][2] = "" ;  // label
+        RowArray[1][5][2][3] = "" ;  // style
+    }
+    if(default_select.value == "expense_report")
+    {
+        StatementArray = new Array(3);
+        StatementArray [1] = "EXPENSE REPORT";//name
+        StatementArray [2] = 0;//header type
+        StatementArray [3] = "Expense report from $startdate to $enddate";//body title
+        A_Count = 1
+        AccountArray = new Array(3);
+        AccountArray [1] = new Array(10);
+        AccountArray [1][0] = "group";//type
+        AccountArray [1][1] = "EXPENSE";//group
+        AccountArray [1][2] = "user_defined";//specific
+        AccountArray [1][3] = "all";//subs
+        D_Count = 1
+        DataArray = new Array(1);
+        DataArray [1] = new Array(10);
+        DataArray [1][0] = 0;//account set
+        DataArray [1][1] = "balance";//type
+        DataArray [1][2] = "user_defined";//target
+        DataArray [1][3] = "Y";//subs
+        DataArray [1][4] = "1";//sign
+        DataArray [1][5] = "all";//dates
+        DataArray [1][6] = "date";//sortby
+        R_Count = 1;
+        RowArray = new Array(4);
+        RowArray[0] = new Array(4);
+        RowArray[0][0] = 1 ;  // which display row type is this?
+        RowArray[0][1] = 1 ;  // do we need the data row selector? if so, which one? -1 for false, 0 or greater for the row
+        RowArray[0][2] = 1;   // how many datarows are there
+        RowArray[0][3] = new Array(1);   // do we need the data row selector? 
+        RowArray[0][3][0] = 0 ;  //multiple accounts selected for data rows
+        RowArray[0][4] = 2 ;  //cell count
+        RowArray[0][5] = new Array(2);  //cell count
+        RowArray[0][5][1] = new Array(4);  //cells
+        RowArray[0][5][1][0] = 10 ;  // which cell type is this?
+        RowArray[0][5][1][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][1][2] = "" ;  // label
+        RowArray[0][5][1][3] = "" ;  // style
+        RowArray[0][5][2] = new Array(4);  //cells
+        RowArray[0][5][2][0] = 9 ;  // which cell type is this?
+        RowArray[0][5][2][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][2][2] = "" ;  // label
+        RowArray[0][5][2][3] = "" ;  // style
+    }
+    if(default_select.value == "general_ledger")
+    {
+        StatementArray = new Array(3);
+        StatementArray [1] = "GENERAL LEDGER";//name
+        StatementArray [2] = 0;//header type
+        StatementArray [3] = "General Ledger $startdate to $enddate";//body title
+        A_Count = 1
+        AccountArray = new Array(3);
+        AccountArray [1] = new Array(10);
+        AccountArray [1][0] = "specific";//type
+        AccountArray [1][1] = "null";//group
+        AccountArray [1][2] = "user_defined";//specific
+        AccountArray [1][3] = "all";//subs
+        D_Count = 1
+        DataArray = new Array(1);
+        DataArray [1] = new Array(10);
+        DataArray [1][0] = 0;//account set
+        DataArray [1][1] = "ledger";//type
+        DataArray [1][2] = "user_defined";//target
+        DataArray [1][3] = "Y";//subs
+        DataArray [1][4] = "1";//sign
+        DataArray [1][5] = "all";//dates
+        DataArray [1][6] = "date";//sortby
+        R_Count = 1;
+        RowArray = new Array(4);
+        RowArray[0] = new Array(4);
+        RowArray[0][0] = 2 ;  // which display row type is this?
+        RowArray[0][1] = 1 ;  // do we need the data row selector? if so, which one? -1 for false, 0 or greater for the row
+        RowArray[0][2] = 1;   // how many datarows are there
+        RowArray[0][3] = new Array(1);   // do we need the data row selector? 
+        RowArray[0][3][0] = 0 ;  //multiple accounts selected for data rows
+        RowArray[0][4] = 7 ;  //cell count
+        RowArray[0][5] = new Array(2);  //cell count
+        RowArray[0][5][1] = new Array(4);  //cells
+        RowArray[0][5][1][0] = 12 ;  // which cell type is this?
+        RowArray[0][5][1][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][1][2] = "" ;  // label
+        RowArray[0][5][1][3] = "" ;  // style
+        RowArray[0][5][2] = new Array(4);  //cells
+        RowArray[0][5][2][0] = 2 ;  // which cell type is this?
+        RowArray[0][5][2][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][2][2] = "" ;  // label
+        RowArray[0][5][2][3] = "" ;  // style
+        RowArray[0][5][3] = new Array(4);  //cells
+        RowArray[0][5][3][0] = 5 ;  // which cell type is this?
+        RowArray[0][5][3][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][3][2] = "" ;  // label
+        RowArray[0][5][3][3] = "" ;  // style
+        RowArray[0][5][4] = new Array(4);  //cells
+        RowArray[0][5][4][0] = 4 ;  // which cell type is this?
+        RowArray[0][5][4][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][4][2] = "" ;  // label
+        RowArray[0][5][4][3] = "" ;  // style
+        RowArray[0][5][5] = new Array(4);  //cells
+        RowArray[0][5][5][0] = 7 ;  // which cell type is this?
+        RowArray[0][5][5][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][5][2] = "" ;  // label
+        RowArray[0][5][5][3] = "" ;  // style
+        RowArray[0][5][6] = new Array(4);  //cells
+        RowArray[0][5][6][0] = 8 ;  // which cell type is this?
+        RowArray[0][5][6][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][6][2] = "" ;  // label
+        RowArray[0][5][6][3] = "" ;  // style
+        RowArray[0][5][7] = new Array(4);  //cells
+        RowArray[0][5][7][0] = 13 ;  // which cell type is this?
+        RowArray[0][5][7][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][7][2] = "" ;  // label
+        RowArray[0][5][7][3] = "" ;  // style
+    }
+    if(default_select.value == "income_report")
+    {
+        StatementArray = new Array(3);
+        StatementArray [1] = "INCOME REPORT";//name
+        StatementArray [2] = 0;//header type
+        StatementArray [3] = "Income Report from $startdate to $enddate";//body title
+        A_Count = 1
+        AccountArray = new Array(3);
+        AccountArray [1] = new Array(10);
+        AccountArray [1][0] = "group";//type
+        AccountArray [1][1] = "INCOME";//group
+        AccountArray [1][2] = "user_defined";//specific
+        AccountArray [1][3] = "all";//subs
+        D_Count = 1
+        DataArray = new Array(1);
+        DataArray [1] = new Array(10);
+        DataArray [1][0] = 0;//account set
+        DataArray [1][1] = "balance";//type
+        DataArray [1][2] = "user_defined";//target
+        DataArray [1][3] = "Y";//subs
+        DataArray [1][4] = "1";//sign
+        DataArray [1][5] = "all";//dates
+        DataArray [1][6] = "date";//sortby
+        R_Count = 1;
+        RowArray = new Array(4);
+        RowArray[0] = new Array(4);
+        RowArray[0][0] = 1 ;  // which display row type is this?
+        RowArray[0][1] = 1 ;  // do we need the data row selector? if so, which one? -1 for false, 0 or greater for the row
+        RowArray[0][2] = 1;   // how many datarows are there
+        RowArray[0][3] = new Array(1);   // do we need the data row selector? 
+        RowArray[0][3][0] = 0 ;  //multiple accounts selected for data rows
+        RowArray[0][4] = 2 ;  //cell count
+        RowArray[0][5] = new Array(2);  //cell count
+        RowArray[0][5][1] = new Array(4);  //cells
+        RowArray[0][5][1][0] = 10 ;  // which cell type is this?
+        RowArray[0][5][1][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][1][2] = "" ;  // label
+        RowArray[0][5][1][3] = "" ;  // style
+        RowArray[0][5][2] = new Array(4);  //cells
+        RowArray[0][5][2][0] = 9 ;  // which cell type is this?
+        RowArray[0][5][2][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][2][2] = "" ;  // label
+        RowArray[0][5][2][3] = "" ;  // style
+    }
+    if(default_select.value == "income_expense")
+    {
+        StatementArray = new Array(3);
+        StatementArray [1] = "INCOME/EXPENSE";//name
+        StatementArray [2] = 0;//header type
+        StatementArray [3] = "Statement for $account_name from $startdate to $enddate";//body title
+        A_Count = 1
+        AccountArray = new Array(1);
+        AccountArray [1] = new Array(10);
+        AccountArray [1][0] = "specific";//type
+        AccountArray [1][1] = "null";//group
+        AccountArray [1][2] = "user_defined";//specific
+        AccountArray [1][3] = "all";//subs
+        D_Count = 1
+        DataArray = new Array(1);
+        DataArray [1] = new Array(10);
+        DataArray [1][0] = 0;//account set
+        DataArray [1][1] = "nettrans";//type
+        DataArray [1][2] = "user_defined";//target
+        DataArray [1][3] = "Y";//subs
+        DataArray [1][4] = "-1";//sign
+        DataArray [1][5] = "all";//dates
+        DataArray [1][6] = "date";//sortby
+        R_Count = 3;
+        RowArray = new Array(3);
+        RowArray[0] = new Array(4);
+        RowArray[0][0] = 0 ;  // which display row type is this?
+        RowArray[0][1] = 1 ;  // do we need the data row selector? if so, which one? -1 for false, 0 or greater for the row
+        RowArray[0][2] = 1;   // how many datarows are there
+        RowArray[0][3] = new Array(2);   // do we need the data row selector? 
+        RowArray[0][3][0] = 0 ;  //multiple accounts selected for data rows
+        RowArray[0][4] = 4 ;  //cell count
+        RowArray[0][5] = new Array(1);  //cell count
+        RowArray[0][5][1] = new Array(4);  //cells
+        RowArray[0][5][1][0] = 1 ;  // which cell type is this?
+        RowArray[0][5][1][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][1][2] = "STARTING BALANCE" ;  // label
+        RowArray[0][5][1][3] = "" ;  // style
+        RowArray[0][5][2] = new Array(4);  //cells
+        RowArray[0][5][2][0] = 0 ;  // which cell type is this?
+        RowArray[0][5][2][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][2][2] = "" ;  // label
+        RowArray[0][5][2][3] = "" ;  // style
+        RowArray[0][5][3] = new Array(4);  //cells
+        RowArray[0][5][3][0] = 0 ;  // which cell type is this?
+        RowArray[0][5][3][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][3][2] = "" ;  // label
+        RowArray[0][5][3][3] = "" ;  // style
+        RowArray[0][5][4] = new Array(4);  //cells
+        RowArray[0][5][4][0] = 14 ;  // which cell type is this?
+        RowArray[0][5][4][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][4][2] = "" ;  // label
+        RowArray[0][5][4][3] = "" ;  // style
+        RowArray[1] = new Array(4);
+        RowArray[1][0] = 2 ;  // which display row type is this?
+        RowArray[1][1] = 0 ;  // do we need the data row selector?
+        RowArray[1][2] = 1;   // how many datarows are there
+        RowArray[1][3] = new Array(2);   // do we need the data row selector? 
+        RowArray[1][3][0] = 0 ;  //multiple accounts selected for data rows
+        RowArray[1][4] = 4 ;  //cell count
+        RowArray[1][5] = new Array(1);  //cell count
+        RowArray[1][5][1] = new Array(4);  //cells
+        RowArray[1][5][1][0] = 2 ;  // which cell type is this?
+        RowArray[1][5][1][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][1][2] = "" ;  // label
+        RowArray[1][5][1][3] = "" ;  // style
+        RowArray[1][5][2] = new Array(4);  //cells
+        RowArray[1][5][2][0] = 4 ;  // which cell type is this?
+        RowArray[1][5][2][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][2][2] = "" ;  // label
+        RowArray[1][5][2][3] = "" ;  // style
+        RowArray[1][5][3] = new Array(4);  //cells
+        RowArray[1][5][3][0] = 6 ;  // which cell type is this?
+        RowArray[1][5][3][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][3][2] = "" ;  // label
+        RowArray[1][5][3][3] = "" ;  // style
+        RowArray[1][5][4] = new Array(4);  //cells
+        RowArray[1][5][4][0] = 13 ;  // which cell type is this?
+        RowArray[1][5][4][1] = true ;  // do we need the cell type selector?
+        RowArray[1][5][4][2] = "" ;  // label
+        RowArray[1][5][4][3] = "" ;  // style
+        RowArray[2] = new Array(4);
+        RowArray[2][0] = 0 ;  // which display row type is this?
+        RowArray[2][1] = 1 ;  // do we need the data row selector?
+        RowArray[2][2] = 1;   // how many datarows are there
+        RowArray[2][3] = new Array(2);   // do we need the data row selector? 
+        RowArray[2][3][0] = 0 ;  //multiple accounts selected for data rows
+        RowArray[2][4] = 4 ;  //cell count
+        RowArray[2][5] = new Array(1);  //cell count
+        RowArray[2][5][1] = new Array(4);  //cells
+        RowArray[2][5][1][0] = 1 ;  // which cell type is this?
+        RowArray[2][5][1][1] = true ;  // fillin value
+        RowArray[2][5][1][2] = "ENDING BALANCE" ;  // label
+        RowArray[2][5][1][3] = "" ;  // style
+        RowArray[2][5][2] = new Array(4);  //cells
+        RowArray[2][5][2][0] = 0 ;  // which cell type is this?
+        RowArray[2][5][2][1] = true ;  // fillin value
+        RowArray[2][5][2][2] = "" ;  // label
+        RowArray[2][5][2][3] = "" ;  // style
+        RowArray[2][5][3] = new Array(4);  //cells
+        RowArray[2][5][3][0] = 0 ;  // which cell type is this?
+        RowArray[2][5][3][1] = true ;  // fillin value
+        RowArray[2][5][3][2] = "" ;  // label
+        RowArray[2][5][3][3] = "" ;  // style
+        RowArray[2][5][4] = new Array(4);  //cells
+        RowArray[2][5][4][0] = 15 ;  // which cell type is this?
+        RowArray[2][5][4][1] = true ;  // fillin value
+        RowArray[2][5][4][2] = "" ;  // label
+        RowArray[2][5][4][3] = "" ;  // style
+    }
+    if(default_select.value == "reconciliation")
+    {
+        StatementArray = new Array(3);
+        StatementArray [1] = "RECONCILIATION";//name
+        StatementArray [2] = 0;//header type
+        StatementArray [3] = "Reconciliation for $account_name from $startdate to $enddate";//body title
+        A_Count = 1
+        AccountArray = new Array(1);
+        AccountArray [1] = new Array(10);
+        AccountArray [1][0] = "specific";//type
+        AccountArray [1][1] = "null";//group
+        AccountArray [1][2] = "user_defined";//specific
+        AccountArray [1][3] = "all";//subs
+        D_Count = 1
+        DataArray = new Array(1);
+        DataArray [1] = new Array(10);
+        DataArray [1][0] = 0;//account set
+        DataArray [1][1] = "reconciliation";//type
+        DataArray [1][2] = "user_defined";//target
+        DataArray [1][3] = "Y";//subs
+        DataArray [1][4] = "1";//sign
+        DataArray [1][5] = "all";//dates
+        DataArray [1][6] = "date";//sortby
+        R_Count = 1;
+        RowArray = new Array(1);
+        RowArray[0] = new Array(4);
+        RowArray[0][0] = 2 ;  // which display row type is this?
+        RowArray[0][1] = 1 ;  // do we need the data row selector? if so, which one? -1 for false, 0 or greater for true
+        RowArray[0][2] = 1;   // how many datarows are there
+        RowArray[0][3] = new Array(2);   // do we need the data row selector? 
+        RowArray[0][3][0] = 0 ;  //multiple accounts selected for data rows
+        RowArray[0][4] = 7 ;  //cell count
+        RowArray[0][5] = new Array(1);  //cell count
+        RowArray[0][5][1] = new Array(4);  //cells
+        RowArray[0][5][1][0] = 5 ;  // which cell type is this?
+        RowArray[0][5][1][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][1][2] = "" ;  // label
+        RowArray[0][5][1][3] = "" ;  // style
+        RowArray[0][5][2] = new Array(4);  //cells
+        RowArray[0][5][2][0] = 2 ;  // which cell type is this?
+        RowArray[0][5][2][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][2][2] = "" ;  // label
+        RowArray[0][5][2][3] = "" ;  // style
+        RowArray[0][5][3] = new Array(4);  //cells
+        RowArray[0][5][3][0] = 3 ;  // which cell type is this?
+        RowArray[0][5][3][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][3][2] = "" ;  // label
+        RowArray[0][5][3][3] = "" ;  // style
+        RowArray[0][5][4] = new Array(4);  //cells
+        RowArray[0][5][4][0] = 12 ;  // which cell type is this?
+        RowArray[0][5][4][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][4][2] = "" ;  // label
+        RowArray[0][5][4][3] = "" ;  // style
+        RowArray[0][5][5] = new Array(4);  //cells
+        RowArray[0][5][5][0] = 6 ;  // which cell type is this?
+        RowArray[0][5][5][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][5][2] = "" ;  // label
+        RowArray[0][5][5][3] = "" ;  // style
+        RowArray[0][5][6] = new Array(4);  //cells
+        RowArray[0][5][6][0] = 13 ;  // which cell type is this?
+        RowArray[0][5][6][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][6][2] = "" ;  // label
+        RowArray[0][5][6][3] = "" ;  // style
+        RowArray[0][5][7] = new Array(4);  //cells
+        RowArray[0][5][7][0] = 4 ;  // which cell type is this?
+        RowArray[0][5][7][1] = true ;  // do we need the cell type selector?
+        RowArray[0][5][7][2] = "" ;  // label
+        RowArray[0][5][7][3] = "" ;  // style
+    }
+    name_box = document.getElementById("statement[name]");
+    name_box.value = StatementArray[1];
+    header_select = document.getElementById("statement[header_type]");    
+    header_select.options[StatementArray[2]].selected = true;
+    body_title = document.getElementById("statement[body_header]");
+    body_title.value = StatementArray[3];
+    for(i=1; i <= A_Count; i++)
+    {
+        add_account_row_load_defaults(i, AccountArray[i][0], AccountArray[i][1], AccountArray[i][2], AccountArray[i][3]);
+    }
+    for(i=1; i <= D_Count; i++)
+    {
+        add_data_row_load_defaults(i, DataArray[i][0], DataArray[i][1], DataArray[i][2], DataArray[i][3], DataArray[i][4], DataArray[i][5], DataArray[i][6], DataArray[i][7], DataArray[i][8], DataArray[i][9], DataArray[i][10], DataArray[i][11]);
+    }
+    for(i=0; i < R_Count; i++)
+    {
+        add_display_row(1);
+        row_type_select = document.getElementById("statement[body][rows]["+i+"][type]");
+        row_type_select.options[RowArray[i][0]].selected = true;
+        //now we need to select the data rows, if needed
+        drow_select = document.getElementById("statement[body][rows]["+i+"][drow_id][]");
+        for(j=0; j <  RowArray[i][2]; j++)
+        {
+            drow_select.options[RowArray[i][3][j]].selected = true;
+        }        
+        for(j=1; j <=  RowArray[i][4]; j++)
+        {
+            add_cell(i, RowArray[i][5][j][2]);
+            cell_type_select = document.getElementById("statement[body][rows]["+i+"][cells]["+j+"][type]");
+            cell_type_select.options[RowArray[i][5][j][0]].selected = true;
+        }    
+
+    }
+}
+
+
+
+function add_display_row() {
+
+    var table = document.getElementById("display_rows");
+    //how many rows in the table
+    numRowsInTable = table.rows.length;
+    // add a row
+    table.insertRow(numRowsInTable);
+    //how many cells in the row
+    //numCellInRow = table.rows[numRowsInTable].cells.length
+    //add the cell
+    table.rows[numRowsInTable].insertCell(0);
+    //create content for the cell
+    select_box = create_select_box(numRowsInTable);
+    //add contents for cells
+    table.rows[numRowsInTable].cells[0].innerHTML = select_box;
+}
+function create_select_box(num){
+    htmlString = "<SELECT  SIZE=\"1\" NAME=\"statement[body][rows]["+num+"][type]\" ID=\"statement[body][rows]["+num+"][type]\"  onchange=\"check_row_type(this, "+num+")\">";
+    htmlString += "<OPTION value=\"data\">DATA</OPTION>";
+    htmlString += "<OPTION value=\"iterate_accounts\">ITERATE ACCOUNTS</OPTION>";
+    htmlString += "<OPTION value=\"iterate_transactions\">ITERATE TRANSACTIONS</OPTION>";
+    htmlString += "<OPTION value=\"label\">LABELS</OPTION>";
+    htmlString += "<OPTION value=\"sum_data\">SUM DATA</OPTION>";
+    htmlString += "<OPTION value=\"delete\">Delete Row</OPTION>";
+    htmlString += "</SELECT><BR/>On Data Sets:";
+    htmlString += create_drow_select_box(num);
+    htmlString += "<BR/><input type=\"BUTTON\"  name=\"ADD_CELL\"  onclick=\"add_cell("+num+")\" value=\"Add Cell\">";
+    return htmlString; 
+}
+function create_drow_select_box(num){
+    htmlString = "<SELECT  multiple SIZE=\"5\" NAME=\"statement[body][rows]["+num+"][drow_id][]\" ID=\"statement[body][rows]["+num+"][drow_id][]\"  >";
+    <?  
+    for($i = 0; $i < 30; $i++)
+    {
+        ?>
+        htmlString += "<OPTION value=\"<? echo $i?>\"><? echo $i?></OPTION>";
+
+        <?
+    }
+    ?>
+    htmlString += "</SELECT>";
+    return htmlString; 
+}
+
+function add_cell(row_num, label) 
+{
+
+    var table = document.getElementById("display_rows");
+    //how many cells in the row
+    numCellInRow = table.rows[row_num].cells.length
+    //add the cell
+    table.rows[row_num].insertCell(numCellInRow);
+    //create content for the cell
+    row_type = document.getElementById("statement[body][rows]["+row_num+"][type]");
+    cell_box = create_cell_box(row_num, row_type.value, numCellInRow, label);
+    cell_box += "<BR/>Style:";
+    cell_box += create_cell_style_box(row_num, row_type.value, numCellInRow);
+    //add contents for cells
+    table.rows[row_num].cells[numCellInRow].innerHTML = cell_box;
+    
+}
+
+function delete_data_set(row_num)
+{
+    //get the table
+    var table = document.getElementById("data_sets");
+    //delete row row_num
+    table.deleteRow(row_num);
+    row_count =  data_set_count;
+    //renumber_rows(i, row_num);
+    for(i=row_num; i < row_count; i++)
+    {
+        table.rows[i].cells[0].innerHTML = "Row "+i;
+        id = i+1;
+        aset = document.getElementById("statement[body][drows]["+id+"][aset]");
+        aset.setAttribute("id", "statement[body][drows]["+i+"][aset]");
+        aset.setAttribute("name", "statement[body][drows]["+i+"][aset]");
+        dtype = document.getElementById("statement[body][drows]["+id+"][type]");
+        dtype.setAttribute("id", "statement[body][drows]["+i+"][type]");
+        dtype.setAttribute("name", "statement[body][drows]["+i+"][type]");
+        target_account = document.getElementById("statement[body][drows]["+id+"][target_account]");
+        target_account.setAttribute("id", "statement[body][drows]["+i+"][target_account]");
+        target_account.setAttribute("name", "statement[body][drows]["+i+"][target_account]");
+        target_account_subs = document.getElementById("statement[body][drows]["+id+"][target_account_subs]");
+        target_account_subs.setAttribute("id", "statement[body][drows]["+i+"][target_account_subs]");
+        target_account_subs.setAttribute("name", "statement[body][drows]["+i+"][target_account_subs]");
+        sign = document.getElementById("statement[body][drows]["+id+"][sign]");
+        sign.setAttribute("id", "statement[body][drows]["+i+"][sign]");
+        sign.setAttribute("name", "statement[body][drows]["+i+"][sign]");
+        data_set_date = document.getElementById("statement[body][drows]["+id+"][data_set_date]");
+        data_set_date.setAttribute("id", "statement[body][drows]["+i+"][data_set_date]");
+        data_set_date.setAttribute("name", "statement[body][drows]["+i+"][data_set_date]");
+        data_set_sort = document.getElementById("statement[body][drows]["+id+"][data_set_sort]");
+        data_set_sort.setAttribute("id", "statement[body][drows]["+i+"][data_set_sort]");
+        data_set_sort.setAttribute("name", "statement[body][drows]["+i+"][data_set_sort]");
+        dbutton = document.getElementById("delete_drow["+id+"]");
+        dbutton.setAttribute("id", "delete_drow["+i+"]");
+        dbutton.setAttribute("name", "delete_drow["+i+"]");
+        dbutton.setAttribute("onclick", "delete_data_set("+i+")");
+    }
+    
+    
+}
+function delete_account_set(row_num)
+{
+    //get the table
+    var table = document.getElementById("account_sets");
+    //delete row row_num
+    table.deleteRow(row_num);
+    row_count =  account_set_count;
+    //renumber_rows(i, row_num);
+    for(i=row_num; i < row_count; i++)
+    {
+        table.rows[i].cells[0].innerHTML = "Row "+i;
+        id = i+1;
+        settype = document.getElementById("statement[body][arows]["+id+"][type]");
+        settype.setAttribute("id", "statement[body][arows]["+i+"][type]");
+        settype.setAttribute("name", "statement[body][arows]["+i+"][type]");
+        group = document.getElementById("statement[body][arows]["+id+"][group]");
+        group.setAttribute("id", "statement[body][arows]["+i+"][group]");
+        group.setAttribute("name", "statement[body][arows]["+i+"][group]");
+        specific = document.getElementById("statement[body][arows]["+id+"][specific]");
+        specific.setAttribute("id", "statement[body][arows]["+i+"][specific]");
+        specific.setAttribute("name", "statement[body][arows]["+i+"][specific]");
+        sub_level = document.getElementById("statement[body][arows]["+id+"][sub_level]");
+        sub_level.setAttribute("id", "statement[body][arows]["+i+"][sub_level]");
+        sub_level.setAttribute("name", "statement[body][arows]["+i+"][sub_level]");
+        dbutton = document.getElementById("delete_drow["+id+"]");
+        dbutton.setAttribute("id", "delete_drow["+i+"]");
+        dbutton.setAttribute("name", "delete_drow["+i+"]");
+        dbutton.setAttribute("onclick", "delete_account_set("+i+")");
+    }
+    
+    
+}
+function remove_all_account_sets()
+{
+    //get the table
+    var table = document.getElementById("account_sets");
+    //delete row row_num
+    row_num = table.rows.length;
+    for(i=0; i < row_num; i++)
+    {
+        table.deleteRow(0);
+    }
+    data_sets = 0;
+}
+function remove_all_datasets()
+{
+    //get the table
+    var table = document.getElementById("data_sets");
+    //delete row row_num
+    row_num = table.rows.length;
+    for(i=0; i < row_num; i++)
+    {
+        table.deleteRow(0);
+    }
+    data_sets = 0;
+}
+function add_account_row_load_defaults(i, a_type, group, specific, sub_level)
+{
+    account_set_count = account_set_count+1;
+    var table = document.getElementById("account_sets");
+    //how many rows in the table
+    row_num = table.rows.length;
+    // add a row
+    table.insertRow(row_num);
+    numCellInRow = table.rows[row_num].cells.length
+    //add the cell
+    table.rows[row_num].insertCell(numCellInRow);
+    table.rows[row_num].cells[numCellInRow].innerHTML = "Row "+row_num;
+   //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    htmlString = "Set Type:"+a_type;
+    htmlString += "<input type=\"hidden\" name=\"statement[body][arows]["+row_num+"][type]\" ID=\"statement[body][arows]["+row_num+"][type]\" value=\""+a_type+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+     //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    htmlString = "Group:"+group;
+    htmlString += "<input type=\"hidden\" name=\"statement[body][arows]["+row_num+"][group]\" ID=\"statement[body][arows]["+row_num+"][group]\" value=\""+group+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    htmlString = "Specific:"+specific;
+    htmlString += "<input type=\"hidden\" name=\"statement[body][arows]["+row_num+"][specific]\" ID=\"statement[body][arows]["+row_num+"][specific]\" value=\""+specific+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    htmlString = "Subs:"+sub_level;
+    htmlString += "<input type=\"hidden\" name=\"statement[body][arows]["+row_num+"][sub_level]\" ID=\"statement[body][arows]["+row_num+"][sub_level]\" value=\""+sub_level+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    htmlString = "<input type=\"button\" name=\"delete_drow\" ID=\"delete_drow["+row_num+"]\" onclick=\"delete_account_set("+row_num+");\" value=\"Delete Account Set\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+
+}
+function add_data_row_load_defaults(i, a_set, d_type, d_target, subs, sign, data_set_date, data_set_sort)
+{
+    data_set_count = data_set_count+1;
+    var table = document.getElementById("data_sets");
+    //how many rows in the table
+    row_num = table.rows.length;
+    // add a row
+    table.insertRow(row_num);
+    numCellInRow = table.rows[row_num].cells.length
+    //add the cell
+    table.rows[row_num].insertCell(numCellInRow);
+    table.rows[row_num].cells[numCellInRow].innerHTML = "Row "+row_num;
+   //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    var form_set = document.getElementById("statement[body][drow][aset]");
+    htmlString = "Account Set:"+a_set;
+    htmlString += "<input type=\"hidden\" name=\"statement[body][drows]["+row_num+"][aset]\" ID=\"statement[body][drows]["+row_num+"][aset]\" value=\""+a_set+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    var form_set = document.getElementById("statement[body][drow][type]");
+    htmlString = "Type:"+d_type;
+    htmlString += "<input type=\"hidden\" name=\"statement[body][drows]["+row_num+"][type]\" ID=\"statement[body][drows]["+row_num+"][type]\" value=\""+d_type+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+     //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    form_set = document.getElementById("statement[body][drow][target_account]");
+    htmlString = "Target:"+d_target;
+    htmlString += "<input type=\"hidden\" name=\"statement[body][drows]["+row_num+"][target_account]\" ID=\"statement[body][drows]["+row_num+"][target_account]\" value=\""+d_target+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    form_set = document.getElementById("statement[body][drow][target_account_subs]");
+    htmlString = "Subs:"+subs;
+    htmlString += "<input type=\"hidden\" name=\"statement[body][drows]["+row_num+"][target_account_subs]\" ID=\"statement[body][drows]["+row_num+"][target_account_subs]\" value=\""+subs+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    numCellInRow = table.rows[row_num].cells.length
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    form_set = document.getElementById("statement[body][drow][sign]");
+    htmlString = "Sign:"+sign;
+    htmlString += "<input type=\"hidden\"  name=\"statement[body][drows]["+row_num+"][sign]\"  ID=\"statement[body][drows]["+row_num+"][sign]\" value=\""+sign+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    form_set = document.getElementById("statement[body][drow][data_set_date]");
+    htmlString = "Dates:"+data_set_date;
+    htmlString += "<input type=\"hidden\"  name=\"statement[body][drows]["+row_num+"][data_set_date]\"  ID=\"statement[body][drows]["+row_num+"][data_set_date]\" value=\""+data_set_date+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length;
+    table.rows[row_num].insertCell(numCellInRow);
+    form_set = document.getElementById("statement[body][drow][data_set_sort]");
+    htmlString = "Sort By:"+data_set_sort;
+    htmlString += "<input type=\"hidden\"  name=\"statement[body][drows]["+row_num+"][data_set_sort]\"  ID=\"statement[body][drows]["+row_num+"][data_set_sort]\" value=\""+data_set_sort+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    htmlString = "<input type=\"button\" name=\"delete_drow\" ID=\"delete_drow["+row_num+"]\" onclick=\"delete_data_set("+row_num+");\" value=\"Delete Data Row\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+
+}
+function add_data_set()
+{
+    data_set_count = data_set_count+1;
+    var table = document.getElementById("data_sets");
+    //how many rows in the table
+    row_num = table.rows.length;
+    // add a row
+    table.insertRow(row_num);
+    numCellInRow = table.rows[row_num].cells.length
+    //add the cell
+    table.rows[row_num].insertCell(numCellInRow);
+    table.rows[row_num].cells[numCellInRow].innerHTML = "Row "+row_num;
+   //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    var form_set = document.getElementById("statement[body][drow][aset]");
+    htmlString = "Account Set:"+form_set.value;
+    htmlString += "<input type=\"hidden\" name=\"statement[body][drows]["+row_num+"][aset]\" ID=\"statement[body][drows]["+row_num+"][aset]\" value=\""+form_set.value+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    var form_set = document.getElementById("statement[body][drow][type]");
+    htmlString = "Type:"+form_set.value;
+    htmlString += "<input type=\"hidden\" name=\"statement[body][drows]["+row_num+"][type]\" ID=\"statement[body][drows]["+row_num+"][type]\" value=\""+form_set.value+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+     //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    form_set = document.getElementById("statement[body][drow][target_account]");
+    htmlString = "Target:"+form_set.value;
+    htmlString += "<input type=\"hidden\" name=\"statement[body][drows]["+row_num+"][target_account]\" ID=\"statement[body][drows]["+row_num+"][target_account]\" value=\""+form_set.value+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    form_set = document.getElementById("statement[body][drow][target_account_subs]");
+    htmlString = "Subs:"+form_set.value;
+    htmlString += "<input type=\"hidden\" name=\"statement[body][drows]["+row_num+"][target_account_subs]\" ID=\"statement[body][drows]["+row_num+"][target_account_subs]\" value=\""+form_set.value+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    numCellInRow = table.rows[row_num].cells.length
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    form_set = document.getElementById("statement[body][drow][sign]");
+    htmlString = "Sign:"+form_set.value;
+    htmlString += "<input type=\"hidden\"  name=\"statement[body][drows]["+row_num+"][sign]\"  ID=\"statement[body][drows]["+row_num+"][sign]\" value=\""+form_set.value+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    form_set = document.getElementById("statement[body][drow][data_set_date]");
+    htmlString = "Dates:"+form_set.value;
+    htmlString += "<input type=\"hidden\"  name=\"statement[body][drows]["+row_num+"][data_set_date]\"  ID=\"statement[body][drows]["+row_num+"][data_set_date]\" value=\""+form_set.value+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length;
+    table.rows[row_num].insertCell(numCellInRow);
+    form_set = document.getElementById("statement[body][drow][data_set_sort]");
+    htmlString = "Sort By:"+form_set.value;
+    htmlString += "<input type=\"hidden\"  name=\"statement[body][drows]["+row_num+"][data_set_sort]\"  ID=\"statement[body][drows]["+row_num+"][data_set_sort]\" value=\""+form_set.value+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    htmlString = "<input type=\"button\" name=\"delete_drow\" ID=\"delete_drow["+row_num+"]\" onclick=\"delete_data_set("+row_num+");\" value=\"Delete Data Row\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+
+}
+function add_account_set()
+{
+    account_set_count = account_set_count+1;
+    var table = document.getElementById("account_sets");
+    //how many rows in the table
+    row_num = table.rows.length;
+    // add a row
+    table.insertRow(row_num);
+    numCellInRow = table.rows[row_num].cells.length
+    //add the cell
+    table.rows[row_num].insertCell(numCellInRow);
+    table.rows[row_num].cells[numCellInRow].innerHTML = "Row "+row_num;
+   //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    var form_set = document.getElementById("statement[body][arow][type]");
+    htmlString = "Set Type:"+form_set.value;
+    htmlString += "<input type=\"hidden\" name=\"statement[body][arows]["+row_num+"][type]\" ID=\"statement[body][arows]["+row_num+"][type]\" value=\""+form_set.value+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+     //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    var form_set = document.getElementById("statement[body][arow][group]");
+    htmlString = "Group:"+form_set.value;
+    htmlString += "<input type=\"hidden\" name=\"statement[body][arows]["+row_num+"][group]\" ID=\"statement[body][arows]["+row_num+"][group]\" value=\""+form_set.value+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    var form_set = document.getElementById("statement[body][arow][specific]");
+    htmlString = "Specific:"+form_set.value;
+    htmlString += "<input type=\"hidden\" name=\"statement[body][arows]["+row_num+"][specific]\" ID=\"statement[body][arows]["+row_num+"][specific]\" value=\""+form_set.value+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    form_set = document.getElementById("statement[body][arow][sub_level]");
+    htmlString = "Subs:"+form_set.value;
+    htmlString += "<input type=\"hidden\" name=\"statement[body][arows]["+row_num+"][sub_level]\" ID=\"statement[body][arows]["+row_num+"][sub_level]\" value=\""+form_set.value+"\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+    //add the cell
+    numCellInRow = table.rows[row_num].cells.length
+    table.rows[row_num].insertCell(numCellInRow);
+    htmlString = "<input type=\"button\" name=\"delete_drow\" ID=\"delete_drow["+row_num+"]\" onclick=\"delete_account_set("+row_num+");\" value=\"Delete Account Set\">";
+    table.rows[row_num].cells[numCellInRow].innerHTML = htmlString;
+
+}
+
+function monthly_to_yearly(mORy){
+    var inbox = document.getElementById("statement[body][drow]["+mORy+"]");
+    budgeted = inbox.value;
+    budgeted = budgeted*1;
+    if(mORy == "monthly")
+    {
+        var outbox = document.getElementById("statement[body][drow][yearly]");
+        amount = budgeted*12;
+        outbox.value = amount.toFixed(2);
+        var outbox = document.getElementById("statement[body][drow][monthly]");
+        outbox.value = budgeted.toFixed(2);
+        
+    }
+    else{
+        var outbox = document.getElementById("statement[body][drow][monthly]");
+        amount = budgeted/12;
+        outbox.value = amount.toFixed(2);
+        var outbox = document.getElementById("statement[body][drow][yearly]");
+        outbox.value = budgeted.toFixed(2);
+
+    }
+}
+function create_cell_box(num, cell_type, cell_num, label){
+    htmlString = "<SELECT  SIZE=\"1\" NAME=\"statement[body][rows]["+num+"][cells]["+cell_num+"][type]\" ID=\"statement[body][rows]["+num+"][cells]["+cell_num+"][type]\">";
+    htmlString += "<OPTION value=\"null\">NULL</OPTION>";
+    htmlString += "<OPTION value=\"fillin_label\">FILL-IN LABEL</OPTION>";
+    htmlString += "<OPTION value=\"date\">DATE</OPTION>";
+    htmlString += "<OPTION value=\"reconcile_date\">RECONCILE DATE</OPTION>";
+    htmlString += "<OPTION value=\"comment\">COMMENT</OPTION>";
+    htmlString += "<OPTION value=\"check_no\">CHECK NUMBER</OPTION>";
+    htmlString += "<OPTION value=\"amount\">TRANSACTION AMOUNT</OPTION>";
+    htmlString += "<OPTION value=\"debit\">DEBIT AMOUNT</OPTION>";
+    htmlString += "<OPTION value=\"credit\">CREDIT AMOUNT</OPTION>";
+    htmlString += "<OPTION value=\"balance\">BALANCE</OPTION>";
+    htmlString += "<OPTION value=\"from_account\">FROM ACCOUNT</OPTION>";
+    htmlString += "<OPTION value=\"to_account\">TO ACCOUNT</OPTION>";
+    htmlString += "<OPTION value=\"from_or_to_account\">FROM/TO ACCOUNT</OPTION>";
+    htmlString += "<OPTION value=\"running_total\">RUNNING TOTAL</OPTION>";
+    htmlString += "<OPTION value=\"starting_balance\">STARTING BALANCE</OPTION>";
+    htmlString += "<OPTION value=\"ending_balance\">ENDING BALANCE</OPTION>";
+    htmlString += "<OPTION value=\"month_actual\">Monthly ACTUAL</OPTION>";
+    htmlString += "<OPTION value=\"month_budget\">Monthly Budgeted</OPTION>";
+    htmlString += "<OPTION value=\"month_var\">Monthly Variance</OPTION>";
+    htmlString += "<OPTION value=\"month_pvar\">Monthly % Variance</OPTION>";
+    htmlString += "<OPTION value=\"year_actual\">YTD Actual</OPTION>";
+    htmlString += "<OPTION value=\"year_budget\">YTD Budgeted</OPTION>";
+    htmlString += "<OPTION value=\"year_var\">YTD Variance</OPTION>";
+    htmlString += "<OPTION value=\"year_pvar\">YTD % Variance</OPTION>";
+    htmlString += "<OPTION value=\"annual_budget\">Annual Budget</OPTION>";
+    htmlString += "<OPTION value=\"as_currentowed\">AS Current Owed</OPTION>";
+    htmlString += "<OPTION value=\"as_030owed\">AS 0-30 Owed</OPTION>";
+    htmlString += "<OPTION value=\"as_3060owed\">AS 30-60 Owed</OPTION>";
+    htmlString += "<OPTION value=\"as_6090owed\">AS 60-90 Owed</OPTION>";
+    htmlString += "<OPTION value=\"as_o90owed\">AS Over 90 Owed</OPTION>";
+    htmlString += "<OPTION value=\"as_prepay\">AS Prepayments</OPTION>";
+    htmlString += "<OPTION value=\"as_total\">AS Total Owed</OPTION>";
+    htmlString += "<OPTION value=\"expense_account\">Expense Account</OPTION>";
+    htmlString += "<OPTION value=\"income_account\">Income Account</OPTION>";
+    htmlString += "<OPTION value=\"delete\">Delete Cell</OPTION>";
+    htmlString += "</SELECT><BR />Label:";
+    htmlString += "<input type=\"TEXT\"  name=\"statement[body][rows]["+num+"][cells]["+cell_num+"][fillin]\" size=\"25\" value=\""+label+"\">";
+    return htmlString; 
+}
+function create_cell_style_box(num, cell_type, cell_num){
+    htmlString = "<SELECT  SIZE=\"1\" NAME=\"statement[body][rows]["+num+"][cells]["+cell_num+"][style]\" ID=\"statement[body][rows]["+num+"][cells]["+cell_num+"][style]\">";
+    htmlString += "<OPTION value=\"none\">None</OPTION>";
+    htmlString += "<OPTION value=\"right\">Right</OPTION>";
+    htmlString += "<OPTION value=\"indent_1\">Indent 1</OPTION>";
+    htmlString += "<OPTION value=\"indent_2\">Indent 2</OPTION>";
+    htmlString += "<OPTION value=\"indent_3\">Indent 3</OPTION>";
+    htmlString += "<OPTION value=\"indent_4\">Indent 4</OPTION>";
+    htmlString += "<OPTION value=\"indent_5\">Indent 5</OPTION>";
+    htmlString += "<OPTION value=\"underline\">U-line</OPTION>";
+    htmlString += "<OPTION value=\"double_underline\">Double U-line</OPTION>";
+    htmlString += "<OPTION value=\"left\">Left</OPTION>";
+    htmlString += "</SELECT>";
+    return htmlString; 
+}
+
+
+ 
+</script>
+<div class="module_container">
+<div class="portlet">
+    <form action="<? echo $BASE_DIR ?>/statements/statements_config.php"  method=POST>
+        <div class="divheader">Edit Statement</div>
+        <div class="row">
+            <span class="label">Statement Name:</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="edit_statement" ID="edit_statement">
+                <?
+                foreach($statement_list AS $row)
+                {
+                    echo "<OPTION value=\"".$row['statement_id']."\">".$row['statement_name']."</OPTION>\n";
+                }
+                ?>
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label"><input type="SUBMIT"  name="ACTION"  value="DELETE"></span>
+            <span class="formw"><input type="SUBMIT"  name="ACTION"  value="EDIT"></span>
+        </div>    
+    </form>
+</div>
+<div class="portlet">
+        <div class="divheader">Load Default Statement</div>
+        <div class="row">
+            <span class="label">Statement Name:</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="load_defaults" ID="load_defaults">
+                <OPTION value="invoice" >INVOICE</OPTION>
+                <OPTION value="income_expense" >INCOME/EXPENSE</OPTION>
+                <OPTION value="ar_aging_summary" >AR Aging Summary</OPTION>
+                <OPTION value="reconciliation" >RECONCILIATION</OPTION>
+                <OPTION value="balance_sheet" >BALANCE SHEET</OPTION>
+                <OPTION value="expense_report" >EXPENSE REPORT</OPTION>
+                <OPTION value="income_report" >INCOME REPORT</OPTION>
+                <OPTION value="general_ledger" >GENERAL LEDGER</OPTION>
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+           <span class="label"><input type="BUTTON"  name="LOAD_DEFAULT_BUTTON"  onclick="load_default();" value="Load"></span>
+        </div>    
+    
+</div>
+<div class="portlet">
+    <form action="<? echo $BASE_DIR ?>/statements/statements_config.php"  method=POST>
+        <div class="divheader">Enter Statement Info</div>
+        <div class="row">
+            <span class="label">Statement Name:</span>
+            <span class="formw">
+                <input type="TEXT"  name="statement[name]" id="statement[name]"  value="<? echo @$statement['name']?>" size="20">
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Statement SubName:</span>
+            <span class="formw">
+                <input type="TEXT"  name="statement[name2]" id="statement[name2]"  value="<? echo @$statement['name2']?>" size="20">
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Statement Privilege:</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="statement[privilege]" ID="statement[privilege]">
+                <OPTION value="PRIVATE">PRIVATE</OPTION>;
+                <OPTION value="PUBLIC">PUBLIC</OPTION>;
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Header:</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="statement[header]" ID="statement[header]">
+                <OPTION value="Y"<? if(@$statement['header']== "Y"){echo " selected ";} ?>>YES</OPTION>
+                <OPTION value="N"<? if(@$statement['header']== "N"){echo " selected ";} ?>>NO</OPTION>
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Header Type:</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="statement[header_type]" ID="statement[header_type]">
+                <OPTION value="YARDI"<? if(@$statement['header_type']== "YARDI"){echo " selected ";} ?>>YARDI STATEMENT</OPTION>
+                <OPTION value="MAILING"<? if(@$statement['header_type']== "MAILING"){echo " selected ";} ?>>MAILING</OPTION>
+                <OPTION value="INVOICE"<? if(@$statement['header_type']== "INVOICE"){echo " selected ";} ?>>INVOICE</OPTION>
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Company Header:</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="statement[company_header]" ID="statement[company_header]">
+                <OPTION value="Y"<? if(@$statement['company_header']== "Y"){echo " selected ";} ?>>YES</OPTION>
+                <OPTION value="N"<? if(@$statement['company_header']== "N"){echo " selected ";} ?>>NO</OPTION>
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Mailing Header:</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="statement[mailing_header]" ID="statement[mailing_header]">
+                <OPTION value="Y"<? if(@$statement['mailing_header']== "Y"){echo " selected ";} ?>>YES</OPTION>
+                <OPTION value="N"<? if(@$statement['mailing_header']== "N"){echo " selected ";} ?>>NO</OPTION>
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Body</span>
+            <span class="formw">
+                <input type="hidden"  name="statement_id" id="statement_id" value="<? echo $statement_id ?>">
+                <SELECT  SIZE="1" NAME="statement[body_yn]" ID="statement[body_yn]">
+                <OPTION value="Y"<? if(@$statement['body_yn']== "Y"){echo " selected ";} ?>>YES</OPTION>
+                <OPTION value="N"<? if(@$statement['body_yn']== "N"){echo " selected ";} ?>>NO</OPTION>
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Body Title:</span>
+            <span class="formw">
+                <input type="TEXT"  name="statement[body_header]"  ID="statement[body_header]" value="<? echo @$statement['body_header']?>" size="60">
+            </span>
+        </div>
+        <div class="row" >
+            <span class="label">Body Footer:</span>
+            <span class="formw">
+                <TEXTAREA  name="statement[body_footer]"  value="" cols="60"></TEXTAREA>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="title">Account Set Configure:</span>
+            <span class="formw"><input type="BUTTON"  name="removeall_account_sets"  onclick="remove_all_account_sets();" value="Remove All Account Sets">
+
+            </span>
+        </div> 
+       <div class="row" >
+          <table id="account_sets">
+          <?
+        if(is_array(@$statement['body']['arows']))
+        {
+        
+        foreach(@$statement['body']['arows'] as $row_index => $row)
+        {
+            ?>
+                <tr>
+                    <TD>Row <? echo $row_index ?>:</TD>
+                    <TD>Set Type:<input type="hidden" name="statement[body][arows][<? echo $row_index ?>][type]" ID="statement[body][arows][<? echo $row_index ?>][type]" value="<? echo $row['type'] ?>"><? echo $row['type'] ?></TD>
+                    <TD>Group:<input type="hidden" name="statement[body][arows][<? echo $row_index ?>][group]" ID="statement[body][arows][<? echo $row_index ?>][group]" value="<? echo $row['group'] ?>"><? echo $row['group'] ?></TD>
+                    <TD>Specifc:<input type="hidden" name="statement[body][arows][<? echo $row_index ?>][specific]" ID="statement[body][arows][<? echo $row_index ?>][specific]" value="<? echo $row['specific'] ?>"><? echo $row['specific'] ?></TD>
+                    <TD>Subs:<input type="hidden" name="statement[body][arows][<? echo $row_index ?>][sub_level]" ID="statement[body][arows][<? echo $row_index ?>][sub_level]" value="<? echo $row['sub_level'] ?>"><? echo $row['sub_level'] ?></TD>
+                   <TD><input type="button" name="delete_drow" ID="delete_drow[<? echo $row_index ?>]" onclick="delete_account_set(<? echo $row_index?>);" value="Delete Account Set"></TD>
+                </tr>
+        <?
+        }
+        }
+        ?>
+        </table>
+        </div>
+        <div class="row">
+            <span class="label">Account Set Type:</span>
+            <span class="formw">
+            <SELECT  SIZE="1" NAME="statement[body][arow][aset_type]" ID="statement[body][arow][type]">
+            <OPTION value="group">Group</OPTION>
+            <OPTION value="specific">Specific</OPTION>
+            </SELECT>
+            </span>
+        </div>
+        <div class="row" >
+            <span class="label">
+            Group:
+            </span>
+            <span class="formw">
+            <SELECT  SIZE="1" NAME="statement[body][arow][group]" ID="statement[body][arow][group]">
+            <OPTION value="null">NULL</OPTION>
+            <OPTION value="ASSET">ASSET</OPTION>
+            <OPTION value="LIABILITY">LIABILITY</OPTION>
+            <OPTION value="EQUITY">EQUITY</OPTION>
+            <OPTION value="INCOME">INCOME</OPTION>
+            <OPTION value="EXPENSE">EXPENSE</OPTION>
+            </SELECT>
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Specific:</span>
+            <span class="formw"><SELECT NAME="statement[body][arow][specific]" id="statement[body][arow][specific]">
+                    <?
+                    foreach($accountIDtoFullnameArray AS $act)
+                    {
+                        echo "<OPTION value=\"".$act['account_id']."\">".$act['account_fullname']."</OPTION>\n";
+                    }
+                    ?>
+                    </SELECT>
+            </span>
+        </div> 
+        <div class="row">
+           <span class="label">Recurse Sub Accounts:</span>
+            <span class="formw">
+            <SELECT NAME="statement[body][arow][sub_level]" id="statement[body][arow][sub_level]">
+                   <OPTION value="ALL" >ALL</OPTION> 
+                    <?  
+                    for($i = 0; $i < 30; $i++)
+                    {
+                        ?>
+                        <OPTION value="<? echo $i?>" <? if(@$pop == $i){echo " selected "; @$pop = array_shift($row['drow_id']);} ?>><? echo $i?></OPTION>
+                        <?
+                    }
+                    ?>
+            </SELECT>
+            </span>
+        </div> 
+        <div class="row">
+            <span class="label">Add Account Set:</span>
+            <span class="formw">
+            <input type="BUTTON"  name="ADD_DATA_ROW"  onclick="add_account_set();" value="Add Account Set">
+            </span>
+        </div>
+        <div class="row">
+            <span class="title">Data Set Configure:</span>
+            <span class="formw"><input type="BUTTON"  name="removeall_datasets"  onclick="remove_all_datasets();" value="Remove All Data Sets">
+
+            </span>
+        </div> 
+       <div class="row" >
+          <table id="data_sets">
+          <?
+        if(is_array(@$statement['body']['drows']))
+        {
+        
+        foreach(@$statement['body']['drows'] as $row_index => $row)
+        {
+            ?>
+                <tr>
+                    <TD>Row <? echo $row_index ?>:</TD>
+                    <TD>Account Set:<input type="hidden" name="statement[body][drows][<? echo $row_index ?>][aset]" ID="statement[body][drows][<? echo $row_index ?>][aset]" value="<? echo $row['aset'] ?>"><? echo $row['aset'] ?></TD>
+                    <TD>Type:<input type="hidden" name="statement[body][drows][<? echo $row_index ?>][type]" ID="statement[body][drows][<? echo $row_index ?>][type]" value="<? echo $row['type'] ?>"><? echo $row['type'] ?></TD>
+                    <TD>Target:<input type="hidden" name="statement[body][drows][<? echo $row_index ?>][target_account]" ID="statement[body][drows][<? echo $row_index ?>][target_account]" value="<? echo $row['target_account'] ?>"><? echo $row['target_account'] ?></TD>
+                    <TD>Subs:<input type="hidden" name="statement[body][drows][<? echo $row_index ?>][target_account_subs]" ID="statement[body][drows][<? echo $row_index ?>][target_account_subs]" value="<? echo $row['target_account_subs'] ?>"><? echo $row['target_account_subs'] ?></TD>
+                    <TD>Sign:<input type="hidden" name="statement[body][drows][<? echo $row_index ?>][sign]" ID="statement[body][drows][<? echo $row_index ?>][sign]" value="<? echo $row['sign'] ?>"><? echo $row['sign'] ?></TD>
+                    <TD>Dates:<input type="hidden" name="statement[body][drows][<? echo $row_index ?>][data_set_date]" ID="statement[body][drows][<? echo $row_index ?>][data_set_date]" value="<? echo $row['data_set_date'] ?>"><? echo $row['data_set_date'] ?></TD>
+                    <TD>Sort By:<input type="hidden" name="statement[body][drows][<? echo $row_index ?>][data_set_sort]" ID="statement[body][drows][<? echo $row_index ?>][data_set_sort]" value="<? echo $row['data_set_sort'] ?>"><? echo $row['data_set_sort'] ?></TD>
+                    <TD><input type="button" name="delete_drow" ID="delete_drow[<? echo $row_index ?>]" onclick="delete_data_set(<? echo $row_index?>);" value="Delete Data Row"></TD>
+                </tr>
+        <?
+        }
+        }
+        ?>
+        </table>
+        </div>
+        <div class="row">
+           <span class="label">On Account Set:</span>
+            <span class="formw">
+            <SELECT NAME="statement[body][drow][aset]" id="statement[body][drow][aset]">
+                    
+                   <?  
+                    for($i = 0; $i < 30; $i++)
+                    {
+                        ?>
+                        <OPTION value="<? echo $i?>" <? if(@$pop == $i){echo " selected "; @$pop = array_shift($row['drow_id']);} ?>><? echo $i?></OPTION>
+                        <?
+                    }
+                    ?>
+            </SELECT>
+            </span>
+        </div> 
+        <div class="row">
+            <span class="label">Type:</span>
+            <span class="formw"><SELECT  SIZE="1" NAME="statement[body][drow][type]" ID="statement[body][drow][type]">
+                <OPTION value="aging">Aging Summary</OPTION>
+                <OPTION value="sumgroupline">Sum/Group/Line</OPTION>
+                <OPTION value="balance">Balance</OPTION>
+                <OPTION value="income">Income</OPTION>
+                <OPTION value="expense">Expense</OPTION>
+                <OPTION value="incometrans">Income Transactions</OPTION>
+                <OPTION value="expensetrans">Expense Transactions</OPTION>
+                <OPTION value="nettrans">Net Transactions</OPTION>
+                <OPTION value="ledger">Ledger</OPTION>
+                <OPTION value="reconciliation">Reconciliation</OPTION>
+                </SELECT>
+            </span>
+        </div>                 
+        <div class="row">
+            <span class="label">From/To Specific Accounts:</span>
+            <span class="formw"><SELECT NAME="statement[body][drow][target_account]" id="statement[body][drow][target_account]">
+                    <?
+                    foreach($accountIDtoFullnameArray AS $act)
+                    {
+                        echo "<OPTION value=\"".$act['account_id']."\">".$act['account_fullname']."</OPTION>\n";
+                    }
+                    ?>
+                    </SELECT>
+                    <BR />Include Sub Accounts:
+                    <SELECT  SIZE="1" NAME="statement[body][drow][target_account_subs]" ID="statement[body][drow][target_account_subs]">
+                    <OPTION value="Y">YES</OPTION>
+                    <OPTION value="N">NO</OPTION>
+                    </SELECT>
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Sign:</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="statement[body][drow][sign]" ID="statement[body][drow][sign]">
+                <OPTION value="1">Normal</OPTION>
+                <OPTION value="-1">Reversed</OPTION>
+                </SELECT>
+            </span>
+        </div>
+         <div class="row">
+            <span class="label">Dates:</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="statement[body][drow][data_set_date]" ID="statement[body][drow][data_set_date]">
+                <OPTION value="all">ALL</OPTION>
+                <OPTION value="start_end">Start Date to End Date</OPTION>
+                <OPTION value="intervall_monthly">Interval Monthly</OPTION>
+                </SELECT>
+            </span>
+        </div>
+
+        <div class="row">
+            <span class="label">Sort By:</span>
+            <span class="formw">
+            <SELECT  SIZE="1" NAME="statement[body][drow][data_set_sort]" ID="statement[body][drow][data_set_sort]">
+            <OPTION value="date" >Date</OPTION>
+            <OPTION value="account">Account</OPTION>
+            </SELECT>
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Add Data Set:</span>
+            <span class="formw">
+            <input type="BUTTON"  name="ADD_DATA_ROW"  onclick="add_data_set();" value="Add Data Set">
+            </span>
+        </div>
+        <div class="row">
+            <span class="title">Display Configure:</span>
+            <span class="formw">
+            </span>
+        </div> 
+         <div class="row" >
+            <span class="label">Add Row:</span>
+            <span class="formw"><input type="BUTTON"  name="ADD_ELEMENT"  onclick="add_display_row();" value="Add Display Row">
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Rows:</span>
+            <span class="formw">
+                <table id="display_rows">
+                <?
+                if(is_array(@$statement['body']['rows']))
+                {
+        
+                 foreach(@$statement['body']['rows'] as $row_index => $row)
+                { 
+                    if($row['type']== "delete")
+                    {
+                       continue;
+                    }
+                    ?>
+                        <tr>
+                            <TD>
+                            <SELECT  SIZE="1" NAME="statement[body][rows][<? echo $row_index ?>][type]" ID="statement[body][rows][<? echo $row_index ?>][type]" >
+                            <OPTION value="data" <? if($row['type']== "data"){echo " selected ";} ?>>DATA</OPTION>
+                            <OPTION value="iterate_accounts" <? if($row['type']== "iterate_accounts"){echo " selected ";} ?> >ITERATE ACCOUNTS</OPTION>
+                            <OPTION value="iterate_transactions" <? if($row['type']== "iterate_transactions"){echo " selected ";} ?>>ITERATE TRANSACTIONS</OPTION>
+                            <OPTION value="label" <? if($row['type']== "label"){echo " selected ";} ?> >LABELS</OPTION>
+                            <OPTION value="sum_data" <? if($row['type']== "sum_data"){echo " selected ";} ?> >SUM DATA</OPTION>
+                            <OPTION value="delete" <? if($row['type']== "delete"){echo " selected ";} ?> >Delete Row</OPTION>
+                            </SELECT><BR/>On Data Sets:
+                            <span id="e<? echo $index ?>row<? echo $row_index ?>subtypespan">
+                            <SELECT  SIZE="5" multiple NAME="statement[body][rows][<? echo $row_index ?>][drow_id][]" ID="statement[body][rows][<? echo $row_index ?>][drow_id][]"  >
+                                <?  
+                                $pop = array_shift($row['drow_id']);
+                                echo $pop;
+                                for($i = 0; $i < 30; $i++)
+                                {
+                                    ?>
+                                    <OPTION value="<? echo $i?>" <? if(@$pop == $i){echo " selected "; @$pop = array_shift($row['drow_id']);} ?>><? echo $i?></OPTION>
+                                    <?
+                                }
+                                ?>
+                                </SELECT>
+                            </span>
+                            <input type="BUTTON"  name="ADD_CELL"  onclick="add_cell(<? echo $row_index ?>)" value="Add Cell">
+                            </TD>
+                            <? 
+                            $cell_count = 0;
+                            foreach( $row['cells'] as $cell_index => $cell)
+                            {   
+                                if($cell['type']== "delete")
+                                {
+                                    continue;
+                                }
+                                    ?>
+                                    <TD>
+                                    <SELECT  SIZE="1" NAME="statement[body][rows][<? echo $row_index ?>][cells][<? echo $cell_count ?>][type]" ID="statement[body][rows][<? echo $row_index ?>][cells][<? echo $cell_index ?>][type]">
+                                    <OPTION value="null" <? if($cell['type']== "NULL"){echo " selected ";} ?>>NULL</OPTION>
+                                    <OPTION value="fillin_label" <? if($cell['type']== "fillin_label"){echo " selected ";} ?>>FILL-IN LABEL</OPTION>
+                                    <OPTION value="date" <? if($cell['type']== "date"){echo " selected ";} ?>>DATE</OPTION>
+                                    <OPTION value="reconcile_date" <? if($cell['type']== "reconcile_date"){echo " selected ";} ?>>RECONCILE DATE</OPTION>
+                                    <OPTION value="comment" <? if($cell['type']== "comment"){echo " selected ";} ?>>COMMENT</OPTION>
+                                    <OPTION value="check_no" <? if($cell['type']== "check_no"){echo " selected ";} ?>>CHECK NUMBER</OPTION>
+                                    <OPTION value="amount" <? if($cell['type']== "amount"){echo " selected ";} ?>>TRANSACTION AMOUNT</OPTION>
+                                    <OPTION value="debit" <? if($cell['type']== "debit"){echo " selected ";} ?>>DEBIT AMOUNT</OPTION>
+                                    <OPTION value="credit" <? if($cell['type']== "credit"){echo " selected ";} ?>>CREDIT AMOUNT</OPTION>
+                                    <OPTION value="balance" <? if($cell['type']== "balance"){echo " selected ";} ?>>BALANCE</OPTION>
+                                    <OPTION value="from_account" <? if($cell['type']== "from_account"){echo " selected ";} ?>>FROM ACCOUNT</OPTION>
+                                    <OPTION value="to_account" <? if($cell['type']== "to_account"){echo " selected ";} ?>>TO ACCOUNT</OPTION>
+                                    <OPTION value="from_or_to_account" <? if($cell['type']== "from_or_to_account"){echo " selected ";} ?>>FROM/TO ACCOUNT</OPTION>
+                                    <OPTION value="running_total" <? if($cell['type']== "running_total"){echo " selected ";} ?>>RUNNING TOTAL</OPTION>
+                                    <OPTION value="starting_balance" <? if($cell['type']== "starting_balance"){echo " selected ";} ?>>STARTING BALANCE</OPTION>
+                                    <OPTION value="ending_balance" <? if($cell['type']== "ending_balance"){echo " selected ";} ?>>ENDING BALANCE</OPTION>
+                                    <OPTION value="month_actual"<? if($cell['type']== "month_actual"){echo " selected ";} ?>>Monthly ACTUAL</OPTION>
+                                    <OPTION value="month_budget"<? if($cell['type']== "month_budget"){echo " selected ";} ?>>Monthly Budgeted</OPTION>
+                                    <OPTION value="month_var"<? if($cell['type']== "month_var"){echo " selected ";} ?>>Monthly Variance</OPTION>
+                                    <OPTION value="month_pvar"<? if($cell['type']== "month_pvar"){echo " selected ";} ?>>Monthly % Variance</OPTION>
+                                    <OPTION value="year_actual"<? if($cell['type']== "year_actual"){echo " selected ";} ?>>YTD Actual</OPTION>
+                                    <OPTION value="year_budget"<? if($cell['type']== "year_budget"){echo " selected ";} ?>>YTD Budgeted</OPTION>
+                                    <OPTION value="year_var"<? if($cell['type']== "year_var"){echo " selected ";} ?>>YTD Variance</OPTION>
+                                    <OPTION value="year_pvar"<? if($cell['type']== "year_pvar"){echo " selected ";} ?>>YTD % Variance</OPTION>
+                                    <OPTION value="annual_budget"<? if($cell['type']== "annual_budget"){echo " selected ";} ?>>Annual Budget</OPTION>
+                                    <OPTION value="as_currentowed"<? if($cell['type']== "as_currentowed"){echo " selected ";} ?>>AS Current Owed</OPTION>
+                                    <OPTION value="as_030owed"<? if($cell['type']== "as_030owed"){echo " selected ";} ?>>AS 0-30 Owed</OPTION>
+                                    <OPTION value="as_3060owed"<? if($cell['type']== "as_3060owed"){echo " selected ";} ?>>AS 30-60 Owed</OPTION>
+                                    <OPTION value="as_6090owed"<? if($cell['type']== "as_6090owed"){echo " selected ";} ?>>AS 60-90 Owed</OPTION>
+                                    <OPTION value="as_o90owed"<? if($cell['type']== "as_o90owed"){echo " selected ";} ?>>AS Over 90 Owed</OPTION>
+                                    <OPTION value="as_prepay"<? if($cell['type']== "as_prepay"){echo " selected ";} ?>>AS Prepayments</OPTION>
+                                    <OPTION value="as_total"<? if($cell['type']== "as_total"){echo " selected ";} ?>>AS Total Owed</OPTION>
+                                     <OPTION value="expense_account"<? if($cell['type']== "expense_account"){echo " selected ";} ?>>Expense Account</OPTION>
+                                     <OPTION value="income_account"<? if($cell['type']== "income_account"){echo " selected ";} ?>>Income Account</OPTION>
+                                    <OPTION value="delete" >Delete Cell</OPTION>
+                                    </SELECT><BR />Label:
+                                    <input type="TEXT" name="statement[body][rows][<? echo $row_index ?>][cells][<? echo $cell_count ?>][fillin]" size="25" value="<? echo $cell['fillin']?>">
+                                    <BR />Style:<SELECT  SIZE="1\" NAME="statement[body][rows][<? echo $row_index ?>][cells][<? echo $cell_count ?>][style]" ID="statement[body][rows][<? echo $row_index ?>][cells][<? echo $cell_count ?>][style]">
+                                    <OPTION value="none">None</OPTION>
+                                    <OPTION value="data_default"<? if($cell['style']== "data_default"){echo " selected ";} ?>>Data Default</OPTION>
+                                    <OPTION value="right"<? if($cell['style']== "right"){echo " selected ";} ?>>Right</OPTION>
+                                    <OPTION value="indent_1"<? if($cell['style']== "indent_1"){echo " selected ";} ?>>Indent 1</OPTION>
+                                    <OPTION value="indent_2"<? if($cell['style']== "indent_2"){echo " selected ";} ?>>Indent 2</OPTION>
+                                    <OPTION value="indent_3"<? if($cell['style']== "indent_3"){echo " selected ";} ?>>Indent 3</OPTION>
+                                    <OPTION value="indent_4"<? if($cell['style']== "indent_4"){echo " selected ";} ?>>Indent 4</OPTION>
+                                    <OPTION value="indent_5"<? if($cell['style']== "indent_5"){echo " selected ";} ?>>Indent 5</OPTION>
+                                    <OPTION value="underline"<? if($cell['style']== "underline"){echo " selected ";} ?>>U-line</OPTION>
+                                    <OPTION value="double_underline"<? if($cell['style']== "double_underline"){echo " selected ";} ?>>Double U-line</OPTION>
+                                    <OPTION value="left"<? if($cell['style']== "left"){echo " selected ";} ?>>Left</OPTION>
+                                    </SELECT>
+                                    </TD> 
+                                <?
+                                $cell_count++;
+                            }
+                            ?>
+                        </tr>
+                    <?
+                    }
+                    }
+                    ?>
+                </table>
+            </span>
+        </div>
+        <div class="row" id="end_div">
+            <span class="label"><input type="SUBMIT"  name="ACTION"  value="SAVE"></span>
+        </div>    
+   </form>
+    </div>
+</div>

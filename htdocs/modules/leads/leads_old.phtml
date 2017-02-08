@@ -1,0 +1,198 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<title></title>
+<?
+include("../../../framework/theme.css");
+include("leads_main.css");
+framework::navbar();
+?>
+<script language="JavaScript"
+
+type="text/javascript">
+
+function createXMLHttpRequest() {
+  try {
+    xmlHttp = new XMLHttpRequest();
+  } catch (trymicrosoft) {
+    try {
+      xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (othermicrosoft) {
+      try {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (failed) {
+        xmlHttp = false;
+      }
+    }
+  }
+
+  if (!xmlHttp)
+    alert("Error initializing XMLHttpRequest!");
+}
+
+function save_lead() {
+    createXMLHttpRequest();
+
+    var firstname =  document.getElementById("firstname").value;
+    var lastname = document.getElementById("lastname").value;
+    var contacttype_id = document.getElementById("contacttype_id").value;
+    var addresstype_id = document.getElementById("addresstype_id").value;
+    var street = document.getElementById("street").value;
+    var city = document.getElementById("city").value;
+    var state = document.getElementById("state").value;
+    var zip = document.getElementById("zip").value;
+    var careof = document.getElementById("careof").value;
+    var phonetype_id = document.getElementById("phonetype_id").value;
+    var phone_num = document.getElementById("phone_num").value;
+
+    var queryString = "ACTION=save_lead&firstname=" + encodeURIComponent(firstname) + "&lastname=" + encodeURIComponent(lastname) 
+        + "&contacttype_id=" + contacttype_id + "&addresstype_id=" + addresstype_id + "&street=" + street + 
+        "&city=" + city + "&state=" + state + "&zip=" + zip + "&careof=" + careof
+         + "&phonetype_id=" + phonetype_id + "&phone_num=" + phone_num;
+    xmlHttp.open("POST", "leads_savelead.php", true);
+    xmlHttp.onreadystatechange = handleStateChange;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    
+}
+
+function handleStateChange() {
+    if (xmlHttp.readyState == 4) {
+       if (xmlHttp.status == 200)
+       {
+            var xmlDoc = xmlHttp.responseXML;
+            if(xmlDoc.getElementsByTagName("lead").length > 0)
+            {
+                var transaction_status = xmlDoc.getElementsByTagName("lead")[0].childNodes[0].nodeValue;
+                if(transaction_status == "SAVED")
+                { 
+                    window.location = '<? $_SERVER['PHP_SELF']; ?>';
+                }
+            }    
+            if(xmlDoc.getElementsByTagName("login").length > 0)
+            {
+                var login_status = xmlDoc.getElementsByTagName("login")[0].childNodes[0].nodeValue;
+                if(login_status == "FAILED")
+                {
+                    loginwindow = window.open('../interface/login_popup.html', 'Login', 'height=100,width=300');
+                }
+            }
+               
+       }
+       else if (xmlHttp.status == 404)
+         alert("Request URL does not exist");
+       else
+         alert("Error: status code is " + xmlHttp.status);
+      }
+}
+
+</script>
+
+<div class="module_container">
+
+<div class="portlet">
+<form action="<? echo $BASE_DIR ?>/leads/leads_main.php"  method=POST>
+    <div class="divheader">Lead</div>
+    <div class="row">
+        <span class="label">First Name:</span>
+        <span class="formw">
+            <input type="TEXT"  ID="firstname" name="firstname"  value="<? echo $lead_info['firstname']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Last Name:</span>
+        <span class="formw">
+            <input type="TEXT"  ID="lastname" name="lastname"  value="<? echo $lead_info['lastname']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Catagory:</span>
+        <span class="formw"><SELECT  class="smallsans" SIZE="1" NAME="contacttype_id" ID="contacttype_id" >
+<?
+            foreach($contacttypes as $row)
+            {
+                ?>
+                    <OPTION VALUE="<? echo $row['contacttype_id']; ?>"><? echo $row['contacttype_name']; ?></OPTION>
+                <?
+            }
+?>	
+        </SELECT></span>
+    </div>    
+
+
+ 
+   <div class="row">
+        <span class="label">Address Type</span>
+        <span class="formw">
+        <SELECT  SIZE="1" NAME="addresstype_id" ID="addresstype_id" >
+            <?
+            foreach($addresstypes as $row)
+            {	
+                ?>
+                <OPTION value="<? echo $row['addresstype_id'] ?>"><? echo $row['addresstype_name'] ?></OPTION>
+                <?
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Address:</span>
+        <span class="formw">
+            <input type="TEXT"  name="street" ID="street"  value="<? echo $lead_info['street']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">City</span>
+        <span class="formw">
+                <input type="TEXT"  name="city" ID="city" value="<? echo $lead_info['city']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">State:</span>
+        <span class="formw">
+            <input type="TEXT"  name="state" ID="state"  value="<? echo $lead_info['state']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Zip:</span>
+        <span class="formw">
+            <input type="TEXT"  name="zip" ID="zip"  value="<? echo $lead_info['zip']; ?>" >  
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Care Of:</span>
+        <span class="formw">
+            <input type="TEXT"  name="careof" ID="careof"  value="<? echo $lead_info['careof']; ?>" >
+        </span>
+    </div>    
+   <div class="row">
+        <span class="label">Phone Type</span>
+        <span class="formw">
+        <SELECT  SIZE="1" NAME="phonetype_id" ID="phonetype_id" >
+        <?
+        foreach($phonetypes as $row)
+        {	
+            ?>
+            <OPTION value="<? echo $row['phonetype_id'] ?>"><? echo $row['phonetype_name'] ?></OPTION>
+            <?
+        }
+        ?>	
+        </SELECT>
+        </span>
+    <div class="row">
+        <span class="label">Number</span>
+        <span class="formw">
+            <input type="TEXT"  name="phone_num" ID="phone_num"  value="<? echo $lead_info['phone_num']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="formw">
+            <input type="HIDDEN"  name="contacts_id"  value="NULL" >
+            <input type="BUTTON"  name="ACTION"  onclick="save_lead()" value="Save Contact" >
+        </span>
+    </div>    
+
+</form>
+</div>
+
+</div>

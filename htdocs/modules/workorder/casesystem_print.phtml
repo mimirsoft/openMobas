@@ -1,0 +1,43 @@
+<? 
+include("../../../framework/theme.css");
+include("casesystem.css");
+?>
+
+<div class="portlet3">
+    <div class="divheader">
+        <span class="label">Case Title:</span>
+        <span class="bold"><? echo $caseinfo['case_title'] ?></span>
+    </div>    
+    <?
+    if(is_array($caseentrys))
+    {
+        foreach($caseentrys as $row)
+        {
+            ?>
+    <div class="row">
+        <span class="col2">
+            <? echo $userArray[$row['user_id']] ?><BR /><? echo $row['caseentry_date'] ?>
+        </span>
+        <span class="col3">
+            <div class="row">
+                <span class="col1">COMMENT:</span>
+                <span class="shown"><? echo $row['casesystem_txt'] ?></span>
+            </div>    
+<?
+if($USER->CheckPermissionType($MODULE_NAME) == 'U')
+{
+?>
+             <div class="row">
+                <span class="col1">HIDDEN COMMENT:</span>
+                <span class="hidden"><? echo $row['hiddencasesystem_txt'] ?></span>
+            </div>
+<?
+}
+?>
+        </span>    
+     </div>    
+            <?
+        }
+    }
+    ?>
+</div>

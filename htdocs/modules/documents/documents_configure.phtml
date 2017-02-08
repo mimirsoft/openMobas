@@ -1,0 +1,72 @@
+<?
+include("../../../framework/theme.css");
+include("documents_configure.css");
+framework::navbar();
+?>
+<div class="module_container">
+    <div class="portlet">
+    <form action="<? echo $BASE_DIR ?>/documents/documents_configure.php"  method=POST>
+        <div class="divheader" ALIGN="center" COLSPAN="3" >Documents Types</div>
+        <div class="row">
+            <span class="label">Type:</span>
+            <span class="formw">
+            <input type="TEXT"  name="doc_cat_name"  value="<? echo $doc_cat_name; ?>" size="15">
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Priority:</span>
+            <span class="formw">
+            <input type="TEXT"  name="doc_cat_priority"  value="<? echo $doc_cat_priority; ?>" size="15">
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Is Active:</span>
+            <span class="formw">
+            <SELECT class="smallsans" NAME="doc_cat_is_active">
+                <OPTION
+                <?
+                if ($doc_cat_is_active == 0)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="0">NO</OPTION>
+                <OPTION
+                <?
+                if ($doc_cat_is_active == 1)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="1">YES</OPTION>
+                
+                </SELECT>
+                
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                <input type="SUBMIT"  name="ACTION"  value="Edit Document Category">
+            </span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="document_cat_edit" >
+                <?
+                foreach ($docTypes as $row)
+                {
+                    ?>
+                    <OPTION value="<? echo $row['category_id'] ?>"> <? echo $row['category_name'] ?>-Priority-<? echo $row['category_priority'] ?>-Active- <? echo $row['is_active'] ?></OPTION>
+                    <?
+                }	
+                ?>
+                </SELECT><input type="SUBMIT"  name="ACTION"  value="Delete Document Category" size="15">
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                <input type="HIDDEN"  name="category_id"  value="<? echo $category_id; ?>" >
+                <input type="SUBMIT"  name="ACTION"  value="Save Document Category" size="15">
+            </span>
+        </div>    
+    </form>
+    </div>
+</div>    

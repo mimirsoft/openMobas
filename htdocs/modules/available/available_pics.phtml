@@ -1,0 +1,26 @@
+<?
+include("../../../framework/theme.css");
+include("available.css");
+?>
+<div class="portlet2">
+    <div class="divheader">Property Pictures</div>
+<?
+
+if(is_array($files))
+{
+    foreach($files as $row)
+    {
+        ?>
+        <div class="float">
+        <a href="../interface/download_file.php?file=<?echo $row['file_id'] ?>&permission=property">
+            <img src="../../thumbnails/<? echo $DB_SETTINGS['dbname']?>/<?echo $row['file_id'] ?>" alt="<?echo $row['fileName'] ?>">
+            </a>
+            <p class="desc">
+            <?echo $row['fileDesc'] ?>
+            </p>
+        </div>    
+       <?
+    }
+}
+?>
+</div>

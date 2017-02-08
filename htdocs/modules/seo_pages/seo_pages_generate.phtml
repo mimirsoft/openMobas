@@ -1,0 +1,80 @@
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="seo_pages_maker" media="screen" >
+<?php
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/seo_pages/seo_pages_generate.php" method=POST>
+	<div class="divheader">Generate SEO Pages</div>
+    <div class="row">
+        <span class="label">Page title start:</span>
+        <span class="formw"><input type="TEXT"  name="page_title"  size=50 value="" ></span>
+    </div>    
+	<div class="row">
+        <span class="label">Seo ServiceTerms:</span>
+        <span class="formw">
+    	    <SELECT multiple SIZE="10" NAME="serviceterms[]" >
+            <?php
+            foreach($seo_serviceterms as $row)
+            {	
+                ?>
+                <OPTION value="<?php echo $row['seo_serviceterm_id'] ?>" > <?php echo $row['seo_serviceterm'] ?></OPTION>
+                <?php
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+	<div class="row">
+        <span class="label">Seo GeoTerm:</span>
+        <span class="formw">
+    	    <SELECT multiple SIZE="10" NAME="geoterms[]" >
+            <?php
+            foreach($seo_geoterms as $row)
+            {	
+                ?>
+                <OPTION value="<?php echo $row['seo_geoterm_id'] ?>" > <?php echo $row['seo_geoterm'] ?></OPTION>
+                <?php
+            }
+            ?>
+            </SELECT>
+            </span>
+    </div>
+    <div class="row">
+       <span class="label">ACTION:</span> <span>
+       <input type="SUBMIT"  name="ACTION"  value="Generate Pages" ></span>
+    </div>    
+</form>        
+</div>
+<div class="portlet">
+	<div class="divheader">SEO Pages</div>
+<table>
+	<tr>
+		<td>page_url</td>
+    	<td>page_title</td>
+    	<td>page_content</td>
+    	<td>meta_description</td>
+    	<td>meta_keywords</td>
+	</tr>
+<?php 
+foreach($seo_data as $row)
+{
+    ?><tr>
+    	<td><?php echo $row['seo_page_url'] ; ?></td>
+    	<td><?php echo $row['seo_page_title'] ; ?></td>
+    	<td><?php echo $row['seo_page_content'] ; ?></td>
+    	<td><?php echo $row['meta_description'] ; ?></td>
+    	<td><?php echo $row['meta_keywords'] ; ?></td>
+    	<td><form action="<?php echo $BASE_DIR ?>/seo_pages/seo_pages_generate.php" method=POST>
+    		<input type="HIDDEN"  name="seo_page_edit"  value="<?php echo $row['seo_page_id']; ?>" >
+       		<input type="SUBMIT"  name="ACTION"  value="Delete" >
+    		</form></td>
+    </tr>
+    <?php 
+}
+?>
+
+</table>
+</div>

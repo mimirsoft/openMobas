@@ -1,0 +1,340 @@
+<?php
+include("../../../framework/theme.css");
+include("invoices_cash_receipts.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+
+if(count($remittance_accounts) > 0)
+{
+?>
+<form action="<?php echo $BASE_DIR ?>/invoices/invoices_cash_receipts.php"  method=POST>
+    <input type="SUBMIT"  name="ACTION"  value="Verify Remittance Advice" >
+</form>
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/invoices/invoices_cash_receipts.php"  method=POST>
+    <div class="divheader">Find Remitter</div>
+    <div class="row">
+        <span class="label">Search Name:</span>
+        <span class="formw"><input type="TEXT"  name="search_string"  value="" ></span>
+    </div>    
+    <div class="row">
+            <input type="SUBMIT"  name="ACTION"  value="Search" >
+    </div>    
+</form>
+</div>
+<div class="portlet">
+    <div class="divheader">Search Results</div>
+    <div class="row" id="search_results">
+        <table>
+             <TR>
+                    <TD>
+                         Customer Name
+                    </TD>
+                    <TD>
+                          Account Name
+                    </TD>
+                    <TD>
+                          Check No:
+                    </TD>
+                    <TD>
+                          Check<BR/>Amount
+                    </TD>
+                    <TD>
+                          Comment
+                    </TD>
+                    <TD> 
+                          Date Received
+                    </TD>
+                    <TD>
+                         Remittance GL Account
+                    </TD>
+                </TR>
+<?php
+            foreach($results as $row)
+            {
+                ?>
+                <TR>
+                    <TD>
+                          <?php echo $row['cv_name'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['GL_AR_fullname'] ?>
+                    </TD>
+                    <?php if($row['payments_accepted'] == 1)
+                    {
+                        ?>
+                        <form action="<?php echo $BASE_DIR ?>/invoices/invoices_remittance_advice.php"  method=POST>
+                        <TD>
+                            <input type="TEXT"  name="check_no"  size=5 value="" >
+                        </TD>
+                        <TD>
+                            <input type="TEXT"  name="check_amount"  size=5 value="" >
+                        </TD>
+                        <TD>
+                            <input type="TEXT"  name="comment"  size=20 value="" >
+                        </TD>
+                        <TD class=date>
+                            <?php
+                            Framework::date_selectors($recorddate_year, $recorddate_month, $recorddate_day, "record", "")
+                            ?>
+                        </TD>
+                        <TD>
+                        <SELECT  class="smallsans" SIZE="1" NAME="remittance_deposit" id="remittance_deposit" >
+                        <?php
+                        foreach($remittance_accounts as $remittance_account)
+                        {
+                        ?>
+                        <OPTION value="<?php echo $remittance_account['account_id'];?>" <?php if($remittance_account['default_account']== 1)echo " SELECTED ";?> ><?php echo $remittance_account['account_fullname']?> </OPTION>
+                        
+                        <?php
+                        }
+                        ?>
+                        </SELECT>
+                        </TD>
+                       <TD>
+                            <input type="HIDDEN"  name="cv_id" value="<?php echo $row['cv_id'] ?>" >
+                            <input type="HIDDEN"  name="receivable_gl_account" value="<?php echo $row['account_id'] ?>" >
+                            <input type="SUBMIT"  name="ACTION" value="Record Check" >
+                        </TD>
+                        </form>
+                        <?php
+                    }
+                    else
+                    {
+                        ?>
+                        <TD>
+                        </TD>
+                        <TD>
+                        </TD>
+                        <TD class=warning>
+                            NO PAYMENTS ACCEPTED!<BR /> ACCOUNT NOT IN GOOD STANDING!<BR />SEE MANAGER!<BR />
+                            <?php echo $row['payments_accepted_note'];?>
+                        </TD>
+
+                        <?php
+            
+                    }?>
+                </TR>
+                <?php
+            }
+?>	
+        </table>
+    </div>    
+<?php 
+if($ACTION == 'Search')
+{
+?>
+<div class="portlet">
+    <div class="divheader">Applied Remittances</div>
+    <div class="row" id="search_results">
+        <table>
+                <TR>
+                    <TD>
+                         Date Recieved
+                    </TD>
+                    <TD>
+                          Customer Name
+                    </TD>
+                    <TD>
+                          Check No
+                    </TD>
+                    <TD>
+                          Amount Recieved
+                    </TD>
+                    <TD>
+                          Amount Applied
+                    </TD>
+                </TR>
+<?php
+			foreach($remittance_advice as $ra_set)
+			{
+            foreach($ra_set as $row)
+            {
+                ?>
+                <form action="<?php echo $BASE_DIR ?>/invoices/invoices_cash_receipts.php"  method=POST>
+                <TR>
+                    <TD>
+                          <?php echo $row['remit_date'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['cv_name'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['checkno'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['total_received'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['total_applied'] ?>
+                    </TD>
+                    <TD>
+                          <input type="HIDDEN"  name="remit_no" value="<?php echo $row['remit_no'] ?>" >
+                          <input type="SUBMIT"  name="ACTION" value="Unapply Remittance" >
+                          <input type="HIDDEN"  name="receivable_gl_account" value="<?php echo $row['account_id'] ?>" >
+                    </TD>
+                    
+                </TR>
+                </form>
+                <?php
+            }
+			}
+?>	
+        </table>
+    </div>    
+</form>
+</div>
+<?php 
+}
+?>
+
+<div class="portlet">
+    <div class="divheader">Unapplied Remittances</div>
+    <div class="row" id="search_results">
+        <table>
+                <TR>
+                    <TD>
+                         Date Recieved
+                    </TD>
+                    <TD>
+                          Customer Name
+                    </TD>
+                    <TD>
+                          Check No
+                    </TD>
+                    <TD>
+                          Amount Recieved
+                    </TD>
+                    <TD>
+                          Amount Applied
+                    </TD>
+                </TR>
+<?php
+            foreach($remittances as $row)
+            {
+                ?>
+                <form action="<?php echo $BASE_DIR ?>/invoices/invoices_remittance_advice.php"  method=POST>
+                <TR>
+                    <TD>
+                          <?php echo $row['remit_date'] ?>
+                    </TD>
+                    <TD>
+                          <a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<?php echo $row['cv_id'] ?>" target="_blank" method=POST><?php echo $row['cv_name'] ?></a>
+                    </TD>
+                    <TD>
+                          <?php echo $row['checkno'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['total_received'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['total_applied'] ?>
+                    </TD>
+                    <TD>
+                          <form action="<?php echo $BASE_DIR ?>/invoices/invoices_remittance_advice.php"  method=POST>
+                	      <input type="HIDDEN"  name="remit_no" value="<?php echo $row['remit_no'] ?>" >
+                          <input type="SUBMIT"  name="ACTION" value="Apply Remittance" >
+                          <input type="HIDDEN"  name="receivable_gl_account" value="<?php echo $row['account_id'] ?>" >
+                          </form>
+                    </TD>
+                    <TD>
+                          <form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_disburse_refund.php"  method=POST>
+                	      <input type="HIDDEN"  name="remit_no" value="<?php echo $row['remit_no'] ?>" >
+                          <input type="SUBMIT"  name="ACTION" value="Refund Money" >
+                          <input type="HIDDEN"  name="receivable_gl_account" value="<?php echo $row['account_id'] ?>" >
+                          </form>
+                    </TD>
+                </TR>
+                </form>
+                <?php
+            }
+?>	
+        </table>
+    </div>    
+</form>
+</div>
+<div class="portlet">
+    <div class="divheader">Remittances Without GL Entrys</div>
+    <div class="row" id="search_results">
+        <table>
+                <TR>
+                    <TD>
+                         Date Recieved
+                    </TD>
+                    <TD>
+                          Customer Name
+                    </TD>
+                    <TD>
+                          Check No
+                    </TD>
+                    <TD>
+                          Amount Recieved
+                    </TD>
+                    <TD>
+                          Receivable GL Account
+                    </TD>
+                    <TD>
+                          Remittance GL Account
+                    </TD>
+                </TR>
+<?php
+            foreach($remittances_no_ledger as $row)
+            {
+                $customer_info = CV_Main::get_cv_from_id($row['customer_id']);
+                ?>
+                <form action="<?php echo $BASE_DIR ?>/invoices/invoices_cash_receipts.php"  method=POST>
+                <TR>
+                    <TD>
+                          <?php echo $row['remit_date'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['cv_name'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['checkno'] ?>
+                    </TD>
+                    <TD>
+                        <?php echo $row['total_received'];?>
+                    </TD>
+                    <TD>
+                          <?php echo $customer_info['GL_AR_fullname'] ?>
+                    </TD>
+                    <TD>
+                    <SELECT  class="smallsans" SIZE="1" NAME="remittance_deposit" id="remittance_deposit" >
+                    <?php
+                    foreach($remittance_accounts as $remittance_account)
+                    {
+                    ?>
+                    <OPTION value="<?php echo $remittance_account['account_id'];?>" <?php if($remittance_account['default_account']== 1)echo " SELECTED ";?> ><?php echo $remittance_account['account_fullname']?> </OPTION>
+                    
+                    <?php
+                    }
+                    ?>
+                    </SELECT>
+                    </TD>
+                    <TD>
+                          <input type="HIDDEN"  name="remit_no" value="<?php echo $row['remit_no'] ?>" >
+                          <input type="SUBMIT"  name="ACTION" value="Update GL" >
+                    </TD>
+                    <TD>
+                          <input type="SUBMIT"  name="ACTION" value="Delete Remittance" >
+                    </TD>
+                    
+                </TR>
+                </form>
+                <?php
+            }
+?>	
+        </table>
+    </div>    
+</form>
+</div>
+
+<?php
+}
+else
+{
+
+?><div class="warning">ERROR:NO REMITTANCE DEPOSIT ACCOUNTS DEFINED!</div><?php
+}

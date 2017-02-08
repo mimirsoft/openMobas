@@ -1,0 +1,150 @@
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="transactions_configure_accounts.css" media="screen" >
+
+
+<?php
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning(@$WARNING);
+?>
+
+<form action="<?php echo $BASE_DIR ?>/transactions/transactions_accountedit.php"  method=POST>
+    <div class="portlet">
+       <div class="divheader">Edit Account</div>
+        <div class="row">
+            <span class="label">Parent Account:</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="account_parent" >
+                    <OPTION value="0" >TOP LEVEL</OPTION>
+                <?php
+                $transaction->build_accountstree_selectoptions($account_array, $transactions_accounts_parent, $account_id);
+                ?>
+                </SELECT>
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Name:</span>
+            <span class="formw">
+                <input type="TEXT"  name="account_name"  value="<?php echo $account['account_name']; ?>">
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Type:</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="accounttype_id" >
+                <?php
+                foreach($accounttypes as $row)
+                {
+                    ?>
+                    <OPTION value="<?php echo $row['accounttype_id'] ?>"<?php
+                    if($row['accounttype_id'] == $account['accounttype_id'])
+                    {
+                        echo " SELECTED";
+                    }
+                    ?> > <?php echo $row['accounttype_name'] ?> </OPTION> 
+                    <?php
+                }
+                ?>
+                </SELECT>
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Memo:</span>
+            <span class="formw"> <input type="TEXT"  name="account_memo"  value="<?php echo $account['account_memo']; ?>">
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Opened Date:</span>
+            <span class="formw">
+                <?php
+                $FRAMEWORK->date_selectors(substr($account['account_open_date'], 0 ,4), substr($account['account_open_date'], 5 ,2), substr($account['account_open_date'], 8 ,2), "account_opened", "");
+                ?>
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Current:</span>
+            <span class="formw"><SELECT NAME="account_current">
+            <OPTION <?php
+            if ($account['account_current'] == 'Y')
+            {
+                echo "SELECTED";
+            }
+            ?> VALUE="Y">YES</OPTION>
+            <OPTION <?php
+            if ($account['account_current'] == 'N')
+            {
+                echo "SELECTED";
+            }
+            ?> VALUE="N">NO</OPTION>
+            </SELECT>
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Reconciled Date:</span>
+            <span class="formw">
+                <?php
+                $FRAMEWORK->date_selectors(substr($account['account_reconcile_date'], 0 ,4), substr($account['account_reconcile_date'], 5 ,2), substr($account['account_reconcile_date'], 8 ,2), "account_reconciled", "");
+                ?>
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Flagged:</span>
+            <span class="formw"><SELECT NAME="account_flagged">
+            <OPTION <?php
+            if ($account['account_flagged'] == '1')
+            {
+                echo "SELECTED";
+            }
+            ?> VALUE="1">YES</OPTION>
+            <OPTION <?php
+            if ($account['account_flagged'] == '0')
+            {
+                echo "SELECTED";
+            }
+            ?> VALUE="0">NO</OPTION>
+            </SELECT>
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Locked:</span>
+            <span class="formw"><SELECT NAME="account_locked">
+            <OPTION <?php
+            if ($account['account_locked'] == '1')
+            {
+                echo "SELECTED";
+            }
+            ?> VALUE="1">YES</OPTION>
+            <OPTION <?php
+            if ($account['account_locked'] == '0')
+            {
+                echo "SELECTED";
+            }
+            ?> VALUE="0">NO</OPTION>
+            </SELECT>
+            </span>
+        </div>
+                
+        <div class="row">
+            <span class="label">&nbsp;</span>
+            <span class="formw"><input type="HIDDEN"  name="account_id"  value="<?php echo $account['account_id'] ?>">
+            <input type="SUBMIT"  name="action"  value="Save Account">
+            </span>
+        </div>
+        <div class="row">
+            <span class="label"><input type="SUBMIT"  name="action"  value="Delete Account"></span>
+            <span class="formw">
+           </span>
+        </div>
+        <div class="row">
+            <span class="label"><input type="SUBMIT"  name="action"  value="Reverse All Transactions">
+            <span class="formw">
+           </span>
+        </div>
+ 
+
+        </TD>
+        <TD ALIGN="right" COLSPAN="1" >
+            
+        </TD>
+    </TR>
+</TABLE>
+</form>

@@ -1,0 +1,295 @@
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<?php
+include("cv_master_main.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+
+?>
+<script language="JavaScript" type="text/javascript">
+function remove_tag(tag_id, cv_id) {
+      var myForm = document.createElement("form");
+      myForm.method="post" ;
+      myForm.action = '<?php echo $_SERVER['PHP_SELF']?>' ;
+      var myInput = document.createElement("input") ;
+      myInput.setAttribute("name", 'ACTION') ;
+      myInput.setAttribute("value", 'Remove Tag');
+      myForm.appendChild(myInput) ;
+      var myInput = document.createElement("input") ;
+      myInput.setAttribute("name", 'cv_id') ;
+      myInput.setAttribute("value", cv_id);
+      myForm.appendChild(myInput) ;
+      var myInput = document.createElement("input") ;
+      myInput.setAttribute("name", 'cv_category_id') ;
+      myInput.setAttribute("value", tag_id);
+      myForm.appendChild(myInput) ;
+      var myInput = document.createElement("input") ;
+      myInput.setAttribute("name", 'previous_search') ;
+      myInput.setAttribute("value", "<?php echo $SEARCH; ?>");
+      myForm.appendChild(myInput) ;
+      document.body.appendChild(myForm) ;
+      myForm.submit() ;
+      document.body.removeChild(myForm) ;
+}
+
+</script>
+<div class="leftcol">
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_main.php"  method=POST>
+    <div class="divheader">Search</div>
+    <div class="row">
+        <span class="label">Name:</span>
+        <span class="formw"><input type="TEXT"  name="name"  value="<?php echo $name; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Search Set</span>
+        <span class="formw"><SELECT class="smallsans" NAME="SEARCH">
+            <OPTION VALUE="SearchAll">Search All</OPTION>
+            <OPTION VALUE="SearchCustomers">Search Customers</OPTION>
+            <OPTION VALUE="SearchVendors">Search Vendors</OPTION>
+            <OPTION VALUE="SearchNeither">Search Neither</OPTION>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Tagged:</span>
+        <span class="formw"><SELECT  class="smallsans" SIZE="1" NAME="search_tag" >
+        <OPTION VALUE="none"></OPTION>
+    <?php
+                foreach($CV_Categories as $row)
+                {
+                    ?>
+                        <OPTION VALUE="<?php echo $row['cv_category_id'];?>">
+                        <?php echo $row['cv_category_name']; ?>
+                        </OPTION>
+                    <?php
+                }
+    ?>  </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label"></span>
+        <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Search" ></span>
+    </div>    
+</form>
+</div>
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_main.php"  method=POST>
+    <div class="divheader">Search Item</div>
+    <div class="row">
+        <span class="label">Name:</span>
+        <span class="formw"><input type="TEXT"  name="name"  value="<?php echo $name; ?>" ></span>
+    </div>    
+   <div class="row">
+        <span class="label"></span>
+        <span class="formw"><input type="HIDDEN"  name="SEARCH"  value="SearchItem" >
+        <input type="SUBMIT"  name="ACTION"  value="Search" ></span>
+    </div>    
+</form>
+</div>
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_main.php"  method=POST>
+    <div class="divheader">Enter New Customer/Vendor Info</div>
+    <div class="row">
+        <span class="label">Name:</span>
+        <span class="formw"><input type="TEXT"  name="name"  value="<?php echo $name; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Customer Number:</span>
+        <span class="formw"><input type="TEXT"  name="number"  value="<?php echo $number; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Tax ID:</span>
+        <span class="formw"><input type="TEXT"  name="taxid"  value="<?php echo $taxid; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Is Customer:</span>
+        <span class="formw"><SELECT class="smallsans" NAME="is_customer">
+            <OPTION
+            <?php
+            if ($is_customer == 0)
+                {
+                    echo "SELECTED";
+                }
+            ?>
+            VALUE="0">NO</OPTION>
+            <OPTION
+            <?php
+            if ($is_customer == 1)
+                {
+                    echo "SELECTED";
+                }
+            ?>
+            VALUE="1">YES</OPTION>
+            
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Is Vendor:</span>
+        <span class="formw"><SELECT class="smallsans" NAME="is_vendor">
+            <OPTION
+            <?php
+            if ($is_vendor == 0)
+                {
+                    echo "SELECTED";
+                }
+            ?>
+            VALUE="0">NO</OPTION>
+            <OPTION
+            <?php
+            if ($is_vendor == 1)
+                {
+                    echo "SELECTED";
+                }
+            ?>
+            VALUE="1">YES</OPTION>
+            
+            </SELECT>
+        </span>
+    </div>    
+        <div class="row">
+            <span class="label">Default Email:</span>
+            <span class="formw"><input type="TEXT"  name="cv_default_email"   ></span>
+        </div>    
+        <div class="row">
+            <span class="label">Default Phone:</span>
+            <span class="formw"><input type="TEXT"  name="cv_default_phone"   ></span>
+        </div>    
+        <div class="row">
+            <span class="label">Default Address:</span>
+            <span class="formw"><input type="TEXT"  name="cv_default_address"   ></span>
+        </div>    
+        <div class="row">
+            <span class="label">Default City:</span>
+            <span class="formw"><input type="TEXT"  name="cv_default_city"   ></span>
+        </div>    
+        <div class="row">
+            <span class="label">Default State:</span>
+            <span class="formw"><input type="TEXT"  name="cv_default_state"  ></span>
+        </div>    
+        <div class="row">
+            <span class="label">Default Zip:</span>
+            <span class="formw"><input type="TEXT"  name="cv_default_zip"   ></span>
+        </div>    
+    <div class="row">
+        <input type="SUBMIT"  name="ACTION"  value="Add Customer" >
+    </div>    
+</form>
+</div>
+
+</div>
+
+
+<div class="portlet2">
+    <div class="divheader">Results-<a target="_blank" href="<?php echo $BASE_DIR ?>/cv_master/cv_master_print.php?SEARCH=<?php echo $SEARCH ?>&name=<?php echo $name?>&search_tag=<?php echo $search_tag?>&sort=<?php echo $sort?>" >PRINT</a></div>
+        <form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_main.php"  method=POST>
+        <div class="row">
+            <span class="label">Tag:</span>
+            <span class="forml"><SELECT  class="smallsans" SIZE="1" NAME="cv_category_id" >
+    <?php
+                foreach($CV_Categories as $row)
+                {
+                    ?>
+                        <OPTION VALUE="<?php echo $row['cv_category_id'];?>">
+                        <?php echo $row['cv_category_name']; ?>
+                        </OPTION>
+                    <?php
+                }
+    ?>  
+            </SELECT>
+            <input type="SUBMIT"  name="ACTION"  value="Add Tag" >
+            <input type="SUBMIT"  name="ACTION"  value="Remove Tags" >
+            <input type="HIDDEN"  name="previous_search"  value="<?php echo $SEARCH; ?>" >
+            </span>
+        </div>
+        <div class="row"> 
+        <table>
+            <TR>
+                <TD><a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_main.php?SEARCH=<?php echo $SEARCH ?>&name=<?php echo $name?>&search_tag=<?php echo $search_tag?>&sort=id">CV ID:</a></TD>
+                <TD><a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_main.php?SEARCH=<?php echo $SEARCH ?>&name=<?php echo $name?>&search_tag=<?php echo $search_tag?>&sort=name">CV Name:</a></TD>
+                <TD><a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_main.php?SEARCH=<?php echo $SEARCH ?>&name=<?php echo $name?>&search_tag=<?php echo $search_tag?>&sort=number">CV Number:</a></TD>
+                <TD><a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_main.php?SEARCH=<?php echo $SEARCH ?>&name=<?php echo $name?>&search_tag=<?php echo $search_tag?>&sort=number">Receivable</a></TD>
+                <TD><a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_main.php?SEARCH=<?php echo $SEARCH ?>&name=<?php echo $name?>&search_tag=<?php echo $search_tag?>&sort=tags">Tags:</a></TD>
+            </TR>
+      <?php
+        foreach($customers as $customer)
+        {
+          
+        ?>
+            <TR <?php if($customer['is_closed'] == '1')
+            {
+                echo "class=\"red\";";
+            }?> >
+                <TD>
+                    <input type=checkbox name="cv_id[]" value="<? echo $customer['cv_id'] ?>" />
+                </TD>
+                <TD>
+                    <a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<?php echo $customer['cv_id'] ?>" target="_blank" method=POST><?php echo $customer['cv_name'] ?></a>
+                </TD>
+                <TD>
+                    <a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<?php echo $customer['cv_id'] ?>" target="_blank" method=POST><?php echo $customer['cv_number'] ?></a>
+                </TD>
+                <TD><?php echo $customer['receivable_invoices_total'] ?>
+                </TD>
+                <TD>
+                <?php
+                    if(@$customer['cv_tag_string'] != "")
+                    {
+                        $cv_tags = explode(",", $customer['cv_tag_string']);
+                        foreach($cv_tags as $cv_tag)
+                        {
+                            ?>
+                               <div class="cvtag"><?php echo $tag_id_to_name[$cv_tag]; ?>|<span onclick="remove_tag(<?php echo $cv_tag; ?>, <?php echo $customer['cv_id'] ?>)"> X&nbsp;</span></div>
+                            <?php
+                        }
+                    }
+                ?>  
+                </TD>
+            </TR>
+        <?php
+        }
+    ?>	
+        </table>
+        </div>
+        </form>
+
+<?php  if(@is_array($purchasers))
+{
+?>
+    <div class="divheader">Purchasers of Item</div>
+    <form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_main.php"  method=POST>
+        <table>
+            <TR>
+                <TD>Customer Name:</TD>
+                <TD>Customer Number:</TD>
+            </TR>
+      <?php
+        foreach($purchasers as $row)
+        {
+        ?>
+            <TR>
+                <TD>
+                    <input type=checkbox name="cv_id[]" value=<?php echo $row['cv_id'] ?>/>
+                    <a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<?php echo $row['cv_id'] ?>" target="_blank" method=POST><?php echo $row['cv_name'] ?></a>
+                </TD>
+                <TD>
+                    <a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<?php echo $row['cv_id'] ?>" target="_blank" method=POST><?php echo $row['cv_number'] ?></a>
+                </TD>
+                <TD><?php echo $row['receivable_invoices_total'] ?>
+                </TD>
+                <TD>
+                    <a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_summary_statement.php?cv_id=<?php echo $row['cv_id'] ?>" target="_blank" method=POST>PRINT SUMMARY STATEMENT</a>
+                </TD>
+                
+            </TR>
+        <?php
+        }
+    	?>	
+		</table>
+<?php 
+}
+?>
+    </form>
+</div>

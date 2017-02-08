@@ -1,0 +1,91 @@
+<style type="text/css">
+    .portlet {
+        width: 50em;
+        display: block;
+        float: left;
+        clear: both;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+
+    .portlet2 {
+        width: auto;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+   .portlet4 {
+        width: auto;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+div.row {
+  padding-top: .5em;
+  clear: both;
+  width: auto;
+  }
+
+div.row span.label {
+  float: left;
+  width: 10em;
+  text-align: right;
+  }
+
+div.row span.formw {
+  padding-left: .5em;
+  float: left;
+  width: 25em;
+  text-align: left;
+  } 
+div.row span.formw2 {
+  float: left;
+  width: auto;
+  text-align: left;
+  } 
+div.box{
+  float: left;
+  margin: .5em;
+  padding: .5em;
+  border: 3px solid gray;
+  font-weight: bold;
+  font-size: 150%;
+  text-transform: uppercase;
+  color: white;
+  background-color: #0099CC;
+}
+div.box_s {
+  float: left;
+  margin: .5em;
+  padding: .5em;
+  border: 3px solid gray;
+  text-transform: uppercase;
+  color: white;
+  background-color: #0099CC;
+}
+div.contact_box{
+  float: left;
+  display: none;
+  margin: .5em;
+  padding: .5em;
+  text-transform: uppercase;
+}
+div.border_box{
+  float: left;
+  border: 3px solid gray;
+  text-transform: uppercase;
+}
+
+div.col_left {
+  float: left;
+  } 
+</style>
+

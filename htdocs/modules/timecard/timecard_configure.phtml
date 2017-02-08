@@ -1,0 +1,45 @@
+<?php
+include("../../../framework/theme.css");
+include("timecard_configure.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+
+?>
+
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/timecard/timecard_configure.php"  method=POST>
+    <div class="divheader">Add Approved IP</div>
+    <div class="row">
+        <span class="label">IP:</span>
+        <span class="formw"><input type="TEXT"  name="ip"  value="" ></span>
+    </div>    
+   
+    <div class="row">
+        <span class="label">
+            <input type="SUBMIT"  name="ACTION"  value="Add IP">
+        </span>
+    </div>    
+</form>
+</div>
+<div class="portlet" >
+    <div class="divheader">IPS</div>
+
+<?php
+foreach($IPs as $row)
+{
+    ?>
+    <form action="<?php echo $BASE_DIR ?>/timecard/timecard_configure.php"  method=POST>
+    <div class="row">
+        <span class="label"><?php echo framework::inet_dtop($row['ip']); ?></span>
+        <span class="form1">
+            <input type="HIDDEN"  name="ip"  value="<?php echo framework::inet_dtop($row['ip']); ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Delete IP">
+        </span>
+    </div>
+    </form>
+<?php
+}
+?>
+</div>
+

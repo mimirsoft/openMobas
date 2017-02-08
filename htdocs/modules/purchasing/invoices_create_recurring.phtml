@@ -1,0 +1,375 @@
+<?
+include("../../../framework/theme.css");
+include("invoices_create.css");
+framework::navbar();
+framework::warning($WARNING);
+?>
+<script language="JavaScript"
+
+type="text/javascript">
+function show_box(obj) {
+    var el = document.getElementById(obj);
+    if ( el.style.display == 'block' ) {
+    el.style.display = 'none';
+    }
+    else {
+    el.style.display = 'block';
+    }
+}
+
+var xmlHttp;
+
+function createXMLHttpRequest() {
+  try {
+    xmlHttp = new XMLHttpRequest();
+  } catch (trymicrosoft) {
+    try {
+      xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (othermicrosoft) {
+      try {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (failed) {
+        xmlHttp = false;
+      }
+    }
+  }
+
+  if (!xmlHttp)
+    alert("Error initializing XMLHttpRequest!");
+}
+
+
+function form_extender(formElement, target_container) {
+    createXMLHttpRequest();
+    form_Name = formElement.getAttribute("name");
+    var queryString = "ACTION="+form_Name;
+    form_Value = formElement.value;
+    queryString += "&VALUE="+form_Value;
+    xmlHttp.open("POST", "invoices_create_request.php", true);
+    xmlHttp.onreadystatechange = handleStateChange;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    var div = document.getElementById(target_container);
+    div.innerHTML =  '';
+}
+function handleStateChange() {
+     if (xmlHttp.readyState == 4) {
+       if (xmlHttp.status == 200)
+       {
+            var xmlDoc = xmlHttp.responseXML;
+            if(xmlDoc.getElementsByTagName("removerow").length > 0)
+            {
+                for(var i = 0; i < xmlDoc.getElementsByTagName("removerow").length; i++)
+                {
+                    var rowname = xmlDoc.getElementsByTagName("removerow")[i].childNodes[0].nodeValue;
+                    thisrow = document.getElementById(rowname);
+                    if(thisrow != null)
+                    {
+                        while(thisrow.hasChildNodes())
+                        {
+                            thisrow.removeChild(thisrow.lastChild)
+                        }
+                        thisrow.parentNode.removeChild(thisrow);
+                    }
+                }
+            }
+            if(xmlDoc.getElementsByTagName("addrow").length > 0)
+            {
+                for(var i = 0; i < xmlDoc.getElementsByTagName("addrow").length; i++)
+                {
+                    add_current_row = xmlDoc.getElementsByTagName("addrow")[i];
+                    var rowname = add_current_row.getElementsByTagName("rowname")[0].childNodes[0].nodeValue;
+                    var rowformname = add_current_row.getElementsByTagName("rowformname")[0].childNodes[0].nodeValue;
+                    var previousrow = add_current_row.getElementsByTagName("previousrow")[0].childNodes[0].nodeValue;
+                    var label = add_current_row.getElementsByTagName("label")[0].childNodes[0].nodeValue;
+                    var multiple = false;
+                    thisrow = document.getElementById(previousrow);
+                    newdiv = document.createElement("div");
+                    newdiv.setAttribute("id", rowname);
+                    newdiv.setAttribute("class", "row");
+                    newspan = document.createElement("span");
+                    newspan.innerHTML = label;
+                    newspan.setAttribute("class", "label");
+                    newdiv.appendChild(newspan);
+                    newspan = document.createElement("span");
+                    newspan.setAttribute("class", "form");
+                    
+                    newSelect = document.createElement("select");
+                    if (add_current_row.getElementsByTagName("multiple")[0])
+                    {
+                        var multiple = add_current_row.getElementsByTagName("multiple")[0].childNodes[0].nodeValue;
+                        newSelect.setAttribute("multiple", true);
+                    }
+                    newSelect.setAttribute("name", rowformname);
+                    newSelect.setAttribute("id", rowformname);
+                    newSelect.setAttribute("onchange", "form_extender(this)");
+                    for(var j = 0; j < add_current_row.getElementsByTagName("id").length; j++)
+                    {
+                        newoption  = document.createElement("option");
+                        newoption.setAttribute("value", add_current_row.getElementsByTagName("id")[j].childNodes[0].nodeValue);
+                        newoption.innerHTML = add_current_row.getElementsByTagName("name")[j].childNodes[0].nodeValue;
+                        newSelect.appendChild(newoption);
+                    }
+                    newspan.appendChild(newSelect);
+                    newdiv.appendChild(newspan);
+                    thisrow.parentNode.insertBefore(newdiv, thisrow.nextSibling);
+                    
+                }
+            }
+       }
+       else if (xmlHttp.status == 404)
+         alert("Request URL does not exist");
+       else
+         alert("Error: status code is " + xmlHttp.status);
+      }
+}
+
+function use_bill_to() {
+    createXMLHttpRequest();
+    form_Name = document.getElementById("billaddress_id");
+    var queryString = "ACTION=use_billing";
+    form_Value = form_Name.value;
+    queryString += "&VALUE="+form_Value;
+    xmlHttp.open("POST", "invoices_create_request.php", true);
+    xmlHttp.onreadystatechange = handleStateChange_setBillTo;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    var div = document.getElementById(target_container);
+    div.innerHTML =  '';
+}
+
+function handleStateChange_setBillTo() {
+     if (xmlHttp.readyState == 4) {
+       if (xmlHttp.status == 200)
+       {
+            var xmlDoc = xmlHttp.responseXML;
+            input_form = document.getElementById('billto[careof]');
+            input_form.value = xmlDoc.getElementsByTagName("contact_name")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('billto[address1]');
+            input_form.value = xmlDoc.getElementsByTagName("address1")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('billto[address2]');
+            input_form.value = xmlDoc.getElementsByTagName("address2")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('billto[city]');
+            input_form.value = xmlDoc.getElementsByTagName("city")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('billto[state]');
+            input_form.value = xmlDoc.getElementsByTagName("state")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('billto[zip]');
+            input_form.value = xmlDoc.getElementsByTagName("zip")[0].childNodes[0].nodeValue;
+                    
+       }
+       else if (xmlHttp.status == 404)
+         alert("Request URL does not exist");
+       else
+         alert("Error: status code is " + xmlHttp.status);
+      }
+}
+function use_ship_to() {
+    createXMLHttpRequest();
+    form_Name = document.getElementById("shipaddress_id");
+    var queryString = "ACTION=use_billing";
+    form_Value = form_Name.value;
+    queryString += "&VALUE="+form_Value;
+    xmlHttp.open("POST", "invoices_create_request.php", true);
+    xmlHttp.onreadystatechange = handleStateChange_setShipTo;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    var div = document.getElementById(target_container);
+    div.innerHTML =  '';
+}
+
+function handleStateChange_setShipTo() {
+     if (xmlHttp.readyState == 4) {
+       if (xmlHttp.status == 200)
+       {
+            var xmlDoc = xmlHttp.responseXML;
+            input_form = document.getElementById('shipto[careof]');
+            input_form.value = xmlDoc.getElementsByTagName("contact_name")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('shipto[address1]');
+            input_form.value = xmlDoc.getElementsByTagName("address1")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('shipto[address2]');
+            input_form.value = xmlDoc.getElementsByTagName("address2")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('shipto[city]');
+            input_form.value = xmlDoc.getElementsByTagName("city")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('shipto[state]');
+            input_form.value = xmlDoc.getElementsByTagName("state")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('shipto[zip]');
+            input_form.value = xmlDoc.getElementsByTagName("zip")[0].childNodes[0].nodeValue;
+                    
+       }
+       else if (xmlHttp.status == 404)
+         alert("Request URL does not exist");
+       else
+         alert("Error: status code is " + xmlHttp.status);
+      }
+}
+
+</script>
+<div class="portlet2">
+<form action="<? echo $BASE_DIR ?>/invoices/invoices_recurring_items.php"  method=POST>
+    <div class="divheader">Create New Invoice</div>
+    <div class="row">
+        <span class="label">Customer:</span>
+        <span class="formw"><? echo $customer_info['cv_name']; ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Customer No:</span>
+        <span class="formw"><? echo $customer_info['cv_number']; ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Recurring Frequency:</span>
+        <span class="formw"><Select id="frequency" name="frequency" >
+            <OPTION  value="30" >30 Days</OPTION>
+            <OPTION  value="90" >60 Days</OPTION>
+            <OPTION  value="90" >60 Days</OPTION>
+            <OPTION  value="180" >180 Days</OPTION>
+            <OPTION  value="365" >365 Days</OPTION>
+        </Select>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Client Reference Number:</span>
+        <span class="formw"><input id="cr_num" name="cr_num" type="text" size="40" value="" />
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Revenue Account:</span>
+        <span class="formw"><Select id="revenue_account" name="revenue_account" >
+        <?  foreach($revenue_accounts as $r_account)
+            {
+                ?><OPTION  value="<? echo $r_account['account_id'] ?>" <? if($r_account['default_account'] == 1){echo "SELECTED";} ?>><? echo $r_account['account_fullname'] ?></OPTION><?
+            }
+    
+        ?>
+        </Select>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">GL Account Receivable:</span>
+        <span class="formw"><? echo $customer_info['GL_AR_fullname']; ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="bill_col">Bill To
+            <div class="row">
+                <span class="label">Care Of:</span>
+                <span class="formw"><input id="billto[careof]" name="billto[careof]" type="text" size="40" value="<? echo $customer_info['cv_name']; ?>" />
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">Address 1:</span>
+                <span class="formw"><input id="billto[address1]" name="billto[address1]" type="text" size="40" value="<? echo $customer_info['cv_default_address']; ?>" />
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">Address 2:</span>
+                <span class="formw"><input id="billto[address2]" name="billto[address2]" type="text" size="40" value="" />
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">City:</span>
+                <span class="formw"><input id="billto[city]" name="billto[city]" type="text" size="40" value="<? echo $customer_info['cv_default_city']; ?>" />
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">State:</span>
+                <span class="formw"><input id="billto[state]" name="billto[state]" type="text" size="40" value="<? echo $customer_info['cv_default_state']; ?>" />
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">Zip:</span>
+                <span class="formw"><input id="billto[zip]" name="billto[zip]" type="text" size="40" value="<? echo $customer_info['cv_default_zip']; ?>" />
+                </span>
+            </div>    
+        </span>
+        <span class="ship_col">Ship To
+            <div class="row">
+                <span class="label">Care Of:</span>
+                <span class="formw"><input id="shipto[careof]" name="shipto[careof]" type="text" size="40" value="<? echo $customer_info['cv_name']; ?>" />
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">Address 1:</span>
+                <span class="formw"><input id="shipto[address1]" name="shipto[address1]" type="text" size="40" value="<? echo $customer_info['cv_default_address']; ?>" />
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">Address 2:</span>
+                <span class="formw"><input id="shipto[address2]" name="shipto[address2]" type="text" size="40" value="" />
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">City:</span>
+                <span class="formw"><input id="shipto[city]" name="shipto[city]" type="text" size="40" value="<? echo $customer_info['cv_default_city']; ?>" />
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">State:</span>
+                <span class="formw"><input id="shipto[state]" name="shipto[state]" type="text" size="40" value="<? echo $customer_info['cv_default_state']; ?>" />
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">Zip:</span>
+                <span class="formw"><input id="shipto[zip]" name="shipto[zip]" type="text" size="40" value="<? echo $customer_info['cv_default_zip']; ?>" />
+                </span>
+            </div>    
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Customer Contact:</span>
+        <span class="formw">
+            <SELECT name="customer_contact" onchange="form_extender(this, 'inventory_block')" >
+            <OPTION value=""></OPTION>
+            <?
+                    foreach($contacts as $contact)
+                    {
+                        $contact_info = contacts::get_contact_from_id($contact['contacts_id']);
+                        
+                    ?><OPTION value="<? echo $contact_info['contacts_id'] ?>"><? echo $contact_info['firstname']." ".$contact_info['lastname'] ?></OPTION><?
+            
+                    }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row" iD="inventory_block">
+     </div> 
+    <div class="row" iD="billaddress_id_row">
+        <span class="label">Bill To Address</span>
+        <span class="formw"> <SELECT  SIZE="1" NAME="addresstype_id[<? echo $address['address_id']; ?>]" >
+            <?
+            foreach($addresses as $address)
+            {	
+                ?>
+                <OPTION value="<? echo $address['address_id'] ?>" > <? echo $address['street']." ".$address['city'].", ".$address['state']." ".$address['zip'] ?></OPTION>
+                <?
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div> 
+    <div class="row" iD="shipaddress_id_row">
+        <span class="label">Ship To Address</span>
+        <span class="formw"> <SELECT  SIZE="1" NAME="addresstype_id[<? echo $address['address_id']; ?>]" >
+            <?
+            foreach($addresses as $address)
+            {	
+                ?>
+                <OPTION value="<? echo $address['address_id'] ?>" > <? echo $address['street']." ".$address['city'].", ".$address['state']." ".$address['zip'] ?></OPTION>
+                <?
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div> 
+   
+    <div class="row">
+        <input type="SUBMIT"  name="ACTION"  value="Save Invoice and Add Items" >
+        <input type="HIDDEN"  name="customer_id"  value="<? echo $customer_info['cv_id']; ?>" >
+        <input type="HIDDEN"  name="invoice_type"  value="<? echo $invoice_type; ?>" >
+        <input type="button" onclick="use_bill_to()" name="ACTION"  value="Use Bill to Address" >
+        <input type="button" onclick="use_ship_to()" name="ACTION"  value="Use Ship to Address" >
+    </div>    
+</form>
+</div>

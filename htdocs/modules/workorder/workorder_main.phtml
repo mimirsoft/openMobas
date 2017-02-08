@@ -1,0 +1,81 @@
+<?
+include("../../../framework/theme.css");
+include("casesystem.css");
+framework::navbar();
+?>
+
+<div class="module_container">
+<div class="portlet">
+<form action="<? echo $BASE_DIR ?>/workorder/workorder_main.php"  method=POST>
+    <div class="divheader">Create New Work Order</div>
+    <div class="row">
+        <span class="label">Title:</span>
+        <span class="formw"><INPUT type=TEXT name="wo_title"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Assign To:</span>
+        <span class="formw">
+        <SELECT  SIZE="1" NAME="whoassigned_id" >
+        <? foreach($users as $row)
+        {	
+            ?><OPTION VALUE="<? echo $row['user_id'] ?>" ><? echo $row['username'] ?></OPTION><?
+        }
+        ?>
+        </SELECT>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">Description:</span>   
+        <span class="formw"><TEXTAREA name="woentry_txt" rows="10" cols="60"></TEXTAREA></span>
+    </div>
+    <div class="row">
+        <span>
+            <input type="SUBMIT"  name="ACTION"  value="Create" size="15">
+        </span>
+    </div>
+</form>
+</div>   
+    
+<div class="portlet2">
+    <div class="divheader">Work Orders</div>
+    <div class="row">
+        <span class="colleft"><a href="<? echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=YES" ?>" >VIEW CLOSED CASES</a></span>
+        <span class="colleft"><a href="<? echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=NO" ?>" >VIEW OPEN CASES</a></span>
+        <span class="colleft"><a href="<? echo $_SERVER["PHP_SELF"]."?VIEW_ALL=YES&VIEW_CLOSED=".$VIEW_CLOSED ?>">VIEW ALL CASES</a></span>
+        <span class="colleft"><a href="<? echo $_SERVER["PHP_SELF"]."?VIEW_ALL=NO&VIEW_CLOSED=".$VIEW_CLOSED ?>">VIEW MY CASES</a></span>
+    </div>    
+    <div class="row">
+    <table>
+        <TR>
+            <TD><a href="<? echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=case_title" ?>">CASE TITLE</A></TD>
+            <TD><a href="<? echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whoopen_id" ?>">WHO OPENED</A></TD>
+            <TD><a href="<? echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whoupdated_id" ?>">WHO UPDATED</A></TD>
+            <TD><a href="<? echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whoassigned_id" ?>">WHO ASSIGNED</A></TD>
+            <TD><a href="<? echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whenopen_date" ?>">WHEN OPEN</A></TD>
+            <TD><a href="<? echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whenupdated_date" ?>">WHEN UPDATED</A></TD>
+            <TD><a href="<? echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whenclosed_date" ?>">WHEN CLOSE</A></TD>
+        </TR>
+    
+<?
+    if(is_array($work_orders))
+    {
+        foreach($work_orders as $row)
+        {
+            ?>
+            <tr>
+                <TD><a href ="<? echo $BASE_DIR ?>/workorder/workorder_update.php?wo_id=<? echo $row['wo_id'] ?>" target="_blank" ><? echo $row['wo_title']; if($row['wo_title'] == ""){ echo "No Title";} ?></a></TD>
+                <TD><? echo $userArray[$row['whoopen_id']]['username'] ?></TD>
+                <TD><? echo $userArray[$row['whoupdated_id']]['username'] ?></TD>
+                <TD><? echo $userArray[$row['whoassigned_id']]['username'] ?></TD>
+                <TD><? echo $row['whenopen_date'] ?></TD>
+                <TD><? echo $row['whenupdated_date'] ?></TD>
+                <TD><? echo $row['whenclosed_date'] ?></TD>
+            </tr>
+            
+            <?
+        }	
+    }
+    ?>
+    </table>
+   
+</div>

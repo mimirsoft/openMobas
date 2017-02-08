@@ -1,0 +1,95 @@
+        <div style="position: static; height: 85mm; width: 270mm">
+
+        <div class="block1">
+        <p class="coname"><?php echo $SYS_INFO['COMPANY_NAME'] ?></p>
+        <p class="coaddy"><?php echo $SYS_INFO['COMPANY_MAILADDRESS1'] ?></p>
+        <p class="coaddy2"><?php echo $SYS_INFO['COMPANY_MAILADDRESS2'] ?></p>
+        <p class="cophone"><?php echo $SYS_INFO['COMPANY_PHONE'] ?></p>
+        <p class="maildate"><?php echo $invoice_info['date_charged'] ?></p>
+        </div>
+        <?php
+    
+        if($invoice_info['cv_default_city'] != ""){$invoice_info['cv_default_city'] .= ",";}
+        ?>
+        <div class="block3">
+        <p class="mailaddress1"><?php echo $invoice_info['cv_name'] ?></p>
+        <?php if($invoice_info['cv_default_careof'] != "")
+        {
+            ?><p class="mailaddress1"><?php echo $invoice_info['cv_default_careof'] ?></p><?php
+        }
+        ?>
+        <p class="mailaddress2"><?php echo $invoice_info['cv_default_address'] ?>&nbsp;</p>
+        <p class="mailaddress3"><?php echo $invoice_info['cv_default_city']." ".$invoice_info['cv_default_state']." ".$invoice_info['cv_default_zip'] ?>&nbsp;</p>
+        </div>
+        <div class="block5">INVOICE No.<?php echo $invoice_info['invoice_id'] ?> </div>
+        <div class="block4">INVOICE</div>
+    </div>
+<?php if($invoice_info['invoice_description'] != "" )
+{ 
+?><table>
+      <tr>
+                   <TD class="lefttop_left" colspan=2>DESCRIPTION </TD>
+    <tr>
+         <TD class="endcolumnbottom" rowspan=2 colspan=2 ><?php echo $invoice_info['invoice_description'] ?></TD>
+     </tr>
+ </table>
+ 
+<?php
+}
+?>
+<table>
+	<colgroup>
+	<col class="col1"/>
+ 	<col class="col2"/>
+ 	<col class="col3"/>
+ 	<col class="col4"/>
+ 	</colgroup>
+ 	<tr>
+	        <TD class="lefttop_left">Item</TD>
+	        <TD class="lefttop">Unit Price</TD>
+	        <TD class="lefttop">Quantity</TD>
+	        <TD class="endcolumntop">Amount</TD>
+	</tr>
+<?php foreach($invoice_items as $invoice_item)
+{?>
+	<tr>
+	        <TD class="left"><?php echo $invoice_item['inventorytype_name']?>-<?php echo $invoice_item['item_name']?>
+            </TD>
+            <TD class="left" align=right><?php echo "$".$invoice_item['invoiceitem_price_per']?> </TD>
+            <TD class="left" align=right><?php echo $invoice_item['invoiceitem_count']?> </TD>
+            <TD class="endcolumn" align=right><?php echo "$".$invoice_item['invoiceitem_price_total']?></TD>
+
+	</tr>
+<?php
+}?>
+ 	<tr>
+	        <TD class="leftbottom">&nbsp;</TD>
+	        <TD class="leftbottom">&nbsp;</TD>
+	        <TD class="leftbottom">&nbsp;</TD>
+	        <TD class="endcolumnbottom">&nbsp;</TD>
+	</tr>
+ 	<tr>
+	               <TD colspan=2> </TD>
+            
+
+        <TD class="endcolumnbottom_right" >Subtotal</TD>
+        <TD class="endcolumnbottom" align=right><?php echo "$".number_format($invoice_info['invoice_total'], 2) ?></TD>
+	</tr>
+ 	<tr>
+            <TD rowspan=2 colspan=2 ></TD>
+        <TD class="endcolumnbottom_right" >Tax</TD>
+        <TD class="endcolumnbottom" align=right><?php echo "$".number_format($invoice_info['invoice_tax'], 2) ?></TD>
+	</tr>
+ 	<tr>
+
+        <TD class="endcolumnbottom_right">Amount Paid</TD>
+        <TD class="endcolumnbottom" align=right><?php echo "$".number_format($invoice_info['total_remitted'], 2) ?></TD>
+	</tr>
+ 	<tr>
+	        <TD></TD>
+	        <TD></TD>
+
+        <TD class="endcolumnbottom_right">Balance Due</TD>
+        <TD class="endcolumnbottom" align=right><?php echo "$".number_format($invoice_info['invoice_total']-$invoice_info['total_remitted'], 2) ?></TD>
+	</tr>
+</table>

@@ -1,0 +1,688 @@
+<?php
+include("../../../framework/theme.css");
+include("tenants_edit.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+?>
+<script language="JavaScript"
+
+type="text/javascript">
+function show_box(obj) {
+    var el = document.getElementById(obj);
+    if ( el.style.display == 'block' ) {
+    el.style.display = 'none';
+    }
+    else {
+    el.style.display = 'block';
+    }
+}
+
+var xmlHttp;
+
+function createXMLHttpRequest() {
+  try {
+    xmlHttp = new XMLHttpRequest();
+  } catch (trymicrosoft) {
+    try {
+      xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (othermicrosoft) {
+      try {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (failed) {
+        xmlHttp = false;
+      }
+    }
+  }
+
+  if (!xmlHttp)
+    alert("Error initializing XMLHttpRequest!");
+}
+
+
+function form_extender(formElement) {
+    createXMLHttpRequest();
+    form_Name = formElement.getAttribute("name");
+    var queryString = "ACTION="+form_Name;
+    form_Value = formElement.value;
+    queryString += "&VALUE="+form_Value;
+    xmlHttp.open("POST", "tenants_config_request.php", true);
+    xmlHttp.onreadystatechange = handleStateChange;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    if(form_Value == "fillin")
+    {
+        var div = document.getElementById("fillin_container");
+        newdiv = document.createElement("div");
+        newdiv.setAttribute("class", "row");
+        newspan = document.createElement("span");
+        newspan.innerHTML = "Name:";
+        newspan.setAttribute("class", "label");
+        newdiv.appendChild(newspan);
+        newspan = document.createElement("span");
+        newspan.innerHTML = "<input type=text name=\"name\" value=\"\" rows=\"5\">";
+        newspan.setAttribute("class", "formw");      
+        newdiv.appendChild(newspan);
+        div.appendChild(newdiv);
+        newdiv = document.createElement("div");
+        newdiv.setAttribute("class", "row");
+        newspan = document.createElement("span");
+        newspan.innerHTML = "Address:";
+        newspan.setAttribute("class", "label");
+        newdiv.appendChild(newspan);
+        newspan = document.createElement("span");
+        newspan.innerHTML = "<input type=text name=\"address\" value=\"\">";
+        newspan.setAttribute("class", "formw");      
+        newdiv.appendChild(newspan);
+        div.appendChild(newdiv);
+        newdiv = document.createElement("div");
+        newdiv.setAttribute("class", "row");
+        newspan = document.createElement("span");
+        newspan.innerHTML = "City: State: Zip::";
+        newspan.setAttribute("class", "label");
+        newdiv.appendChild(newspan);
+        newspan = document.createElement("span");
+        newspan.innerHTML = "<input type=text name=\"city\" value=\"\" size=\"10\"><input type=text name=\"state\" value=\"\" size=\"5\"><input type=text name=\"zip\" value=\"\" size=\"8\">";
+        newspan.setAttribute("class", "formw");      
+        newdiv.appendChild(newspan);
+        div.appendChild(newdiv);
+    }
+    else
+    {    var div = document.getElementById("fillin_container");
+        div.innerHTML =  '';
+    }
+}
+
+function handleStateChange() {
+     if (xmlHttp.readyState == 4) {
+       if (xmlHttp.status == 200)
+       {
+            var xmlDoc = xmlHttp.responseXML;
+            if(xmlDoc.getElementsByTagName("removerow").length > 0)
+            {
+                for(var i = 0; i < xmlDoc.getElementsByTagName("removerow").length; i++)
+                {
+                    var rowname = xmlDoc.getElementsByTagName("removerow")[i].childNodes[0].nodeValue;
+                    thisrow = document.getElementById(rowname);
+                    if(thisrow != null)
+                    {
+                        while(thisrow.hasChildNodes())
+                        {
+                            thisrow.removeChild(thisrow.lastChild)
+                        }
+                        thisrow.parentNode.removeChild(thisrow);
+                    }
+                }
+            }
+            if(xmlDoc.getElementsByTagName("addrow").length > 0)
+            {
+                for(var i = 0; i < xmlDoc.getElementsByTagName("addrow").length; i++)
+                {
+                    add_current_row = xmlDoc.getElementsByTagName("addrow")[i];
+                    var rowname = add_current_row.getElementsByTagName("rowname")[0].childNodes[0].nodeValue;
+                    var rowformname = add_current_row.getElementsByTagName("rowformname")[0].childNodes[0].nodeValue;
+                    var previousrow = add_current_row.getElementsByTagName("previousrow")[0].childNodes[0].nodeValue;
+                    var label = add_current_row.getElementsByTagName("label")[0].childNodes[0].nodeValue;
+                    var multiple = false;
+                    
+                    thisrow = document.getElementById(previousrow);
+                    newdiv = document.createElement("div");
+                    newdiv.setAttribute("id", rowname);
+                    newdiv.setAttribute("class", "row");
+                    newspan = document.createElement("span");
+                    newspan.innerHTML = label;
+                    newspan.setAttribute("class", "label");
+                    newdiv.appendChild(newspan);
+                    newspan = document.createElement("span");
+                    newspan.setAttribute("class", "form");
+                    
+                    newSelect = document.createElement("select");
+                    if (add_current_row.getElementsByTagName("multiple")[0])
+                    {
+                        var multiple = add_current_row.getElementsByTagName("multiple")[0].childNodes[0].nodeValue;
+                        newSelect.setAttribute("multiple", true);
+                    }
+                    newSelect.setAttribute("name", rowformname);
+                    newSelect.setAttribute("id", rowformname);
+                    newSelect.setAttribute("onchange", "form_extender(this)");
+                    for(var j = 0; j < add_current_row.getElementsByTagName("id").length; j++)
+                    {
+                        newoption  = document.createElement("option");
+                        newoption.setAttribute("value", add_current_row.getElementsByTagName("id")[j].childNodes[0].nodeValue);
+                        newoption.innerHTML = add_current_row.getElementsByTagName("name")[j].childNodes[0].nodeValue;
+                        newSelect.appendChild(newoption);
+                    }
+                    newspan.appendChild(newSelect);
+                    newdiv.appendChild(newspan);
+                    thisrow.parentNode.insertBefore(newdiv, thisrow.nextSibling);
+                    
+                }
+            }
+       }
+       else if (xmlHttp.status == 404)
+         alert("Request URL does not exist");
+       else
+         alert("Error: status code is " + xmlHttp.status);
+      }
+}
+
+
+</script>
+<div class="col_left">
+<div class="portlet">
+<div class="divheader">Tenant Info</div>
+    <div class="row">
+        <span class="label">Tenant</span>
+        <span class="formw">
+        <?php echo $tenant_info['cv_name'] ?>
+        </span>
+    </div>
+    <form action="<?php echo $BASE_DIR ?>/tenants/tenants_edit.php"  method=POST>
+    <div class="row">
+        <span class="label">Property</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="inventory_id" >
+            <?php
+            foreach ($properties as $row)
+            {
+                ?>
+                <OPTION <?php
+                if ($tenant_info['inventory_id'] == $row['inventory_id'])
+                {
+                    echo "SELECTED";
+                }
+                ?> value="<?php echo $row['inventory_id'] ?>"><?php echo $row['item_name'] ?></OPTION>
+                <?php
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">Rent</span>
+        <span class="formw">
+        <input type="TEXT"  name="tenant_rent"  value="<?php echo $tenant_info['tenant_rent'] ?>" size="5">
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">Lease Start</span>
+        <span class="formw">
+        <?php Framework::date_selectors($tenant_info['lease_start_date_year'], $tenant_info['lease_start_date_month'],$tenant_info['lease_start_date_day'], "lease_start_", ""); ?>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">Lease End</span>
+        <span class="formw">
+        <?php Framework::date_selectors($tenant_info['lease_end_date_year'], $tenant_info['lease_end_date_month'], $tenant_info['lease_end_date_day'], "lease_end_", ""); ?>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">Current?:</span>
+        <span class="formw"><SELECT NAME="tenant_current">
+        <OPTION <?php
+        if ($tenant_info['tenant_current'] == 'Y')
+        {
+                echo "SELECTED";
+        }
+        ?> VALUE="Y">YES</OPTION>
+        <OPTION <?php
+        if ($tenant_info['tenant_current'] == 'N')
+        {
+            echo "SELECTED";
+        }
+        ?> VALUE="N">NO</OPTION>
+        </SELECT>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label"><input type="HIDDEN"  name="tenant_id"  value="<?php echo $tenant_info['tenant_id'] ?>">
+       <input type="SUBMIT"  name="ACTION"  value="Delete Tenant"></span>
+        <span class="formw"> <input type="SUBMIT"  name="ACTION"  value="Update"></span>
+    </div>
+    </form>
+    <form action="<?php echo $BASE_DIR ?>/tenants/tenants_edit.php"  method=POST>
+    <div class="row">
+        <span class="label">30 Day</span>
+        <span class="formw">
+        <?php Framework::date_selectors($tenant_info['thirty_day_date_year'], $tenant_info['thirty_day_date_month'],$tenant_info['thirty_day_date_day'], "thirty_day_", ""); ?><input type="HIDDEN"  name="tenant_id"  value="<?php echo $tenant_info['tenant_id'] ?>"><input type="SUBMIT"  name="ACTION"  value="Set 30 Day"><input type="SUBMIT"  name="ACTION"  value="Unset 30 Day">
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">Move Out</span>
+        <span class="formw">
+        <?php Framework::date_selectors($tenant_info['move_out_date_year'], $tenant_info['move_out_date_month'],$tenant_info['move_out_date_day'], "move_out_", ""); ?>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">Refund Due</span>
+        <span class="formw">
+        <?php Framework::date_selectors($tenant_info['refund_date_year'], $tenant_info['refund_date_month'],$tenant_info['refund_date_day'], "refund_", ""); ?>
+        </span>
+    </div>
+    </form>
+    
+</div>
+    <div class="portlet">
+    <div class="divheader">Contacts</div>
+        
+    <?php  if(is_array($tenant_contacts))
+        {
+        foreach($tenant_contacts as $contact)
+        {
+            $contact_info = contact::get_contact_from_id($contact['contacts_id']);
+            $phones = contact::getall_phonenumbers_from_contact_id($contact['contacts_id']);
+            $addresses = contact::getall_addresses_from_contact_id($contact['contacts_id']);
+            $emails = contact::getall_emailaddys_from_contact_id($contact['contacts_id']);
+            ?>
+            <div class="box"><span  style="float:left"><?php echo $contact_info['lastname'].", ".$contact_info['firstname']; ?></span><span onclick="show_box('contact_box<?php echo $contact['contacts_id'] ?>')" style="float:right;display:inline">+</span>
+            </div>
+            <div class="contact_box" style="display:none" id="contact_box<?php echo $contact['contacts_id'] ?>" >
+                <div class="border_box"> 
+                <form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php"  method=POST>
+                    <span class="label">
+                    </span>
+                    <span class="formw">
+                        <input type="HIDDEN"  name="cv_id"  value="<?php echo $customer_info['cv_id']; ?>" >
+                        <input type="SUBMIT"  name="ACTION"  value="Remove Contact">
+                        <input type="HIDDEN"  name="contacts_id"  value="<?php echo $contact_info['contacts_id'] ?>">
+                        <input type="HIDDEN"  name="cv_contacts_id"  value="<?php echo $contact['cv_contacts_id'] ?>">
+                    </span>
+                    <div class="row">
+                        <span class="label">First Name:</span>
+                        <span class="formw">
+                            <input type="TEXT"  name="firstname"  value="<?php echo $contact_info['firstname']; ?>" >
+                        </span>
+                    </div>    
+                    <div class="row">
+                        <span class="label">Last Name or Company Name:</span>
+                        <span class="formw">
+                            <input type="TEXT"  name="lastname"  value="<?php echo $contact_info['lastname']; ?>" >
+                        </span>
+                    </div>    
+                    <div class="row">
+                        <span class="label">SSN:</span>
+                        <span class="formw">
+                            <input type="TEXT"  name="ssn"  value="<?php echo $contact_info['ssn']; ?>" >
+                        </span>
+                    </div>    
+                    <div class="row">
+                        <span class="label">Notes:</span>
+                        <span class="formw">
+                            <textarea name="contact_notes" ><?php echo $contact_info['contact_notes']; ?></textarea>
+                        </span>
+                    </div>    
+                    <div class="row">
+                        <span class="label">Catagory:</span>
+                        <span class="formw">
+                            <SELECT  SIZE="1" NAME="contacttype_id" >
+                    <?php
+                                foreach($contact_types as $row)
+                                {
+                                    ?>
+                                        <OPTION VALUE="<?php echo $row['contacttype_id']; ?>"<?php 
+                                        if ($contact_info['contacttype_id'] == $row['contacttype_id'])
+                                        {
+                                            echo " SELECTED";
+                                        }
+                                        ?>
+                                        >
+                                        <?php echo $row['contacttype_name']; ?></OPTION>
+                                    <?php
+                                }
+                    ?>  
+                            </SELECT>
+                        </span>
+                    </div>    
+                    <?php
+                    if(is_array($addresses))
+                    {
+                        foreach($addresses as $address)
+                        {   
+                        ?>
+                            <div class="row">
+                                <span class="label">Type</span>
+                                <span class="formw">
+                                <SELECT  SIZE="1" NAME="addresstype_id[<?php echo $address['address_id']; ?>]" >
+                                    <?php
+                                    foreach($addresstypes as $row2)
+                                    {   
+                                        ?>
+                                        <OPTION value="<?php echo $row2['addresstype_id'] ?>" <?php if($row2['addresstype_id'] == $address['addresstype_id']){echo "SELECTED"; } ?> > <?php echo $row2['addresstype_name'] ?></OPTION>
+                                        <?php
+                                    }
+                                    ?>
+                                    </SELECT>DELETE ADDRESS?<input type="checkbox" name="delete_address[]" value="<?php echo $address['address_id']; ?>" >
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">Care Of:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="careof[<?php echo $address['address_id']; ?>]" id="careof[<?php echo $address['address_id']; ?>]"  value="<?php echo $address['careof']; ?>" ><BUTTON type=button onclick="setToDefault(<?php echo $address['address_id']; ?>)">Set to Default</BUTTON>
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">Address:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="street[<?php echo $address['address_id']; ?>]" id="street[<?php echo $address['address_id']; ?>]"  value="<?php echo  $address['street']; ?>" > 
+        
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">City</span>
+                                <span class="formw">
+                                        <input type="TEXT"  name="city[<?php echo $address['address_id']; ?>]" id="city[<?php echo $address['address_id']; ?>]"  value="<?php echo $address['city']; ?>" >
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">State:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="state[<?php echo $address['address_id']; ?>]" id="state[<?php echo $address['address_id']; ?>]"  value="<?php echo $address['state']; ?>" >
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">Zip:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="zip[<?php echo $address['address_id']; ?>]" id="zip[<?php echo $address['address_id']; ?>]"  value="<?php echo $address['zip']; ?>" >  
+                                </span>
+                                <input type="HIDDEN"  name="address_id[]"  value="<?php echo $address['address_id']; ?>" >
+                            </div>    
+                        <?php
+                        }
+                    }
+                    foreach($phones as $phone)
+                    {
+                    ?>
+                        <div class="row">
+                            <span class="label">Type</span>
+                            <span class="formw">
+                            <SELECT  SIZE="1" NAME="phonetype_id[<?php echo $phone['phone_id']; ?>]" >
+                                <?php
+                                foreach($phonetypes as $phonetype)
+                                {   
+                                    ?>
+                                    <OPTION value="<?php echo $phonetype['phonetype_id'] ?>" <?php if($phonetype['phonetype_id'] == $phone['phonetype_id']){echo "SELECTED"; } ?> > <?php echo $phonetype['phonetype_name'] ?></OPTION>
+                                    <?php
+                                }
+                                ?>
+                                </SELECT>DELETE PHONE NUMBER?<input type="checkbox" name="delete_phone[]" value="<?php echo $phone['phone_id']; ?>">
+                            </span>
+                        </div>    
+                        <div class="row">
+                            <span class="label">Number:</span>
+                            <span class="formw">
+                                <input type="TEXT"  name="phone_num[<?php echo $phone['phone_id']; ?>]"  value="<?php echo $phone['phone_num']; ?>" >
+                            </span>
+                            <input type="HIDDEN"  name="phone_id[]"  value="<?php echo $phone['phone_id']; ?>" >
+                        </div>    
+                    <?php
+                    }
+                    foreach($emails as $email)
+                    {
+                    ?>
+                        <div class="row">
+                            <span class="label">Type</span>
+                            <span class="formw">
+                            <SELECT  SIZE="1" NAME="emailtype_id[<?php echo $email['email_id']; ?>]" >
+                                <?php
+                                foreach($emailtypes as $emailtype)
+                                {   
+                                    ?>
+                                    <OPTION value="<?php echo $emailtype['emailtype_id'] ?>" <?php if($emailtype['emailtype_id'] == $email['emailtype_id']){echo "SELECTED"; } ?> > <?php echo $emailtype['emailtype_name'] ?></OPTION>
+                                    <?php
+                                }
+                                ?>
+                                </SELECT>DELETE EMAIL ADDRESS?<input type="checkbox" name="delete_email[]" value="<?php echo $email['email_id']; ?>">
+                            </span>
+                        </div>    
+                        <div class="row">
+                            <span class="label">EMAIL ADDRESS:</span>
+                            <span class="formw">
+                                <input type="TEXT"  size=30 name="email_address[<?php echo $email['email_id']; ?>]"  value="<?php echo $email['email_address']; ?>" >
+                            </span>
+                            <input type="HIDDEN"  name="email_id[]"  value="<?php echo $email['email_id']; ?>" >
+                        </div>    
+                    <?php
+                    }
+                    ?>
+                    <div class="row">
+                        <span class="label"></span>
+                        <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Update Contact" ></span>
+                    </div>
+                    </form>
+                </div>
+                <div class="border_box">
+                    <form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php"  method=POST>
+                        <input type="HIDDEN"  name="cv_id"  value="<?php echo $customer_info['cv_id']; ?>" >
+                        <input type="HIDDEN"  name="contacts_id"  value="<?php echo $contact_info['contacts_id'] ?>">
+                            <BUTTON type=button onclick="loadDefault(<?php echo $contact_info['contacts_id'] ?>)">Load CV Values</BUTTON>
+                            <div class="row">
+                                <span class="label">Type</span>
+                                <span class="formw">
+                                <SELECT  SIZE="1" NAME="addresstype_id[NULL]" >
+                                    <?php
+                                    foreach($addresstypes as $row2)
+                                    {   
+                                        ?>
+                                        <OPTION value="<?php echo $row2['addresstype_id'] ?>"  > <?php echo $row2['addresstype_name'] ?></OPTION>
+                                        <?php
+                                    }
+                                    ?>
+                                    </SELECT>
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">Care Of:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="careof[NULL]" ID="careof[NULL]<?php echo $contact['contacts_id'] ?>" value="" >
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">Address:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="street[NULL]" ID="street[NULL]<?php echo $contact['contacts_id'] ?>"  value="" > 
+        
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">City</span>
+                                <span class="formw">
+                                        <input type="TEXT"  name="city[NULL]" ID="city[NULL]<?php echo $contact['contacts_id'] ?>"  value="" >
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">State:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="state[NULL]" ID="state[NULL]<?php echo $contact['contacts_id'] ?>" value="" >
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">Zip:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="zip[NULL]" ID="zip[NULL]<?php echo $contact['contacts_id'] ?>"  value="" >  
+                                </span>
+                                <input type="HIDDEN"  name="address_id"  value="NULL" >
+                            </div>    
+                            <div class="row">
+                                <span class="label"></span>
+                                <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Add Address" ></span>
+                            </div>
+                            <div class="row">
+                                <span class="label">Type</span>
+                                <span class="formw">
+                                <SELECT  SIZE="1" NAME="phonetype_id[NULL]" >
+                                    <?php
+                                    foreach($phonetypes as $phonetype)
+                                    {   
+                                        ?>
+                                        <OPTION value="<?php echo $phonetype['phonetype_id'] ?>" > <?php echo $phonetype['phonetype_name'] ?></OPTION>
+                                        <?php
+                                    }
+                                    ?>
+                                    </SELECT>
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">Number:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="phone_num[NULL]" ID="phone_num[NULL]<?php echo $contact['contacts_id'] ?>"  value="" >
+                                </span>
+                                <input type="HIDDEN"  name="phone_id"  value="NULL" >
+                            </div>    
+                            <div class="row">
+                                <span class="label"></span>
+                                <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Add Phone" ></span>
+                            </div>
+                            <div class="row">
+                                <span class="label">Email Type</span>
+                                <span class="formw">
+                                <SELECT  SIZE="1" NAME="emailtype_id[NULL]" >
+                                    <?php
+                                    foreach($emailtypes as $emailtype)
+                                    {   
+                                        ?>
+                                        <OPTION value="<?php echo $emailtype['emailtype_id'] ?>" > <?php echo $emailtype['emailtype_name'] ?></OPTION>
+                                        <?php
+                                    }
+                                    ?>
+                                    </SELECT>
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">Email Address:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="email_address[NULL]" ID="email_address[NULL]<?php echo $contact['contacts_id'] ?>"  value="" >
+                                </span>
+                                <input type="HIDDEN"  name="email_id"  value="NULL" >
+                            </div>    
+                            <div class="row">
+                                <span class="label"></span>
+                                <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Add Email" ></span>
+                            </div>
+                    </form>
+                </div>
+            </div>
+             <?php
+        }
+        }
+    else
+    {
+        ?>
+        <div class="row">
+        <p class="warning" align="center" >YOU MUST ADD AT LEAST ONE CONTACT!</p>
+        </div>
+        <?php
+
+    }
+    ?>
+    </div>
+    
+    
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/tenants/tenants_config.php"  method=POST>
+    <div class="divheader">Attach Contacts</div>
+    <div class="row" id="target_row">
+        <span class="label">Catagory:</span>
+        <span class="formw"><SELECT  class="smallsans" SIZE="1" NAME="target" onchange="form_extender(this);">
+            <OPTION value="null"></OPTION>
+            <?php
+            foreach($contact_types as $row)
+            {
+                ?>
+                    <OPTION VALUE="<?php echo $row['contacttype_id']; ?>"><?php echo $row['contacttype_name']; ?></OPTION>
+                <?php
+            }
+?>	
+        </SELECT></span>
+    </div>    
+    <div id="fillin_container">
+
+    </div>    
+    <div class="row">
+        <span class="label"></span>
+        <span class="formw">
+            <input type="HIDDEN"  name="tenantmulti_id"  value="NULL">
+            <input type="HIDDEN"  name="tenant_id"  value="<?php echo $tenant_info['tenant_id'] ?>">
+            <input type="SUBMIT"  name="ACTION"  value="Add Contact">
+        </span>
+    </div>    
+</form>
+</div>
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/tenants/tenants_config.php"  method=POST>
+    <div class="divheader">Create and Attach Contact Info</div>
+    <div class="row">
+        <span class="label">First Name:</span>
+        <span class="formw"><input type="TEXT"  name="firstname"  value="<?php echo $firstname; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Last Name or Company Name:</span>
+        <span class="formw"><input type="TEXT"  name="lastname"  value="<?php echo $lastname; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Catagory:</span>
+        <span class="formw"><SELECT  class="smallsans" SIZE="1" NAME="contacttype_id" >
+<?php
+            foreach($contact_types as $row)
+            {
+                ?>
+                    <OPTION VALUE="<?php echo $row['contacttype_id']; ?>"><?php echo $row['contacttype_name']; ?></OPTION>
+                <?php
+            }
+?>	
+        </SELECT></span>
+    </div>    
+    <div class="row">
+            <input type="HIDDEN"  name="tenant_id"  value="<?php echo $tenant_info['tenant_id'] ?>">
+            <input type="HIDDEN"  name="contacts_id"  value="NULL">
+            <input type="HIDDEN"  name="tenantmulti_id"  value="NULL">
+            <input type="SUBMIT"  name="ACTION"  value="Create and Add Contact" >
+    </div>    
+</form>
+</div>
+</div>
+</div>
+
+
+<div class="portlet2">
+    <div class="divheader">RESULTS</div>    
+<?php  if($USER->CheckPermissionType($MODULE_NAME) == 'U')
+    {
+    ?>
+        <div class="row">
+            <span class="colleft"><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=YES" ?>" >VIEW CLOSED CASES</a></span>
+            <span class="colright"><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=YES&VIEW_CLOSED=".$VIEW_CLOSED ?>">VIEW ALL CASES</a></span>
+        </div>    
+    <?php
+    }
+?>
+        <div class="row">
+<table>
+    <TR>
+        <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=maintenance_title" ?>">CASE TITLE</A></TD>
+        <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whoopen_id" ?>">WHO OPENED</A></TD>
+        <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whoassigned_id" ?>">WHO CLOSED</A></TD>
+        <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whenopen_date" ?>">WHEN OPEN</A></TD>
+        <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whenclosed_date" ?>">WHEN CLOSE</A></TD>
+        <TD></TD>
+    </TR>
+<?php
+    if(is_array($maintenance))
+    {
+        foreach($maintenance as $row)
+        {
+            ?>
+            <TR class="action<?php echo $row['action_needed']?>">
+           
+                <TD> <a href ="<?php echo $BASE_DIR ?>/maintenance/maintenance_update.php?maintenance_id=<?php echo $row['maintenance_id'] ?>" target="_blank"><?php echo $row['maintenance_title'] ?> </a></TD>
+                <TD><?php echo $row['whoopen_username'] ?></TD>
+                <TD><?php echo $row['whoclosed_username'] ?></TD>
+                <TD><?php echo $row['whenopen_date'] ?></TD>
+                <TD><?php echo $row['whenclosed_date'] ?></TD>
+           
+            </TR>    
+            <?php
+        }   
+    }
+    ?>
+    
+</table>
+</div>

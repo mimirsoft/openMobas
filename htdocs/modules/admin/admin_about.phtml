@@ -1,0 +1,43 @@
+<?php
+require_once("../../../framework/theme.css");
+require_once($MODULE_NAME."_about.css");
+framework::navbar();
+?>
+
+<div class="portlet">
+    <div class="divheader">Actions</div>
+    <table>
+    <?php foreach($actions as $a)
+    { ?>
+        <tr>
+        <td> <?php echo $a ?></td>
+        <td> <?php echo $action_description[$a]; ?></td>
+        
+        </tr>
+
+      <?php   
+    }?>
+    </table>
+        
+   
+
+</div>
+
+<div class="portlet">
+    <div class="divheader">Objects</div>
+     <table>
+   <?php foreach($objects as $o)
+    { ?>
+                <tr>
+        <td> <?php echo $o ?></td>
+        <td> <?php echo $object_description[$o]; ?></td>
+        
+        </tr>
+        
+      <?php   
+    }?>
+    </table>
+        
+   
+
+</div>

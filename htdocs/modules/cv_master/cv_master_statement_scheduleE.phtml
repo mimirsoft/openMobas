@@ -1,0 +1,221 @@
+        <div style="position: static; height: 85mm; ">
+
+        <div class="block1">
+        <p class="coname"><? echo $SYS_INFO['COMPANY_NAME'] ?></p>
+        <p class="coaddy"><? echo $SYS_INFO['COMPANY_MAILADDRESS1'] ?></p>
+        <p class="coaddy2"><? echo $SYS_INFO['COMPANY_MAILADDRESS2'] ?></p>
+        <p class="cophone"><? echo $SYS_INFO['COMPANY_PHONE'] ?></p>
+        <p class="maildate"><? echo $statement['date'] ?></p>
+        </div>
+        <?
+    
+        if($customer_info['cv_default_city'] != ""){$customer_info['cv_default_city'] .= ",";}
+        ?>
+        <div class="block3">
+        <p class="mailaddress1"><? echo $customer_info['cv_name'] ?></p>
+        <? if($customer_info['careof'] != "")
+        {
+            ?><p class="mailaddress1"><? echo $statement['mh']['careof'] ?></p><?
+        }
+        ?>
+        <p class="mailaddress2"><? echo $customer_info['cv_default_address'] ?></p>
+        <p class="mailaddress3"><? echo $customer_info['cv_default_city']." ".$customer_info['cv_default_state']." ".$customer_info['cv_default_zip'] ?></p>
+        </div>
+    </div>
+
+PURCHASE ORDERS
+    <table>
+    	<colgroup>
+    	<col class="col1"/>
+     	<col class="col2"/>
+     	<col class="col3"/>
+     	<col class="col4"/>
+     	<col class="col5"/>
+     	</colgroup>
+     	<tr>
+    	        <TD class="lefttop">PO</TD>
+    	        <TD class="lefttop">Date</TD>
+    	        <TD class="lefttop">Description</TD>
+                <TD class="lefttop">Amount</TD>
+                <TD class="lefttop">Remaining</TD>
+    	        <TD class="endcolumntop">Running Total</TD>
+    	</tr>
+    <?php foreach($po_set as $po)
+    {
+    		$outstanding = $po['po_total']-$po['total_disbursed'];
+            $po_sum += $po['po_total'];
+    		$po_total += $outstanding;
+    		?>
+    	<tr>
+    	        <TD class="left"><? echo $po['po_id']?></TD>
+    	        <TD class="left"><? echo $po['po_date']?></TD>
+                <TD class="left"><? echo $po['purchase_description'];
+                $invoice_items = Purchase_Requisition::getall_purchaserequest_items($po['pr_id']);
+                foreach($invoice_items as $i_item)
+                {
+                    echo $i_item['item_name']."<BR />";
+                }
+                
+                ?> </TD>
+                <TD class="left" align=right><? echo $po['po_total']?></TD>
+                <TD class="left" align=right><? echo number_format($outstanding, 2)?></TD>
+                <TD class="endcolumn" align=right><? echo number_format($po_total, 2)?></TD>
+    
+    	</tr>
+    <?php 
+    }?>
+    	
+    	<tr>
+    	        <TD class="leftbottom">&nbsp;</TD>
+    	        <TD class="leftbottom">&nbsp;</TD>
+    	        <TD class="leftbottom">Total</TD>
+    	        <TD class="endcolumnbottom"><? echo number_format($po_sum, 2) ?></TD>
+                <TD class="leftbottom">&nbsp;</TD>
+                <TD align=right class="endcolumnbottom"><? echo number_format($po_total, 2) ?></TD>
+    	</tr>
+ 	</table>
+    REMITTANCES
+    <table>
+        <colgroup>
+        <col class="col1"/>
+        <col class="col2"/>
+        <col class="col3"/>
+        <col class="col4"/>
+        <col class="col5"/>
+        </colgroup>
+    
+        <tr>
+                <TD class="lefttop">Check #</TD>
+                <TD class="lefttop">Date</TD>
+                <TD class="lefttop">Description</TD>
+                <TD class="lefttop">Amount</TD>
+                <TD class="lefttop">Remaining</TD>
+                <TD class="endcolumntop">Running Total</TD>
+        </tr>
+    <?php 
+    foreach($real_remittances as $real_remittance)
+    {
+        $outstanding = $po['total_received']-$po['amount_applied'];
+        $po_sum += $real_remittance['total_received'];
+        $po_total += $outstanding;
+        ?>
+        <tr>
+                <TD class="left"><? echo $real_remittance['checkno']?></TD>
+                <TD class="left"><? echo $real_remittance['remit_date']?></TD>
+                <TD class="left"><? echo $real_remittance['comment']?> </TD>
+                <TD class="left" align=right><? echo $real_remittance['total_received']?></TD>
+                <TD class="left" align=right><? echo number_format($outstanding, 2)?></TD>
+                <TD class="endcolumn" align=right><? echo number_format($po_total, 2)?></TD>
+    
+        </tr>
+    <?php 
+    }
+    
+    ?>
+     
+        <tr>
+            <TD class="leftbottom">&nbsp;</TD>
+            <TD class="leftbottom">&nbsp;</TD>
+            <TD class="leftbottom">Total of Checks</TD>
+            <TD class="endcolumnbottom"><? echo number_format($po_sum, 2) ?></TD>
+            <TD class="leftbottom">&nbsp;</TD>
+            <TD class="endcolumnbottom"><? echo number_format($po_total, 2) ?></TD>
+        </tr>
+    </table>
+     INVOICES
+    <table>
+    	<colgroup>
+    	<col class="col1"/>
+     	<col class="col2"/>
+     	<col class="col3"/>
+     	<col class="col4"/>
+     	<col class="col5"/>
+     	</colgroup>
+    
+       	<tr>
+    	        <TD class="lefttop">INV #</TD>
+    	        <TD class="lefttop">Date</TD>
+    	        <TD class="lefttop">Description</TD>
+                <TD class="lefttop">Amount</TD>
+                <TD class="lefttop">Remaining</TD>
+    	        <TD class="endcolumntop">Running Total</TD>
+    	</tr>
+    <?php 
+    foreach($inv_set as $inv)
+    {
+            $outstanding = $inv['invoice_total']-$inv['total_remitted'];
+            $inv_total += $outstanding;
+            $inv_sum += $inv['invoice_total'];
+    	?>
+    	<tr>
+    	        <TD class="left"><? echo $inv['invoice_id']?></TD>
+     	        <TD class="left"><? echo $inv['date_charged']?></TD>
+     	        <TD class="left"><? echo $inv['invoice_description']?> </TD>
+                <TD class="left" align=right><? echo $inv['invoice_total']?></TD>
+                <TD class="left" align=right><? echo number_format($outstanding, 2)?></TD>
+                <TD class="endcolumn" align=right><? echo number_format($inv_total, 2)?></TD>
+    
+    	</tr>
+    <?php 
+    }
+    
+    ?>
+     
+    	<tr>
+	     	<TD class="leftbottom">&nbsp;</TD>
+            <TD class="leftbottom">&nbsp;</TD>
+            <TD class="leftbottom">Total</TD>
+            <TD class="endcolumnbottom"><? echo number_format($inv_sum, 2) ?></TD>
+            <TD class="leftbottom">&nbsp;</TD>
+            <TD class="endcolumnbottom"><? echo number_format($inv_total-$payments_total, 2) ?></TD>
+		</tr>
+    </table>
+DISBURSEMENTS
+    <table>
+        <colgroup>
+        <col class="col1"/>
+        <col class="col2"/>
+        <col class="col3"/>
+        <col class="col4"/>
+        <col class="col5"/>
+        </colgroup>
+    
+        <tr>
+                <TD class="lefttop">Check #</TD>
+                <TD class="lefttop">Date</TD>
+                <TD class="lefttop">Description</TD>
+                <TD class="lefttop">Amount</TD>
+                <TD class="lefttop">Remaining</TD>
+                <TD class="endcolumntop">Running Total</TD>
+        </tr>
+    <?php 
+    foreach($real_disbursements as $real_disbursement)
+    {
+        $inv_sum += $real_disbursement['total_amount'];
+        $outstanding = $inv['total_amount']-$inv['amount_applied'];
+        $inv_total += $outstanding;
+        
+        ?>
+        <tr>
+                <TD class="left"><? echo $real_disbursement['checkno']?></TD>
+                <TD class="left"><? echo $real_disbursement['cd_date']?></TD>
+                <TD class="left"><? echo $real_disbursement['comment']?> </TD>
+                <TD class="left" align=right><? echo $real_disbursement['total_amount']?></TD>
+                <TD class="left" align=right><? echo number_format($outstanding, 2)?></TD>
+                <TD class="endcolumn" align=right><? echo number_format($inv_total, 2)?></TD>
+    
+        </tr>
+    <?php 
+    }
+    
+    ?>
+     
+        <tr>
+            <TD class="leftbottom">&nbsp;</TD>
+            <TD class="leftbottom">&nbsp;</TD>
+            <TD class="leftbottom">Total of Checks</TD>
+            <TD class="endcolumnbottom"><? echo number_format($inv_sum, 2) ?></TD>
+            <TD class="leftbottom">&nbsp;</TD>
+            <TD class="endcolumnbottom"><? echo number_format($inv_total-$payments_total, 2) ?></TD>
+        </tr>
+    </table>

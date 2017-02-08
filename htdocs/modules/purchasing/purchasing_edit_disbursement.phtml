@@ -1,0 +1,76 @@
+<?php
+include("../../../framework/theme.css");
+include("purchasing_cash_disbursements.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+
+<div class="portlet">
+    <div class="divheader">Edit Disbursement</div>
+<form id='disburse_form' action="<?php echo $BASE_DIR ?>/purchasing/purchasing_edit_disbursement.php" method="POST">
+    <div class="row"><span class="label">Date of Check:</span> 
+        <span class="formw"> 
+        <?php 
+        Framework::date_selectors(substr($cd_info['cd_date'], 0 ,4), substr($cd_info['cd_date'], 5 ,2), substr($cd_info['cd_date'], 8 ,2), "cd_", "")
+        ?>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">Check No:</span> 
+        <span class="formw"> <input type="TEXT" name="checkno" size="5" value="<?php  echo $cd_info['checkno'] ?>"> </span>
+    </div>
+    <div class="row">
+        <span class="label">Comment:</span> 
+        <span class="formw"> <input type="TEXT" name="comment" size="30" value="<?php  echo $cd_info['comment'] ?>"> </span>
+    </div>
+    <div class="row">
+        <span class="label">Amount:</span> 
+        <span class="formw" id='check_total_display'><?php  echo $cd_info['total_amount'] ?></span> 
+    </div>
+    <div class="row">
+        <span class="label">Total Applied:</span> 
+        <span class="formw" id='check_total_display'><?php  echo $cd_info['total_applied'] ?>
+        <input type="SUBMIT" name="ACTION" size="5" value="Unapply">
+        </span> 
+    </div>
+    <div class="row">
+        <span class="label">Credit/Clearing:</span> 
+        <span class="formw" >
+            <input type="checkbox" name="credit_or_clearing" id="credit_or_clearing"  
+            value=1 <?php if ($cd_info['credit_or_clearing'] == 1)echo "checked" ?> >
+        </span> 
+    </div>
+    <div class="row">
+        <span class="label">Is Refund:</span> 
+        <span class="formw" >
+            <input type="checkbox" name="is_refund" id="is_refund"  
+            value=1 <?php if ($cd_info['is_refund'] == 1)echo "checked" ?> >
+        </span> 
+    </div>
+    <div class="row">
+        <span class="label"></span> 
+        <span class="formw">
+            <input type="SUBMIT" name="ACTION" size="5" value="Update">
+            <input type="HIDDEN" name="cd_no" value="<?php echo $cd_info['cd_no'] ?>"> 
+        </span>
+            <input type="SUBMIT" name="ACTION" size="5" value="Delete">
+    </div>
+ </form>
+    <div class="row">
+        <span class="label">
+        <?php
+            if($cd_info['total_amount'] != $cd_info['total_applied'])
+            {
+            ?>
+            <form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_disbursement_advice.php"  method=POST>
+          	<input type="HIDDEN"  name="cd_no" value="<?php echo $cd_info['cd_no'] ?>" >
+          	<input type="SUBMIT"  name="ACTION" value="Apply Disbursement" >
+          	</form>
+			<?php 
+            }
+			?></span> 
+        <span class="formw">
+		</span>
+	</div>
+
+</div>

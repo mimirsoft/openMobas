@@ -1,0 +1,60 @@
+<style type="text/css">
+    .portlet {
+        width: auto;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+    
+    div.row {
+    padding-top: .5em;
+    clear: both;
+    }
+    
+    div.row span.label {
+    float: left;
+    width: 15em;
+    text-align: right;
+    }
+    
+    div.row span.formw {
+    float: left;
+    width: auto;
+    text-align: left;
+    } 
+    table.fixed {
+        table-layout:fixed;
+        width:89em;
+    }
+    col.date {
+        width: 6em;    
+    }
+    col.checknum {
+        width: 4em;    
+    }
+    col.comment {
+        width: 8.5em;    
+    }
+    col.reconcile {
+        width: 1.5em;    
+    }
+    col.amount {
+        width: 6em;    
+    }
+    col.amount2 {
+        width: 7em;    
+    }
+    col.checkbox {
+        width: 2em;    
+    }
+    tr.green {
+        background-color: #99CC32;    
+    }
+    tr.yellow {
+        background-color: #DBDB70;    
+    }
+</style>
+

@@ -1,0 +1,22 @@
+<style type="text/css">
+    div.loggin {
+        position: absolute;
+        left:40%;
+        top:40%;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+</style>
+<div><?php echo $logged_out_message ?></div>
+<div class="loggin">OpenMOBAS 
+Login
+<form action="<?php echo $currentURL ?>"  method=POST>
+USERNAME:<input type="TEXT"  name="username"  value="" size="10">
+<BR>
+PASSWORD:<input type="PASSWORD"  name="passwd"  value="" size="10">
+<input type="SUBMIT"  name="LOGIN"  value="LOGIN" >
+</form>
+Forgot Username/Password? <a href="/modules/interface/recover.php">CLICK HERE</a>
+</div>

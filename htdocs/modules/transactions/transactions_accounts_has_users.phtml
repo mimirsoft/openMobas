@@ -1,0 +1,119 @@
+<?
+include("../../../framework/theme.css");
+include("transactions_config.css");
+framework::navbar();
+?>
+
+<form  action="" method="POST">
+<div class="portlet">
+    <div class="divheader">Privileges</div>
+    <div class="data">
+    <table border="0" cellpadding="2" cellspacing="2" class="tbl_data">
+	<tr >
+	   <td>
+            </td>
+            <td align="left">
+                <b><a href="admin_rbac_domains.php?&order_by=name">User Id</a></b>
+            </td>
+            <td align="left">
+                <b><a href="admin_rbac_domains.php?&order_by=name">Username</a></b>
+            </td>
+            <td align="left">
+                <b><a href="admin_rbac_domains.php?&order_by=description">Account</a></b>
+            </td>
+	</tr>
+<?
+$class = "green";
+foreach($user_mtm_account as $row)
+{
+    ?>
+    <tr  class="<? echo $class?>">
+        <td>
+            <INPUT type="radio" name="edit_id" value="<? echo $row['id'] ?>">
+        </td>
+        <td>
+            <? echo $row['user_id'] ?>
+        </td>
+        <td>
+            <? echo $row['username'] ?>
+        </td>
+        <td>
+            <? echo $account_array[$row['account_id']] ?>
+        </td>
+    </tr>
+<?
+    switch ($class)
+    {
+        case "green":
+            $class = "yellow";
+            break;
+        
+        case "yellow":
+            $class = "green";
+            break;
+    }
+
+
+
+
+}
+?>
+    </table>
+    </div>
+    <div class="button">
+        <INPUT name="ACTION" type="submit" value="View / Edit" >
+        <INPUT name="ACTION" type="submit" value="Delete" >
+    </div>
+</div>
+</form>
+
+
+<form  action="" method="POST">
+<div class="portlet">
+    <div class="divheader">Add/Edit Privilege</div>
+    <div class="data">
+    <table border="0" class="tbl_frm">
+        <tr >
+            <td class="lbl">
+                    Users
+            </td>
+            <td>
+                    <SELECT name="user" size="8"><span style="color:red">*</span>
+                    <? foreach($users as $act)
+                    {
+                        ?><OPTION value="<? echo $act['user_id'] ?>"
+                        <? 
+                        if($act['user_id'] == $user_id)
+                        {
+                            echo " SELECTED ";
+                        }
+                        ?>
+                        ><? echo $act['username'] ?></OPTION><?   
+                    }  
+                    ?></SELECT>
+                
+            </td>
+        </tr>
+        <tr >
+            <td class="lbl">
+                    Roles
+            </td>
+            <td>
+                    <SELECT name="account"  size="20"><span style="color:red">*</span>
+                  <?
+                transactions::build_accountstree_selectoptions($account_stack, $account_id);
+                ?>
+                    ?></SELECT>
+                
+            </td>
+        </tr>
+        <tr >
+            <td colspan="2" align="center" id="button">
+                <INPUT name="ACTION" type="submit" value="<? echo $ACTION_VALUE ?>">
+                <INPUT name="id" type="hidden" value="<? echo $id?>">
+            </td>
+        </tr>
+    </table>
+    </div>
+</div>
+</FORM>

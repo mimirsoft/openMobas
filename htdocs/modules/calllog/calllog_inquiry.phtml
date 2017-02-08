@@ -1,0 +1,28 @@
+<?
+include("../../../framework/theme.css");
+include("calllog_main.css");
+framework::navbar();
+?>
+<div class="portlet">
+<form action="<? echo $BASE_DIR ?>/calllog/calllog_inquiry.php"  method=POST>
+    <div class="divheader">INQUIRY</div>
+    <div class="row">
+        <span class="label">For Property:</span>
+        <span class="formw"><SELECT  class="smallsans" SIZE="1" NAME="item" >
+        <?
+            foreach($items as $row)
+            {
+                ?>
+                <OPTION VALUE="<? echo $row['inventory_id']?>"><? echo $row['item_name']?></OPTION>
+                <?
+            }
+        
+        ?>      
+        </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+            <input type="SUBMIT"  name="ACTION"  value="OPEN ITEM" >
+    </div>    
+</form>
+</div>

@@ -1,0 +1,146 @@
+<?
+include("../../../framework/theme.css");
+include("contacts_configure.css");
+framework::navbar();
+?>
+
+
+<div class="portlet">
+<form action="<? echo $BASE_DIR ?>/contacts/contacts_configure.php"  method=POST>
+    <div class="divheader">Create New Contact Catagory</div>
+    <div class="row">
+        <span class="label">Type:</span>
+        <span class="formw"><input type="TEXT"  name="contacttype_name"  value="<? echo $contacttype_name; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label"><input type="SUBMIT"  name="ACTION"  value="Edit Contact Type"></span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="contacts_type_edit" >
+            <?
+            foreach ($contactTypes as $row)
+            {
+                ?>
+                <OPTION value="<? echo $row['contacttype_id'] ?>"><? echo $row['contacttype_name'] ?></OPTION>
+                <?
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">
+            <input type="HIDDEN"  name="contacttype_id"  value="<? echo $contacttype_id ?>"><input type="SUBMIT"  name="ACTION"  value="Save Contact Type">
+        </span>
+        <span class="formw">
+            <input type="SUBMIT"  name="ACTION"  value="Delete Contact Type">
+        </span>
+    </div>    
+</form>
+</div>
+
+
+<div class="portlet">
+<form action="<? echo $BASE_DIR ?>/contacts/contacts_configure.php"  method=POST>
+    <div class="divheader">Create New Contact Phone Type</div>
+    <div class="row">
+        <span class="label">Type:</span>
+        <span class="formw">
+            <input type="TEXT"  name="phonetype_name"  value="<? echo $phonetype_name; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">
+            <input type="SUBMIT"  name="ACTION"  value="Edit Contact Phone Type" >
+        </span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="phonetype_edit" >
+            <?
+            foreach ($contactPhoneTypes as $row)
+            {
+                ?>
+                <OPTION value="<? echo $row['phonetype_id'] ?>"><? echo $row['phonetype_name'] ?></OPTION>
+                <?
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">
+            <input type="HIDDEN"  name="phonetype_id"  value="<? echo $phonetype_id; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Save Contact Phone Type" >
+        </span>
+    </div>    
+</form>
+</div>
+
+<div class="portlet">
+<form action="<? echo $BASE_DIR ?>/contacts/contacts_configure.php"  method=POST>
+    <div class="divheader">Create New Contact Email Type</div>
+    <div class="row">
+        <span class="label">Type:</span>
+        <span class="formw">
+            <input type="TEXT"  name="emailtype_name"  value="<? echo $emailtype_name; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">
+            <input type="SUBMIT"  name="ACTION"  value="Edit Contact Email Type" >
+        </span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="emailtype_edit" >
+            <?
+            foreach ($contactEmailTypes as $row)
+            {
+                ?>
+                <OPTION value="<? echo $row['emailtype_id'] ?>"><? echo $row['emailtype_name'] ?></OPTION>
+                <?
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">
+            <input type="HIDDEN"  name="emailtype_id"  value="<? echo $emailtype_id; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Save Contact Email Type" >
+        </span>
+    </div>    
+</form>
+</div>
+
+<div class="portlet">
+<form action="<? echo $BASE_DIR ?>/contacts/contacts_configure.php"  method=POST>
+    <div class="divheader">Create New Address Type</div>
+    <div class="row">
+        <span class="label">Type:</span>
+        <span class="formw">
+            <input type="TEXT"  name="addresstype_name"  value="<? echo $addresstype_name; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">
+            <input type="SUBMIT"  name="ACTION"  value="Edit Contact Address Type" >
+        </span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="addresstype_edit" >
+            <?
+            foreach ($contactAddressTypes as $row)
+            {
+                ?>
+                <OPTION value="<? echo $row['addresstype_id'] ?>"><? echo $row['addresstype_name'] ?></OPTION>
+                <?
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">
+            <input type="HIDDEN"  name="addresstype_id"  value="<? echo $addresstype_id; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Save Contact Address Type" >
+        </span>
+    </div>    
+</form>
+</div>
+ 

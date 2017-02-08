@@ -1,0 +1,226 @@
+<?
+include("../../../framework/theme.css");
+include("calllog_main.css");
+framework::navbar();
+framework::warning($WARNING);
+?>
+
+<div class="rightcolwrapper">
+    <div class="rightcol">
+        <form action="<? echo $BASE_DIR ?>/calllog/calllog_inquiry.php"  method=POST>
+        <div class="portlet2">
+            <div class="divheader">INQUIRER INFO</div>
+            <div class="row">
+                <span class="label">First Name:</span>
+                <span class="formw"><input type="TEXT"  name="firstname"  value="<? echo $firstname; ?>" ></span>
+            </div>    
+            <div class="row">
+                <span class="label">Last Name:</span>
+                <span class="formw"><input type="TEXT"  name="lastname"  value="<? echo $lastname; ?>" ></span>
+            </div>    
+            <div class="row">
+                <span class="label">Phone:</span>
+                <span class="formw"><input type="TEXT"  name="phone"  value="<? echo $phone; ?>" ></span>
+            </div>    
+            <div class="row">
+                <span class="label">Phone2:</span>
+                <span class="formw"><input type="TEXT"  name="phone2"  value="<? echo $phone2; ?>" ></span>
+            </div>    
+            <div class="row">
+                <span class="label">Email:</span>
+                <span class="formw"><input type="TEXT"  name="email"  value="<? echo $email; ?>" ></span>
+            </div>    
+            <div class="row">
+                <span class="label">Notes:(These are included in any auto generated reports)</span>
+                <span class="formw"><textarea name="contact_notes" cols=20><? echo $contact_notes ?></textarea>
+            </div>    
+            <div class="row">
+                    <input type="SUBMIT"  name="ACTION"  value="Record Inquiry" >
+                    <input type="HIDDEN"  name="item"  value="<? echo $item ?>" >
+            </div>    
+        </div>
+        <div class="portlet2">
+            <div class="divheader">SCHEDULE APT</div>
+            <div class="row">
+                <span class="label">Date:</span>
+                <span class="formw">
+                    <?
+                    Framework::date_selectors(date('Y'), date('m'), date('d'), "apt_", "");
+                    ?>
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">Date:</span>
+                <span class="formw">
+                <input type="text" name="apt_date_hour" size="2" value="<? echo date("h") ?>" maxlength="2" />:
+                <input type="text" name="apt_date_minute" size="2" value="<? echo date("i") ?>" maxlength="2" />
+                <input type="radio" name="ampm" value="am" <? if( date('H') < 12){ echo " checked";} ?> />am
+                <input type="radio" name="ampm" value="pm" <? if( date('H') >= 12){ echo " checked";} ?> />pm
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">Appointment With:</span>
+                <span class="formw"><SELECT  SIZE="1" NAME="appointment_with" >
+                <? foreach($users as $row)
+                {	
+                    ?><OPTION VALUE="<? echo $row['user_id'] ?>" <?if($row['user_id'] == $item_info['item_manager']){echo " SELECTED ";} ?> ><? echo $row['username'] ?></OPTION><?
+                }
+                ?>
+                </SELECT>
+                </span>
+             </div>    
+             <div class="row">
+                <span class="label"></span>
+                <span class="formw">
+                <input type="SUBMIT"  name="ACTION"  value="Schedule Appointment" >
+                </span>
+            </div>    
+        </div>    
+        </form>
+        <div class="portlet2">
+            <div class="divheader">VENDOR INFORMATION</div>
+            <div class="row">
+                <span class="label">Name:</span>
+                <span class="formw"><? echo $item_info['cv_name']; ?></span>
+            </div>    
+            <div class="row">
+                <span class="label">Customer Number:</span>
+                <span class="formw"><? echo $item_info['cv_number']; ?></span>
+            </div>    
+            <div class="row">
+                <span class="label">Tax ID:</span>
+                <span class="formw"><? echo $item_info['tax_id']; ?></span>
+            </div>    
+            <div class="row">
+                <span class="label">Is Customer:</span>
+                <span class="formw">
+                    <?
+                    if ($item_info['is_customer'] == 0)
+                        {
+                            echo "NO";
+                        }
+                    if ($item_info['is_customer'] == 1)
+                        {
+                            echo "YES";
+                        }
+                    ?>
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">Is Vendor:</span>
+                <span class="formw">
+                    <?
+                    if ($item_info['is_vendor'] == 0)
+                        {
+                            echo "NO";
+                        }
+                    if ($item_info['is_vendor'] == 1)
+                        {
+                            echo "YES";
+                        }
+                    ?>
+                </span>
+            </div>    
+            <div class="row">
+                <span class="label">Default Email:</span>
+                <span class="formw"><? echo $item_info['cv_default_email']; ?></span>
+            </div>    
+            <div class="row">
+                <span class="label">Default Phone:</span>
+                <span class="formw"><? echo $item_info['cv_default_phone']; ?></span>
+            </div>    
+            <div class="row">
+                <span class="label">Default Address:</span>
+                <span class="formw"><? echo $item_info['cv_default_address']; ?></span>
+            </div>    
+            <div class="row">
+                <span class="label">Default City:</span>
+                <span class="formw"><? echo $item_info['cv_default_city']; ?></span>
+            </div>    
+            <div class="row">
+                <span class="label">Default State:</span>
+                <span class="formw"><? echo $item_info['cv_default_state']; ?></span>
+            </div>    
+            <div class="row">
+                <span class="label">Default Zip:</span>
+                <span class="formw"><? echo $item_info['cv_default_zip']; ?></span>
+            </div>    
+        </div>    
+    </div>
+</div>
+
+<div class="leftcol">
+    <form action="<? echo $BASE_DIR ?>/calllog/calllog_inquiry.php"  method=POST>
+    <div class="portlet">
+        <div class="divheader">INQUIRY</div>
+        <div class="row">
+            <span class="label">For Property:</span>
+            <span class="formw"><SELECT  class="smallsans" SIZE="1" NAME="item" >
+            <?
+                foreach($items as $row)
+                {
+                    ?>
+                    <OPTION VALUE="<? echo $row['inventory_id']?>"><? echo $row['item_name']?></OPTION>
+                    <?
+                }
+            
+            ?>      
+            </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <input type="HIDDEN"  name="firstname"  value="<? echo $firstname ?>" >
+            <input type="HIDDEN"  name="lastname"  value="<? echo $lastname ?>" >
+            <input type="HIDDEN"  name="phone"  value="<? echo $phone ?>" >
+            <input type="HIDDEN"  name="phone2"  value="<? echo $phone2 ?>" >
+            <input type="HIDDEN"  name="contact_notes"  value="<? echo $contact_notes ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="OPEN ITEM" >
+        </div>    
+    </form>
+</div>
+<div class="portlet">
+    <div class="divheader">ITEM INFO</div>
+    <div class="row">
+        <span class="label">Item Name: </span>
+        <span class="formw"><? echo $item_info['item_name'] ?></span>
+    </div>     
+    <div class="row">
+        <span class="label">Item Type:        </span>
+        <span class="formw"><? echo $item_info['item_type_name'] ?>        </span>
+    </div>     
+    <div class="row">
+        <span class="label">Description:</span>
+        <span class="formw"><? echo $item_info['item_description']; ?>        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Wholesale Price:</span>
+        <span class="formw"><? echo $item_info['wholesale_price']; ?>        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Retail Price:</span>
+        <span class="formw"><? echo $item_info['retail_price']; ?>        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Available?:</span>
+        <span class="formw"><?
+            if ($item_info['available'] == 1)
+                {
+                    echo "YES";
+                }
+            if ($item_info['available'] == 0)
+                {
+                    echo "NO";
+                }
+            ?></span>
+    </div>    
+    <div class="row">
+        <span class="label">Date Avail:</span>
+        <span class="formw"><? echo $item_info['availabledate']; ?></span>
+    </div>    
+    <div class="row">
+        <span class="label">Item Manager:</span>
+        <span class="formw"><? echo $item_info['username']?>  <a target="_blank" href="<? echo $BASE_DIR ?>/calendar/week.php?user=<? echo $item_info['item_manager']?>"> VIEW CALENDAR</a></span>
+    </div>    
+    <div class="row">
+    </div>    
+</div>

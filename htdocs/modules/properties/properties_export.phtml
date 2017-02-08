@@ -1,0 +1,24 @@
+<?php
+$list = array ();
+foreach($current_props as $row)
+{
+
+    $l = array($row['property_address']." ".$row['property_aptnum'],$row['property_address'], $row['property_aptnum'], $row['property_city'],$row['property_state'],$row['property_zip']);
+	$list[]=$l;    
+            
+}
+
+/*
+*/
+header('Content-Type: text/csv; charset=utf-8');
+header('Content-Disposition: attachment; filename=properties.csv');
+
+// create a file pointer connected to the output stream
+$output = fopen('php://output', 'w');
+foreach ($list as $fields) {
+    fputcsv($output, $fields);
+}
+
+
+?>	
+       

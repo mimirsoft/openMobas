@@ -1,0 +1,160 @@
+<style type="text/css">
+   
+    .portlet {
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+    div.row {
+        clear: both;
+        padding-top: 10px;
+    }
+    span {
+    	width: 8em;    
+    	text-align: right;
+    	float: left;
+    }
+    input {
+        border:0;
+        margin:0px 0px;
+        padding:0;
+    }
+    select {
+        border:0;
+        margin:0;
+        padding:0;
+    }
+    td {
+        border:0;
+        margin:0;
+        padding:0;
+        vertical-align: top;
+        font-size:10pt;
+        
+    }
+   .close_box {
+        float: right;
+        font-weight:bold;
+    }
+    table.fixed {
+        background-color: <? echo $FRAMEWORK_COLORS['background_color'] ?>;
+        table-layout:fixed;
+        float: left;
+        margin: .5em;
+    }
+    col.date {
+        width: 8em;    
+        min-width: 8em;    
+    }
+    col.checknum {
+        width: 4em;    
+    }
+    col.amount {
+        width: 6em;    
+    }
+    col.date {
+        width: 5em;    
+    }
+    col.reconcile {
+        width: 1.5em;    
+    }
+    col.amount {
+        width: 6em;    
+    }
+    col.amount2 {
+        width: 7em;    
+    }
+
+    tr.green td{
+        background-color: #99CC32;    
+    }
+    tr.yellow td{
+        background-color: #DBDB70;    
+    }
+    div.edit_box {
+        position:absolute;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+    }
+    .nb {
+        border-right:0px solid #ccc;
+        border-bottom:0px solid #ccc;
+        width: auto;
+        padding: 0px;
+        margin: 0px;
+        
+    }
+    .pad_right {
+        padding-right:.5em;
+        
+    }
+	span.sortarrow {
+    	width: auto;    
+    	text-align: right;
+    	float: left;
+    }
+    
+   .new_trans {
+        font-size:14px;
+        position:absolute;
+        visibility: hidden;
+        z-index: 3;
+        top: 3em;
+        padding: 5px;
+        width: 1120px;
+        background-color:#D6DCE2;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+    }
+    div.CREDIT_LABEL{
+        font-size: 14px;
+        text-align: center;
+        float:right;
+        width: 550px;
+    }
+    div.DEBIT_LABEL{
+        font-size: 14px;
+        text-align: center;
+        float:left;
+        width: 550px;
+    }
+    div.dc_amount{
+        font-size: 14px;
+        text-align: right;
+        float: right;
+    }
+    div.dc_account{
+        font-size: 14px;
+        text-align: left;
+        float: left;
+   }
+    div.DEBIT_CREDIT_BOX{
+        color: black;
+        float:left;
+        width: 500px;
+        height: 16px;
+        margin: 2px;
+        background-color: #CCCCCC;
+        border-top: 2px solid #035156;
+        border-bottom: 2px solid #035156;
+        border-left: 2px solid #035156;
+        border-right: 2px solid #035156;
+        
+    }
+    input {
+        border:0;
+        margin:0px 0px;
+        padding:0;
+    }
+
+</style>
+

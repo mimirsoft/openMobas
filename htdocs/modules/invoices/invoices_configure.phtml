@@ -1,0 +1,92 @@
+<?php
+include("../../../framework/theme.css");
+include("invoices_configure.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<div class="portlet" >
+<form action="<?php echo $BASE_DIR ?>/invoices/invoices_configure.php"  method=POST>
+    <div class="divheader">Configure Invoices - Set Revenue Accounts</div>
+    <div class="row">
+        <span class="label1">Accounts:</span>
+        <span class="formw">
+                <SELECT  class="smallsans" SIZE="20" NAME="account_id" id="account_id" >
+                <?php
+                transaction::build_accountstree_selectoptions($income_set, '');
+                ?>
+                </SELECT>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label1">
+            <input type="SUBMIT"  name="ACTION"  value="Add Revenue Account">
+        </span>
+    </div>
+</form>
+</div>
+    
+<div class="portlet2" >
+    <div class="divheader">Income Accounts</div>
+
+<?php
+foreach($revenue_accounts as $row)
+{
+    ?>
+    <form action="<?php echo $BASE_DIR ?>/invoices/invoices_configure.php"  method=POST>
+    <div class="row">
+        <span class="label"><?php echo $row['account_fullname']; ?></span>
+        <span class="form1">
+            <input type="HIDDEN"  name="invoice_account_edit"  value="<?php echo $row['account_id']; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Delete Revenue Account">
+            <input type="SUBMIT"  name="ACTION"  value="Set Default Revenue"><?php if($row['default_account'] ==1){ echo "DEFAULT";} ?>
+        </span>
+    </div>
+    </form>
+<?php
+}
+?>
+</div>
+    
+<div class="portlet" >
+<form action="<?php echo $BASE_DIR ?>/invoices/invoices_configure.php"  method=POST>
+    <div class="divheader">Configure Invoices - Set Remittance Deposit Accounts</div>
+    <div class="row">
+        <span class="label1">Accounts:</span>
+        <span class="formw">
+                <SELECT  class="smallsans" SIZE="20" NAME="account_id" id="account_id" >
+                <?php
+                transaction::build_accountstree_selectoptions($asset_set, '');
+                ?>
+                </SELECT>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label1">
+            <input type="SUBMIT"  name="ACTION"  value="Add Remittance Account">
+        </span>
+    </div>
+</form>
+</div>
+    
+<div class="portlet" >
+    <div class="divheader">Remittance Accounts</div>
+
+<?php
+foreach($remittance_accounts as $row)
+{
+    ?>
+    <form action="<?php echo $BASE_DIR ?>/invoices/invoices_configure.php"  method=POST>
+    <div class="row">
+        <span class="label"><?php echo $row['account_fullname']; ?></span>
+        <span class="form1">
+            <input type="HIDDEN"  name="invoice_account_edit"  value="<?php echo $row['account_id']; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Delete Remittance Account">
+            <input type="SUBMIT"  name="ACTION"  value="Set Default Remittance"><?php if($row['default_account'] ==1){ echo "DEFAULT";} ?>
+        </span>
+    </div>
+    </form>
+<?php
+}
+?>
+</div>
+    

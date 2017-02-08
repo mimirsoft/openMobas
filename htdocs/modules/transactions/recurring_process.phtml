@@ -1,0 +1,118 @@
+<?
+include("../../../framework/theme.css");
+include("transactions_rprocess.css");
+framework::navbar();
+?>
+<div class="module_container">
+    <form action="<? echo $BASE_DIR ?>/recurring/recurring_process.php"  method=POST>
+    <table align="center">
+        <tr>
+            <td ALIGN="center" BGCOLOR="#CCCCCC"><B>Working Date</B></td>
+            <td ALIGN="left" BGCOLOR="#CCCCCC"><?
+            Framework::date_selectors($date_year, $date_month, $date_day, $NULL);
+            ?></td>
+        </tr>
+        <tr>
+            <td COLSPAN="2" BGCOLOR="#CCCCCC">
+                <input type="SUBMIT"  name="WORK"  value="Set Working Date" >
+            </td>
+        </tr>
+    </table>
+    </form>
+<?
+if ($date == "--")
+{
+    ?>
+    <div>
+    <p class="warning" align="center" >YOU MUST SET THE DATE!<p>
+    </div>
+    <?
+    exit;
+}
+?>
+   <form action="<? echo $BASE_DIR ?>/recurring/recurring_process.php"  method=POST>
+    <table align="center">
+        <tr>
+            <td ALIGN="center" COLSPAN="6" BGCOLOR="#CCCCCC"><B>Recurring Transactions</B></td>
+        </tr>
+        <tr>
+            <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B>Type</B></td>
+            <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B>Comment:</B></td>
+            <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B>From Account:</B></td>
+            <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B>To Account:</B></td>
+            <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B>Amount:</B></td>
+            <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B>Check#</B></td>
+        </tr>
+    <?
+    foreach($recurring as $row)
+    {
+        foreach ($row as $key => $value)
+        {
+            $$key = $value;
+        }
+        $selected = $recurring_type_ID;
+        ?>
+            <tr>
+            <td ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+                <SELECT  SIZE="1" NAME="recurring_type_ID<? echo $recurring_main_ID; ?>" >\n";
+    <?
+                foreach($types as $row)
+                {
+                    foreach ($row as $key => $value)
+                    {
+                        $$key = $value;
+                    }
+                    ?>
+                        <OPTION <?
+                        if($selected == $recurring_type_ID)
+                        {
+                            echo "SELECTED";
+                        }
+                        ?> VALUE="<? echo $recurring_type_ID; ?>"><? echo $recurring_type_name; ?></OPTION>
+                    <?
+                }
+    ?>		</SELECT>
+            </td>
+            <td ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+                <input type="TEXT"  name="recurring_main_comment<? echo $recurring_main_ID; ?>"  value="<? echo $recurring_main_comment; ?>" size="20">
+            </td>
+            <td ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+                <input type="HIDDEN"  name="recurring_main_accountW<? echo $recurring_main_ID; ?>"  value="<? echo $recurring_main_accountW; ?>" >
+                <?
+                echo transactions_retrieve_account_name($recurring_main_accountW);
+                ?>
+            </td>
+            <td ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+                <input type="HIDDEN"  name="recurring_main_accountD<? echo $recurring_main_ID; ?>"  value="<? echo $recurring_main_accountD; ?>" >
+                <?
+                echo transactions_retrieve_account_name($recurring_main_accountD);
+                ?>
+            </td>
+            <td ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+                <input type="TEXT"  name="recurring_main_amount<? echo $recurring_main_ID; ?>"  value="<? echo $recurring_main_amount; ?>" size="7">
+            </td>
+            <td>
+                <input type="TEXT"  name="recurring_main_checkno<? echo $recurring_main_ID; ?>"  value="0" size="7">
+                <input type="checkbox"  name="recurring_list[]"  value="<? echo $recurring_main_ID; ?>">
+            </td>
+        </tr>
+        <?
+    }
+    ?>
+        <tr>
+            <td COLSPAN="3">
+                <input type="HIDDEN"  name="date_year"  value="<? echo $date_year; ?>" >
+                <input type="HIDDEN"  name="date_month"  value="<? echo $date_month; ?>" >
+                <input type="HIDDEN"  name="date_day"  value="<? echo $date_day; ?>" >
+                <input type="SUBMIT"  name="ACTION"  value="Record">
+            </td>
+            <td>
+                <input type="SUBMIT"  name="ACTION"  value="Print">
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>
+
+
+

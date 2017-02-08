@@ -1,0 +1,119 @@
+<style type="text/css">
+
+.group_sum {
+text-align: right;
+}
+.sumgroupline_sum {
+text-align: left;
+padding-left: 1em;
+font-weight: bold;
+}
+.sumgroupline_balance {
+border-top: 1px solid black;
+text-align:right;
+
+}
+.indent_1 {
+padding-left: 1em;
+}
+.indent_2 {
+padding-left: 3em;
+}
+.indent_3 {
+padding-left: 5em;
+}
+.indent_4 {
+padding-left: 7em;
+}
+.indent_5 {
+padding-left: 9em;
+}
+.indented_1 {
+padding-left: 1em;
+}
+.indented_2 {
+padding-left: 3em;
+}
+.indented_3 {
+padding-left: 5em;
+}
+.indented_4 {
+padding-left: 7em;
+}
+.indented_5 {
+padding-left: 9em;
+}
+.itemized_date {
+}
+.itemized_checkno {
+}
+.itemized_comment {
+}
+.itemized_amount {
+text-align:right;
+}
+.right {
+text-align:right;
+}
+.right_padr {
+text-align:right;
+padding-right: 1em;
+}
+.left{
+text-align:left;
+}
+.sum_right {
+text-align:right;
+border-top: 1px solid black
+}
+.itemized_amount_negative {
+color:red;
+text-align:right;
+}
+.itemized_target_account {
+}
+.itemized_running_total {
+text-align:right;
+}
+.colspan {
+text-align:right;
+}
+.itemized_running_total_negative {
+color:red;
+text-align:right;
+}
+.starting_balance_amt {
+text-align:right;
+}
+.starting_balance {
+    text-align:right;
+}
+.ending_balance {
+    text-align:right;
+}
+div.row {
+clear: both;
+padding-top: 2px;
+}
+
+div.body{
+width: 185mm;
+clear: both;
+font-size: 10pt;
+font-family:sans-serif;
+}
+div{
+font-family:sans-serif;
+}
+
+.body_header {
+text-align: center;
+font-size: 14pt;
+width : 180mm;
+}
+.element {
+width: 100%;
+}
+
+</style>
+

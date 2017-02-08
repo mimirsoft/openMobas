@@ -1,0 +1,192 @@
+<table align="center">
+    <tr>
+        <td ALIGN="center" COLSPAN="6" BGCOLOR="#CCCCCC"><B>Recurring Transaction</B></td>
+    </tr>
+    <tr>
+        <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B>Type</B></td>
+        <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B>Comment:</B></td>
+        <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B>From Account:</B></td>
+        <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B>To Account:</B></td>
+        <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B>Amount:</B></td>
+    </tr>
+    <tr>
+        <td ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+            <? echo $recurringTypes[$recurring['recurringtype_id']] ?>
+        </td>
+        <td ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+            <? echo $recurring['recurring_comment']; ?>
+        </td>
+        <td ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+            <? 
+            echo $accountIDtoFullnameArray[$recurring['recurring_accountW']];
+            ?>
+        </td>
+        <td ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+            <? 
+            echo $accountIDtoFullnameArray[$recurring['recurring_accountD']];
+            ?>
+        </td>
+        <td ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+        <? echo $recurring['recurring_amount']; ?>
+        </td>
+    </tr>
+</table>
+
+<form action="<? echo $BASE_DIR ?>/recurring/recurring_address.php"  method=POST>
+<table align="center">
+    <tr>
+        <td ALIGN="center" COLSPAN="6" BGCOLOR="#CCCCCC"><B>CheckType</B></td>
+    </tr>
+    <tr>
+        <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B>Type</B></td>
+        <td ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+            <SELECT  SIZE="1" NAME="recurringcheck_type" >
+                    <OPTION <?
+                    if($recurringCheck['recurringcheck_type'] == 'CONTACT')
+                    {
+                        echo "SELECTED";
+                    }
+                    ?> VALUE="CONTACT">CONTACT</OPTION>
+                    <OPTION <?
+                    if($recurringCheck['recurringcheck_type'] == 'UNIQUE')
+                    {
+                        echo "SELECTED";
+                    }
+                    ?> VALUE="UNIQUE">UNIQUE</OPTION>
+            </SELECT>
+        </td>
+    </tr>
+    <tr>
+        <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B>Contact Type</B></td>
+        <td ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+            <SELECT  class="smallsans" SIZE="1" NAME="contacttype_id" >
+            <?
+                        foreach($types as $row)
+                        {
+                            ?>
+                                <OPTION VALUE="<? echo $row['contacttype_id']; ?>"><? echo $row['contacttype_name']; ?></OPTION>
+                            <?
+                        }
+            ?>	
+                    </SELECT>        
+        </td>
+    </tr>
+    <tr>
+        <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC">
+                <input type="HIDDEN"  name="recurringcheck_id"  value="<? echo $recurringCheck['recurringcheck_id']; ?>" >
+                <input type="HIDDEN"  name="recurring_id"  value="<? echo $recurring_id; ?>" >
+                <input type="SUBMIT"  name="EDIT"  value="Set Check Type">
+        </td>
+    </tr>
+</table>
+</form>
+
+<table align="center">
+    <tr>
+        <td ALIGN="center" COLSPAN="6" BGCOLOR="#CCCCCC"><B>Address</B></td>
+    </tr>
+    <tr>
+        <td ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC"><? echo $checkAddy['nameoncheck'] ?><BR/><? echo $checkAddy['memo'] ?><BR/>
+        <? echo $checkAddy['addressee']." ".$checkAddy['careof'] ?><BR/>
+        <? echo $checkAddy['street'] ?><BR/><? echo $checkAddy['city']." ".$checkAddy['state'].", ".$checkAddy['zip'] ?>
+        </td>
+    </tr>
+</table>
+
+<? if ($recurringCheck['recurringcheck_type'] == 'CONTACT')
+{
+    ?>
+    <table ALIGN="center" BORDER="0">
+        <tr>
+            <td ALIGN="center" COLSPAN="10" BGCOLOR="#CCCCCC"><B>Contact and Address</B></td>
+        </tr>
+        <tr>
+            <TH BGCOLOR="#CCCCCC"><B>TYPE:</B></TH>
+            <TH BGCOLOR="#CCCCCC"><B><? echo $type['contacttype_name'] ?></B></TH>
+        </tr>
+        <?
+        if(is_array($contactSet))//take all contacts of that type
+        {
+            foreach($contactSet as $contact)
+            {
+                ?>
+                <tr>
+                    <td><? echo $contact['lastname'] ?></td>
+                    <td><? echo $contact['firstname'] ?></td>
+                </tr>
+                <?
+                if(is_array($addressSet[$contact['contacts_id']]))//find all addresses for each contact
+                {
+                    foreach($addressSet[$contact['contacts_id']] as $addresses)
+                    {
+                        ?>
+                        <form action="<? echo $BASE_DIR ?>/recurring/recurring_address.php"  method=POST>
+                        <tr>
+                        <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><? echo $addresses['addresstype_name'] ?></td>
+                        <td ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC"><? echo $addresses['careof'] ?><BR/><? echo $addresses['street'] ?><BR/><? echo $addresses['city']." ".$addresses['state'].", ".$addresses['zip'] ?>
+                            <td ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC">
+                                <input type="HIDDEN"  name="address_id"  value="<? echo $addresses['address_id'] ?>" >
+                                <input type="HIDDEN"  name="recurring_id"  value="<? echo $recurring['recurring_id']; ?>" >
+                                <input type="HIDDEN"  name="recurringcheck_id"  value="<? echo $recurringCheck['recurringcheck_id']; ?>" >
+                                <input type="HIDDEN"  name="checkcontact_id"  value="<? echo $recurringCheckContact['checkcontact_id']; ?>" >
+                                <input type="TEXT"  name="check_memo"  value="<? echo $recurringCheckContact['check_memo']; ?>" size="20">
+                                <input type="SUBMIT"  name="EDIT"  value="Set Check Address" >
+                            </td>
+                        </tr>
+                        </form>
+                        <?
+                    }
+                }
+            }
+        }
+    
+    ?>
+    </table>
+    <?
+}
+
+if ($recurringCheck['recurringcheck_type'] == 'UNIQUE')
+{
+    ?>
+    <form action="<? echo $BASE_DIR ?>/recurring/recurring_address.php"  method=POST>
+    <table ALIGN="center" BORDER="0">
+        <tr>
+            <td ALIGN="center" COLSPAN="10" BGCOLOR="#CCCCCC"><B>Check</B></td>
+        </tr>
+        <tr>
+            <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B> Name on Check:</B>
+                <input type="TEXT"  name="checkunique_name"  value="<? echo $recurringCheckUnique['checkunique_name']; ?>" size="20">
+            </td>
+            <td ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC"><B>Addresse:</B>
+                <input type="TEXT"  name="checkunique_careof"  value="<? echo $recurringCheckUnique['checkunique_careof']; ?>" size="20">
+            </td>
+            <td ALIGN="left" COLSPAN="1" BGCOLOR="#CCCCCC"><B> Street:</B>
+                <input type="TEXT"  name="checkunique_street"  value="<? echo $recurringCheckUnique['checkunique_street']; ?>" size="20">
+            </td>
+        </tr>
+        <tr>
+            <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B>City</B>
+                <input type="TEXT"  name="checkunique_city"  value="<? echo $recurringCheckUnique['checkunique_city']; ?>" size="20">
+            </td>
+            <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B>State:</B>
+                <input type="TEXT"  name="checkunique_state"  value="<? echo $recurringCheckUnique['checkunique_state']; ?>" size="20">
+            </td>
+            <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B>Zip:</B>
+                <input type="TEXT"  name="checkunique_zip"  value="<? echo $recurringCheckUnique['checkunique_zip']; ?>" size="20">
+            </td>
+        </tr>
+        <tr>
+            <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC"><B>Memo</B>
+                <input type="TEXT"  name="checkunique_memo"  value="<? echo $recurringCheckUnique['checkunique_memo']; ?>" size="20">
+            </td>
+            <td ALIGN="right" COLSPAN="1" BGCOLOR="#CCCCCC">
+                <input type="HIDDEN"  name="checkunique_id"  value="<? echo $recurringCheckUnique['checkunique_id']; ?>" >
+                <input type="HIDDEN"  name="recurringcheck_id"  value="<? echo $recurringCheck['recurringcheck_id']; ?>" >
+                <input type="HIDDEN"  name="recurring_id"  value="<? echo $recurring_id; ?>" >
+                <input type="SUBMIT"  name="EDIT"  value="Add Address">
+            </td>
+        </tr>
+    </table>
+    </form>
+    <?
+}

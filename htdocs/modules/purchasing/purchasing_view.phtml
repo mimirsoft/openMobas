@@ -1,0 +1,131 @@
+<?php
+include("../../../framework/theme.css");
+include("purchasing_view.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<div class="portlet2">
+    <div class="divheader">Purchase Order</div>
+    <div class="row">
+        <span class="label">PO ID:</span>
+        <span class="formw"><?php echo $po_info['po_id']; ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Vendor:</span>
+        <span class="formw"><?php echo $invoice_info['cv_name']; ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Vendor No:</span>
+        <span class="formw"><?php echo $invoice_info['cv_number']; ?>
+        </span>
+    </div>    
+    <form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_items.php"  method=POST>
+    
+    <div class="row">
+        <span class="label">Invoice ID:</span>
+        <span class="formw"><input type=text name=invoice_id size=5 value=<?php echo $invoice_info['invoice_id']?> >
+			<input type=SUBMIT name="ACTION" value="Update Invoice" >        
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">PR Date(YYYY-MM-DD):</span>
+        <span class="formw">
+            <?php
+            Framework::date_selectors(substr($invoice_info['pr_date'], 0 ,4), substr($invoice_info['pr_date'], 5 ,2), substr($invoice_info['pr_date'], 8 ,2), "pr", '');
+            ?>
+
+        </span>
+    </div>       
+    <div class="row">
+        <span class="label">PO Date(YYYY-MM-DD):</span>
+        <span class="formw">
+            <?php
+            Framework::date_selectors(substr($po_info['po_date'], 0 ,4), substr($po_info['po_date'], 5 ,2), substr($po_info['po_date'], 8 ,2), "po", '');
+            ?>                    <input type=SUBMIT name="ACTION" value="Update Dates" >
+            
+
+        </span>
+    </div>       
+    <div class="row">
+        <span class="label">Purchase Description:</span>
+        <span class="formw">
+            <textarea id="purchase_description" name="purchase_description" type="text" cols="40" rows=6 /><?php echo $invoice_info['purchase_description']; ?></textarea>
+                    <input type="hidden"  name="pr_id"  value="<?php echo $pr_id ?>" >
+                    <input type=SUBMIT name="ACTION" value="Update Description" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Discount(percentage):</span>
+        <span class="formw"><input type=text name=po_discount size=5 value=<?php echo $po_info['po_discount']?> >
+			<input type="hidden"  name="po_id"  value="<?php echo $po_info['po_id'] ?>" >
+                    <input type=SUBMIT name="ACTION" value="Update Discount" >        
+        </span>
+    </div>    
+    </form>
+    <div class="row">
+        <span class="label">Expense Account:</span>
+        <span class="formw"><?php echo $invoice_info['expenseaccount_fullname']; ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Payable Account:</span>
+        <span class="formw"><?php echo $invoice_info['vendoraccount_fullname']; ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Items:</span>
+        <span>
+        <table>
+            <?php foreach($invoice_items as $invoice_item)
+            {
+            ?>
+            <TR>
+                <TD><?php echo $invoice_item['inventorytype_name']?></TD>
+                <TD><?php echo $invoice_item['item_name']?></TD>
+                <TD><?php echo $invoice_item['purchaseitem_price_per']?>  </TD>
+                <TD><?php echo $invoice_item['purchaseitem_count']?>  </TD>
+                <TD align=right><?php echo $invoice_item['purchaseitem_price_total']?></TD>
+                <TD>
+                </TD>
+            </TR>
+            <?php
+            }
+            ?>
+            <TR>
+                <TD></TD>
+                <TD></TD>
+                <TD></TD>
+                <TD></TD>
+                <TD align=right>$<?php echo $po_info['po_subtotal']?></TD>
+                <TD>SUB TOTAL
+                </TD>
+            </TR>
+            <TR>
+                <TD></TD>
+                <TD></TD>
+                <TD></TD>
+                <TD></TD>
+                <TD align=right>$<?php echo $po_info['po_discount_total']?></TD>
+                <TD>DISCOUNT
+                </TD>
+            </TR>
+            <TR>
+                <TD></TD>
+                <TD></TD>
+                <TD></TD>
+                <TD></TD>
+                <TD align=right>$<?php echo $po_info['po_total']?></TD>
+                <TD>TOTAL
+                </TD>
+            </TR>
+        </table>
+       </span>
+    </div>    
+    <form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_items.php"  method=POST>
+                    <input type="hidden"  name="pr_id"  value="<?php echo $pr_id ?>" >
+                    <input type=SUBMIT name="ACTION" value="Unapprove and Edit" >
+            </form>
+            
+</div>

@@ -1,0 +1,77 @@
+<?php
+include("../../../framework/theme.css");
+include("checks_main.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/checks/checks_main.php" target="_blank" method=POST>
+    <div class="divheader">Enter Check Info</div>
+    <div class="row">
+        <span class="label">Pay to:</span>
+        <span class="formw"><input type="TEXT"  name="checkname"  value="<?php echo $checkname; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Check Date(YYYY-MM-DD):</span>
+        <span class="formw">
+            <?php
+            Framework::date_selectors($checkdate_year, $checkdate_month, $checkdate_day, "check", '');
+            ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Amount:</span>
+        <span class="formw"><input type="TEXT"  name="net"  value="<?php echo $net; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Check Number:</span>
+        <span class="formw"><input type="TEXT"  name="checkno"  value="" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Memo:</span>
+        <span class="formw"><input type="TEXT"  name="memo"  value="<?php echo $memo; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Care Of:</span>
+        <span class="formw"><input type="TEXT"  name="careof"  value="<?php echo $careof; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Address:</span>
+        <span class="formw"><input type="TEXT"  name="address"  value="<?php echo $address; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">City:</span>
+        <span class="formw"><input type="TEXT"  name="city"  value="<?php echo $city; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">State:</span>
+        <span class="formw"><input type="TEXT"  name="state"  value="<?php echo $state; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Zip:</span>
+        <span class="formw"><input type="TEXT"  name="zip"  value="<?php echo $zip; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">DEBIT:</span>
+        <span class="formw">  <SELECT  class="smallsans" SIZE="20" NAME="debit" id="debit" >
+                <?php
+                transaction::build_accountstree_selectoptions($account_array, $working_account);
+                ?>
+                </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">CREDIT:</span>
+        <span class="formw">  <SELECT  class="smallsans" SIZE="20" NAME="credit" id="debit" >
+                <?php
+                transaction::build_accountstree_selectoptions($account_array, $working_account);
+                ?>
+                </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+       <span class="label">Make/Record:</span> <span><input type="SUBMIT"  name="CREATE"  value="Print and Record Check" ></span>
+    </div>    
+</form>
+</div>
+

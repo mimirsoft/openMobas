@@ -1,0 +1,260 @@
+<?php
+include("../../../framework/theme.css");
+include("purchasing_rcreate.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<script language="JavaScript"
+
+type="text/javascript">
+function show_box(obj) {
+    var el = document.getElementById(obj);
+    if ( el.style.display == 'block' ) {
+    el.style.display = 'none';
+    }
+    else {
+    el.style.display = 'block';
+    }
+}
+
+var xmlHttp;
+
+function createXMLHttpRequest() {
+  try {
+    xmlHttp = new XMLHttpRequest();
+  } catch (trymicrosoft) {
+    try {
+      xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (othermicrosoft) {
+      try {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (failed) {
+        xmlHttp = false;
+      }
+    }
+  }
+
+  if (!xmlHttp)
+    alert("Error initializing XMLHttpRequest!");
+}
+
+
+function form_extender(formElement, target_container) {
+    createXMLHttpRequest();
+    form_Name = formElement.getAttribute("name");
+    var queryString = "ACTION="+form_Name;
+    form_Value = formElement.value;
+    queryString += "&VALUE="+form_Value;
+    xmlHttp.open("POST", "invoices_create_request.php", true);
+    xmlHttp.onreadystatechange = handleStateChange;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    var div = document.getElementById(target_container);
+    div.innerHTML =  '';
+}
+function handleStateChange() {
+     if (xmlHttp.readyState == 4) {
+       if (xmlHttp.status == 200)
+       {
+            var xmlDoc = xmlHttp.responseXML;
+            if(xmlDoc.getElementsByTagName("removerow").length > 0)
+            {
+                for(var i = 0; i < xmlDoc.getElementsByTagName("removerow").length; i++)
+                {
+                    var rowname = xmlDoc.getElementsByTagName("removerow")[i].childNodes[0].nodeValue;
+                    thisrow = document.getElementById(rowname);
+                    if(thisrow != null)
+                    {
+                        while(thisrow.hasChildNodes())
+                        {
+                            thisrow.removeChild(thisrow.lastChild)
+                        }
+                        thisrow.parentNode.removeChild(thisrow);
+                    }
+                }
+            }
+            if(xmlDoc.getElementsByTagName("addrow").length > 0)
+            {
+                for(var i = 0; i < xmlDoc.getElementsByTagName("addrow").length; i++)
+                {
+                    add_current_row = xmlDoc.getElementsByTagName("addrow")[i];
+                    var rowname = add_current_row.getElementsByTagName("rowname")[0].childNodes[0].nodeValue;
+                    var rowformname = add_current_row.getElementsByTagName("rowformname")[0].childNodes[0].nodeValue;
+                    var previousrow = add_current_row.getElementsByTagName("previousrow")[0].childNodes[0].nodeValue;
+                    var label = add_current_row.getElementsByTagName("label")[0].childNodes[0].nodeValue;
+                    var multiple = false;
+                    thisrow = document.getElementById(previousrow);
+                    newdiv = document.createElement("div");
+                    newdiv.setAttribute("id", rowname);
+                    newdiv.setAttribute("class", "row");
+                    newspan = document.createElement("span");
+                    newspan.innerHTML = label;
+                    newspan.setAttribute("class", "label");
+                    newdiv.appendChild(newspan);
+                    newspan = document.createElement("span");
+                    newspan.setAttribute("class", "form");
+                    
+                    newSelect = document.createElement("select");
+                    if (add_current_row.getElementsByTagName("multiple")[0])
+                    {
+                        var multiple = add_current_row.getElementsByTagName("multiple")[0].childNodes[0].nodeValue;
+                        newSelect.setAttribute("multiple", true);
+                    }
+                    newSelect.setAttribute("name", rowformname);
+                    newSelect.setAttribute("id", rowformname);
+                    newSelect.setAttribute("onchange", "form_extender(this)");
+                    for(var j = 0; j < add_current_row.getElementsByTagName("id").length; j++)
+                    {
+                        newoption  = document.createElement("option");
+                        newoption.setAttribute("value", add_current_row.getElementsByTagName("id")[j].childNodes[0].nodeValue);
+                        newoption.innerHTML = add_current_row.getElementsByTagName("name")[j].childNodes[0].nodeValue;
+                        newSelect.appendChild(newoption);
+                    }
+                    newspan.appendChild(newSelect);
+                    newdiv.appendChild(newspan);
+                    thisrow.parentNode.insertBefore(newdiv, thisrow.nextSibling);
+                    
+                }
+            }
+       }
+       else if (xmlHttp.status == 404)
+         alert("Request URL does not exist");
+       else
+         alert("Error: status code is " + xmlHttp.status);
+      }
+}
+
+function use_bill_to() {
+    createXMLHttpRequest();
+    form_Name = document.getElementById("billaddress_id");
+    var queryString = "ACTION=use_billing";
+    form_Value = form_Name.value;
+    queryString += "&VALUE="+form_Value;
+    xmlHttp.open("POST", "invoices_create_request.php", true);
+    xmlHttp.onreadystatechange = handleStateChange_setBillTo;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    var div = document.getElementById(target_container);
+    div.innerHTML =  '';
+}
+
+function handleStateChange_setBillTo() {
+     if (xmlHttp.readyState == 4) {
+       if (xmlHttp.status == 200)
+       {
+            var xmlDoc = xmlHttp.responseXML;
+            input_form = document.getElementById('billto[careof]');
+            input_form.value = xmlDoc.getElementsByTagName("contact_name")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('billto[address1]');
+            input_form.value = xmlDoc.getElementsByTagName("address1")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('billto[address2]');
+            input_form.value = xmlDoc.getElementsByTagName("address2")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('billto[city]');
+            input_form.value = xmlDoc.getElementsByTagName("city")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('billto[state]');
+            input_form.value = xmlDoc.getElementsByTagName("state")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('billto[zip]');
+            input_form.value = xmlDoc.getElementsByTagName("zip")[0].childNodes[0].nodeValue;
+                    
+       }
+       else if (xmlHttp.status == 404)
+         alert("Request URL does not exist");
+       else
+         alert("Error: status code is " + xmlHttp.status);
+      }
+}
+function use_ship_to() {
+    createXMLHttpRequest();
+    form_Name = document.getElementById("shipaddress_id");
+    var queryString = "ACTION=use_billing";
+    form_Value = form_Name.value;
+    queryString += "&VALUE="+form_Value;
+    xmlHttp.open("POST", "invoices_create_request.php", true);
+    xmlHttp.onreadystatechange = handleStateChange_setShipTo;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    var div = document.getElementById(target_container);
+    div.innerHTML =  '';
+}
+
+function handleStateChange_setShipTo() {
+     if (xmlHttp.readyState == 4) {
+       if (xmlHttp.status == 200)
+       {
+            var xmlDoc = xmlHttp.responseXML;
+            input_form = document.getElementById('shipto[careof]');
+            input_form.value = xmlDoc.getElementsByTagName("contact_name")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('shipto[address1]');
+            input_form.value = xmlDoc.getElementsByTagName("address1")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('shipto[address2]');
+            input_form.value = xmlDoc.getElementsByTagName("address2")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('shipto[city]');
+            input_form.value = xmlDoc.getElementsByTagName("city")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('shipto[state]');
+            input_form.value = xmlDoc.getElementsByTagName("state")[0].childNodes[0].nodeValue;
+            input_form = document.getElementById('shipto[zip]');
+            input_form.value = xmlDoc.getElementsByTagName("zip")[0].childNodes[0].nodeValue;
+                    
+       }
+       else if (xmlHttp.status == 404)
+         alert("Request URL does not exist");
+       else
+         alert("Error: status code is " + xmlHttp.status);
+      }
+}
+
+</script>
+<div class="portlet2">
+<form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_items.php"  method=POST>
+    <div class="divheader">Create New Invoice</div>
+    <div class="row">
+        <span class="label">Vendor:</span>
+        <span class="formw"><?php echo $vendor_info['cv_name']; ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Vendor No:</span>
+        <span class="formw"><?php echo $vendor_info['cv_number']; ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Purchase Description:</span>
+        <span class="formw"><textarea id="purchase_description" name="purchase_description" type="text" cols="40" rows=6 /></textarea>
+        </span>
+    </div>        
+    <div class="row">
+        <span class="label">Expense/Inventory Account:</span>
+        <span class="formw"><Select id="expense_account" name="expense_account" >
+        <?php  foreach($revenue_accounts as $r_account)
+            {
+                ?><OPTION  value="<?php echo $r_account['account_id'] ?>" <?php if($r_account['default_account'] == 1){echo "SELECTED";} ?>><?php echo $r_account['account_fullname'] ?></OPTION><?php
+            }
+    
+        ?>
+        </Select>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Clearing Account:</span>
+        <span class="formw"><Select id="clearing_account" name="clearing_account" >
+        <?php  foreach($clearing_accounts as $c_account)
+            {
+                ?><OPTION  value="<?php echo $c_account['account_id'] ?>" <?php if($c_account['default_account'] == 1){echo "SELECTED";} ?>><?php echo $c_account['account_fullname'] ?></OPTION><?php
+            }
+    
+        ?>
+        </Select>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">GL Account Payable:</span>
+        <span class="formw"><?php echo $vendor_info['GL_AP_fullname']; ?>
+        </span>
+    </div>    
+  
+    <div class="row">
+        <input type="SUBMIT"  name="ACTION"  value="Save Purchase Requisition and Add Items" >
+        <input type="HIDDEN"  name="vendor_id"  value="<?php echo $vendor_info['cv_id']; ?>" >
+    </div>    
+</form>
+</div>

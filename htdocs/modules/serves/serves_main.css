@@ -1,0 +1,107 @@
+<?php 
+header('Content-Type: text/css');
+
+?>  
+    
+    .portlet {
+        width: auto;
+        display: block;
+        float: left;
+        clear: both;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+   .portlet2 {
+        width: 300px;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+div.row {
+  padding-top: .5em;
+  clear: both;
+  }
+
+div.row span.label {
+  float: left;
+  width: 15em;
+  text-align: right;
+  }
+div.row span.col1 {
+  float: left;
+  text-align: left;
+  width: 14em;
+  padding-right: 1em;
+  }
+div.divheader span.colr {
+  float: left;
+  text-align: right;
+  width: 100px;
+  }
+
+div.row span.formw {
+  float: left;
+  width: 45em;
+  text-align: left;
+  } 
+  .float_right{
+  float: right;
+  } 
+  
+div.leadtag{
+	float:left;
+   color:green;  
+   background-color:white;
+   display: block;
+   margin: 2px;
+}
+table{
+	border-collapse: collapse;
+}
+
+tr.lime td {
+    background-color:#33ff33;
+}
+
+tr.teal td {
+    background-color:#008080;
+}
+tr.cyan td {
+    background-color:#00FFFF;
+}
+tr.magenta td {
+    background-color:#EE00EE;
+}
+tr.pink td {
+    background-color:#FFC0CB;
+}
+tr.salmon td {
+    background-color:#FF8C69;
+}
+tr.yellow td {
+    background-color:#FBEC5D;
+}
+tr.orange td {
+    background-color:#FFA500;
+}
+tr.seagreen td {
+    background-color:#54FF9F;
+}
+tr td.alert {
+    background-color:red;
+  } 
+div.leadtag{
+    float:left;
+   color:green;  
+   background-color:white;
+   display: block;
+   margin: 2px;
+   clear:both;
+}
+
+

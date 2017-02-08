@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><?php  ?></title>
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="admin_rbac.css" media="screen" >
+</head>
+<body>
+
+<?php
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+include("admin_rbac_navbar.phtml");
+?>
+
+<form  action="" method="POST">
+<div class="portlet">
+    <div class="divheader">Privileges</div>
+    <div class="data">
+    <table border="0" cellpadding="2" cellspacing="2" class="tbl_data">
+	<tr >
+	   <td>
+            </td>
+            <td align="left">
+                <b><a href="admin_rbac_domains.php?&order_by=name">User Id</a></b>
+            </td>
+            <td align="left">
+                <b><a href="admin_rbac_domains.php?&order_by=name">Username</a></b>
+            </td>
+            <td align="left">
+                <b><a href="admin_rbac_domains.php?&order_by=description">Role</a></b>
+            </td>
+            <td align="left">
+                <b><a href="admin_rbac_domains.php?&order_by=description">Importance</a></b>
+            </td>
+	</tr>
+<?php
+$class = "green";
+foreach($user_mtm_role as $row)
+{
+    ?>
+    <tr  class="<?php echo $class?>">
+        <td>
+            <INPUT type="radio" name="edit_id" value="<?php echo $row['id'] ?>">
+        </td>
+        <td>
+            <?php echo $row['user_id'] ?>
+        </td>
+        <td>
+            <?php echo $row['username'] ?>
+        </td>
+        <td>
+            <?php echo $row['name'] ?>
+        </td>
+        <td>
+            <?php echo $row['importance'] ?>
+        </td>
+    </tr>
+<?php
+    switch ($class)
+    {
+        case "green":
+            $class = "yellow";
+            break;
+        
+        case "yellow":
+            $class = "green";
+            break;
+    }
+
+
+
+
+}
+?>
+    </table>
+    </div>
+    <div class="button">
+        <INPUT name="ACTION" type="submit" value="View / Edit" >
+        <INPUT name="ACTION" type="submit" value="Delete" >
+    </div>
+</div>
+</form>
+
+
+<form  action="" method="POST">
+<div class="portlet">
+    <div class="divheader">Add/Edit Privilege</div>
+    <div class="data">
+    <table border="0" class="tbl_frm">
+        <tr >
+            <td class="lbl">
+                    Users
+            </td>
+            <td>
+                    <SELECT name="user" size="8"><span style="color:red">*</span>
+                    <?php foreach($users as $act)
+                    {
+                        ?><OPTION value="<?php echo $act['user_id'] ?>"
+                        <?php
+                        if($act['user_id'] == $user_id)
+                        {
+                            echo " SELECTED ";
+                        }
+                        ?>
+                        ><?php echo $act['username'] ?></OPTION><?php
+                    }  
+                    ?></SELECT>
+                
+            </td>
+        </tr>
+        <tr >
+            <td class="lbl">
+                    Roles
+            </td>
+            <td>
+                    <SELECT name="role"  size="8"><span style="color:red">*</span>
+                    <?php foreach($roles as $act)
+                    {
+                        ?><OPTION value="<?php echo $act['role_id'] ?>"
+                        <?php
+                        if($act['role_id'] == $role_id)
+                        {
+                            echo " SELECTED ";
+                        }
+                        ?>
+                        ><?php echo $act['name'] ?></OPTION><?php   
+                    }  
+                    ?></SELECT>
+                
+            </td>
+        </tr>
+        <tr >
+            <td colspan="2" align="center" id="button">
+                <INPUT name="ACTION" type="submit" value="<?php echo $ACTION_VALUE ?>">
+                <INPUT name="id" type="hidden" value="<?php echo $id?>">
+            </td>
+        </tr>
+    </table>
+    </div>
+</div>
+</FORM>
+</body>
+</html>

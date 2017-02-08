@@ -1,0 +1,36 @@
+<?
+include("../../../framework/theme.css");
+include("documents_main.css");
+framework::navbar();
+?>
+
+
+<div class="portlet">
+    <div class="divheader">Documents</div>
+<table>
+    <TR>
+        <TD>Link</TD>
+        <TD>Date</TD>
+        <TD>Document Name</TD>
+        <TD>File Name</TD>
+    </TR>
+<?
+
+if(is_array($docs))
+{
+    foreach($docs as $row)
+    {
+        ?>
+        <TR>
+            <TD><a href="../interface/download_file.php?file=<?echo $row['file_id'] ?>&permission=document">DOWNLOAD</a></TD>
+            <TD><? echo $row['document_date'] ?></TD>
+            <TD><?echo $row['document_name'] ?></TD>
+            <TD><?echo $row['fileName'] ?></TD>
+            
+        </TR>
+       <?
+    }
+}
+?>
+</table>
+</div>

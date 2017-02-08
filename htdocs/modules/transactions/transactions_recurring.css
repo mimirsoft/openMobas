@@ -1,0 +1,78 @@
+<style type="text/css">
+     
+   .portlet {
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+    }
+    .portlet2 {
+        width: 300px;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+    }
+    div.row {
+        clear: both;
+        padding-top: 10px;
+    }
+    div.rowright {
+        clear: both;
+        padding-top: 10px;
+        text-align: right;
+    }
+    #rowhead
+    {
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    div.row span.col1 {
+        float: left;
+        width: 100px;
+        text-align: left;
+    }
+    div.row span.right {
+        font-weight: bold;
+        float: right;
+        text-align: right;
+    }
+    div.row span.neg {
+        font-weight: bold;
+        float: right;
+        text-align: left;
+        width: 100px;
+    }
+    div.row span.black {
+        font-weight: bold;
+        float: right;
+        text-align: left;
+        width: 100px;
+    }
+    td {
+        padding:0px 0px;
+        vertical-align: top;
+        font-size:8pt;
+    }
+    table {
+        clear: both;
+    }
+    th {
+        padding:0px 0px;
+        vertical-align: top;
+        font-size:8pt;
+    }
+    tr.green td{
+        background-color: #99CC32;    
+    }
+    tr.yellow td{
+        background-color: #DBDB70;    
+    }
+/*  */
+</style>
+

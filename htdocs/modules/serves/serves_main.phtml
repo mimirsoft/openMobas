@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><?php  ?></title>
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="serves_main.css" media="screen" >
+</head>
+<body>
+
+<?php
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/serves/serves_main.php"  method=POST>
+    <div class="divheader">Search</div>
+    <div class="row">
+        <span class="label">String:</span>
+        <span class="formw"><input type="TEXT"  name="string"  value="<?php echo $string; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label"></span>
+        <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Search All" ></span>
+    </div>    
+</form>
+</div>
+<div class="portlet">
+    <div class="divheader">Results</div>
+        <table>
+        <TR>
+        	<TD><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=NAME" ?>">Name</a></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=STREETNUMBER" ?>">Street Number</a></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=STREET" ?>">Address</a></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=CITY" ?>">City</a></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=STATE" ?>">State</a></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=ZIP" ?>">Zip</a></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=TYPE" ?>">Type</a></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=DATE" ?>">Date</a></TD>
+		</TR>
+      	<?php
+        if(is_array($search_results))
+        {
+        foreach($search_results as $row)
+        {
+        ?>
+        	<TR>
+                <TD><?php echo $row['firstname']." ".$row['lastname'] ?></TD>
+                <TD><?php echo $row['street'] ?></TD>
+                <TD><?php echo $row['city'] ?></TD>
+                <TD><?php echo $row['state'] ?></TD>
+                <TD><?php echo $row['zip'] ?></TD>
+                <TD><?php echo $row['type'] ?></TD>
+                 <TD><?php echo $row['date'] ?></TD>
+               
+               <TD> <form action="<?php echo $BASE_DIR ?>/serves/serves_update.php" target="_blank" method=POST>
+           
+                    <input type="HIDDEN"  name="serve_id"  value="<?php echo $row['serve_id'] ?>" >
+                    <input type="SUBMIT"  name="EDIT"  value="Edit" >
+                    
+    				</form>
+                </TD>
+                
+            </TR>
+            </form>
+        <?php
+        }
+        }
+    ?>  
+</table>
+</div>
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/serves/serves_main.php"  method=POST>
+    <div class="divheader">Serve</div>
+    <div class="row">
+        <span class="label">First Name:</span>
+        <span class="formw">
+            <input type="TEXT"  ID="firstname" name="firstname"  value="" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Last Name:</span>
+        <span class="formw">
+            <input type="TEXT"  ID="lastname" name="lastname"  value="" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Type:</span>
+        <span class="formw"><SELECT  class="smallsans" SIZE="1" NAME="type" >
+<?php
+
+
+$types = array('UD','SC','FL','TRO','CH','DV');
+
+            foreach($types as $row)
+            {
+                ?>
+                    <OPTION VALUE="<?php echo $row; ?>" ><?php echo $row; ?></OPTION>
+                <?php
+            }
+?>	
+        </SELECT></span>
+    </div>    
+ 
+    <div class="row">
+        <span class="label">Street Number/Address Number:</span>
+        <span class="formw">
+            <input type="TEXT"  name="streetnumber" ID="street"  value="" >
+        </span>
+    </div>    
+        <div class="row">
+        <span class="label">Street Name:</span>
+        <span class="formw">
+            <input type="TEXT"  name="street" ID="street"  value="" >
+        </span>
+    </div>    
+        <div class="row">
+        <span class="label">City</span>
+        <span class="formw">
+                <input type="TEXT"  name="city" ID="city" value="" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">State:</span>
+        <span class="formw">
+            <input type="TEXT"  name="state" ID="state"  value="" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Zip:</span>
+        <span class="formw">
+            <input type="TEXT"  name="zip" ID="zip"  value="" >  
+        </span>
+    </div>    
+    <div class="row">
+            <span class="label">Serve Date/Time:</span>
+            <span class="formw">
+                <?php
+                $FRAMEWORK->date_selectors($serve_date_year, $serve_date_month, $serve_date_day, "serve_", "")
+                ?>
+            <input type="text" name="serve_date_hour" size="2" value="<?php echo $serve_date_hour ?>" maxlength="2" />:
+            <input type="text" name="serve_date_minute" size="2" value="<?php echo $serve_date_minute ?>" maxlength="2" />
+            <input type="radio" name="ampm" value="am" <?php if( date('H') < 12){ echo " checked";} ?> />am
+            <input type="radio" name="ampm" value="pm" <?php if( date('H') > 12){ echo " checked";} ?> />pm
+            </span>
+	</div>      
+	<div class="row">
+        <span class="label">Comments:</span>   
+        <span class="formw"><TEXTAREA name="comments" rows="10" cols="60"></TEXTAREA></span>
+    </div>
+        <div class="row">
+        <span class="label">Is Complete?:</span>   
+        <span class="formw"><input type="checkbox" name="complete" value=1>YES</span>
+    </div>
+
+       
+     <div class="row">
+        <span class="formw">
+            <input type="SUBMIT"  name="ACTION" value="Record Serve" >
+        </span>
+    </div>    
+
+</form>
+</div>
+<div class="portlet">
+    <div class="divheader">Serves</div>    
+    <table>
+    	<TR><TD><input type="checkbox" name="checkAll" value="Comfortable with"
+    		onclick="javascript:check_all('serve_form', this, 'serve_ids[][]')"  ></TD>
+        </tr>
+        <TR>
+            <TD></TD>
+        	<TD><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=FIRSTNAME&INCLUDE_COMPLETED=".$INCLUDE_COMPLETED ?>">Firstname</a></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=LASTNAME&INCLUDE_COMPLETED=".$INCLUDE_COMPLETED ?>">Lastname</a></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=STREETNUMBER&INCLUDE_COMPLETED=".$INCLUDE_COMPLETED ?>">Street/Address Number</a></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=STREET&INCLUDE_COMPLETED=".$INCLUDE_COMPLETED ?>">Street Name</a></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=CITY&INCLUDE_COMPLETED=".$INCLUDE_COMPLETED ?>">City</a></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=STATE&INCLUDE_COMPLETED=".$INCLUDE_COMPLETED ?>">State</a></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=ZIP&INCLUDE_COMPLETED=".$INCLUDE_COMPLETED ?>">Zip</a></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=TYPE&INCLUDE_COMPLETED=".$INCLUDE_COMPLETED ?>">Type</a></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=DATE&INCLUDE_COMPLETED=".$INCLUDE_COMPLETED ?>">Date</a></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?INCLUDE_COMPLETED=".($INCLUDE_COMPLETED ? "0" : "1") ?>">Toggle Include Complete</a></TD>
+        </TR>
+<?php
+    if(is_array($results))
+    {
+    	foreach($results as $row)
+        {
+            ?>
+           <TR class="<?php echo $row['color'] ?>" >
+                <TD>
+                    <input type=checkbox name="serve_ids[]" value="<?php echo $row['serve_id'] ?>" />
+                </TD>
+                <TD><?php echo $row['firstname']?></TD>
+                <TD><?php echo $row['lastname'] ?></TD>
+                <TD><?php echo $row['streetnumber'] ?></TD>
+                <TD><?php echo $row['street'] ?></TD>
+                <TD><?php echo $row['city'] ?></TD>
+                <TD><?php echo $row['state'] ?></TD>
+                <TD><?php echo $row['zip'] ?></TD>
+                <TD><?php echo $row['type'] ?></TD>
+                 <TD><?php echo $row['date'] ?></TD>
+                 <TD><?php echo $row['complete'] ?></TD>
+               
+               <TD> <form action="<?php echo $BASE_DIR ?>/serves/serves_update.php" target="_blank" method=POST>
+           
+                    <input type="HIDDEN"  name="serve_id"  value="<?php echo $row['serve_id'] ?>" >
+                    <input type="SUBMIT"  name="EDIT"  value="Edit" >
+                    
+    				</form>
+                </TD>
+                <TD>
+                <?php
+                    if(@$row['leadtag_string'] != "")
+                    {
+                        $tags = explode(",", $row['leadtag_string']);
+                        foreach($tags as $tag)
+                        {
+                            ?>
+                               <div class="leadtag"><?php echo $tag_id_to_name[$tag]; ?>|<span onclick="remove_tag(<?php echo $tag; ?>, <?php echo $row['lead_id'] ?>)"> X&nbsp;</span></div>
+                            <?php
+                        }
+                    }
+                ?>  
+                </TD>
+                
+            </TR>
+            <?php
+        }	
+    }
+    ?>
+    </table>
+    
+</div>
+</div>
+</body>
+</html>

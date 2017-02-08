@@ -1,0 +1,44 @@
+
+
+<div class="portlet2">
+    <div class="divheader"></div>
+        <table>
+        <tr>
+        <td><a href="<? echo $_SERVER["PHP_SELF"]."?SORTBY=username" ?>">User Name</a>
+        </td>
+        <td><a href="<? echo $_SERVER["PHP_SELF"]."?SORTBY=user_email" ?>">Email</a>
+        </td>
+        <td><a href="<? echo $_SERVER["PHP_SELF"]."?SORTBY=user_lastname" ?>">Last Name</a>
+        </td>
+        <td>
+        <a href="<? echo $_SERVER["PHP_SELF"]."?SORTBY=user_firstname" ?>">First Name</a>
+        </td>
+        </tr>
+
+    <?
+        if(is_array($users)){
+        foreach($users as $user)
+        {
+        ?>
+			<tr>
+                <td><? echo $user['username'] ?>
+                </td>
+                <td><? echo $user['user_email'] ?>
+                </td>
+    			<td><? echo $user['user_lastname'] ?>
+    			</td>
+    			<td><? echo $user['user_firstname'] ?>
+    			</td>
+    			<td><? echo framework::inet_dtop($user['ip']) ?>
+    			</td>
+    			<td><? echo $user['last_login'] ?>
+    			</td>
+
+			</tr>
+        <?
+        }
+        }
+    ?>	
+    </table>
+</div>
+

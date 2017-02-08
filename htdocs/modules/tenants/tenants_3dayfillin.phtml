@@ -1,0 +1,111 @@
+<?
+include("../../../framework/theme.css");
+include("tenants_3dayprep.css");
+?>
+<html>
+<body>         
+           
+<div class="portlet">
+<form action="<? echo $BASE_DIR ?>/tenants/tenants_3dayprint.php"  method=POST>
+    <div class="divheader">3 Day Notice</div>
+    <div class="row">
+        <span class="label">Owners</span>
+        <span class="formw">
+            <?
+                Framework::date_selectors($date_year, $date_month, $date_day, "notice", "");
+            ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Owners</span>
+        <span class="formw">
+            <textarea name="owners"  value=""><? echo $owners; ?></textarea>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Names</span>
+        <span class="formw">
+            <textarea name="names"  value=""><? echo $names; ?></textarea>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Address</span>
+        <span class="formw">
+            <input type="text"  name="property_address"  value="">
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Aptnum</span>
+        <span class="formw">
+            <input type="text"  name="property_aptnum"  value="">
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">City</span>
+        <span class="formw">
+            <input type="text"  name="property_city"  value="">
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">County</span>
+        <span class="formw">
+            <input type="text"  name="property_county"  value="">
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">State</span>
+        <span class="formw">
+            <input type="text"  name="property_state"  value="">
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Zip</span>
+        <span class="formw">
+            <input type="text"  name="property_zip"  value=""> 
+        </span>
+    </div>
+    <div class="row">
+    <table>
+        <th>Start Date  <BR />(YYYY-MM-DD): <BR /> End Date <BR />(YYYY-MM-DD):</th>
+        <th>Comment:</th>
+        <th>Amount:</th>
+        
+<?
+	
+    for($i = 0; $i < 10; $i++)
+    {
+        ?>
+        <TR>
+            <TD>
+                <?
+                    Framework::date_selectors(date('Y'), date('m'), 1, $i, "");
+                    ?><BR />
+                    <?
+                    Framework::date_selectors(date('Y'),  date('m'), 30, $i."end", "");
+                ?>
+            </TD>
+            <TD>
+               <input type="TEXT"  name="transaction_comment<? echo $i ?>"  value="" size="20">
+            </TD>
+            <TD>
+                <input type="TEXT"  name="transaction_amount<? echo $i ?>"  value="" size="7">
+                <input type="checkbox"  name="transactions_list[]"  value="<? echo $i; ?>">
+            </TD>
+        </TR>
+        <?
+    }
+
+?>
+</table>
+</div>
+    <div class="row">    
+        <span class="col1">
+            
+            <input type="SUBMIT"  name="action"  value="Print">
+         </span>
+    </div>
+</form>
+</div>
+
+</body>
+</html>

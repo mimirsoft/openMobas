@@ -1,0 +1,37 @@
+<?
+include("properties_print.css");
+?>
+
+    
+    <div class="portlet">
+        <div class="divheader" ALIGN="center" COLSPAN="3" >PROPERTIES</div>
+<table>
+    <TR>
+        <TD><a href="<? echo $BASE_DIR ?>/properties/properties_print.php?sortby=owner">Owner</a> </TD>
+        <TD>Phone Numbers</TD>
+        <TD>Address</TD>
+        <TD><a href="<? echo $BASE_DIR ?>/properties/properties_print.php?sortby=prop">Property</a> 
+            <a href="<? echo $BASE_DIR ?>/properties/properties_print.php?sortby=street">Street</a></TD>
+        <TD><a href="<? echo $BASE_DIR ?>/properties/properties_print.php?sortby=zip">ZIP</a> </TD>
+    </TR>
+    <?
+        if(is_array($properties))
+        {
+            $count = 1;
+            foreach($properties as $row)
+            {
+                ?>
+            <TR>
+                <TD><? echo $count." ".$row['cv_name'] ?></TD>
+                <TD><? echo $row['cv_default_phone'] ?></TD>
+                <TD><? echo $row['cv_default_address']."<BR/>".$row['cv_default_city']." ".$row['cv_default_state']." ".$row['cv_default_zip'] ?></TD>
+                <TD><? echo $row['property_address'] ?> <? echo $row['property_aptnum'] ?></TD><TD><? echo $row['property_zip'] ?></TD>
+            </TR>
+            <?
+            $count++;
+            }
+        }
+        ?>
+</table>
+    </div>
+

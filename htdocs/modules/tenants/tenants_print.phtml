@@ -1,0 +1,36 @@
+<?php
+include("tenants_print.css");
+?>
+
+<div class="portlet">
+    <div class="divheader">Tenants - <? echo $prop_status ?></div>
+<table>
+    <TR>
+        <TD><a href="<? echo $BASE_DIR ?>/tenants/tenants_print.php?prop_status=<? echo $prop_status?>&tenant_status=<? echo $tenant_status ?>&sortby=owner">Tenant</a> </TD>
+        <TD><a href="<? echo $BASE_DIR ?>/tenants/tenants_print.php?prop_status=<? echo $prop_status?>&tenant_status=<? echo $tenant_status ?>&sortby=prop">Property</a> 
+        <a href="<? echo $BASE_DIR ?>/tenants/tenants_print.php?prop_status=<? echo $prop_status?>&tenant_status=<? echo $tenant_status ?>&sortby=street">Street</a></TD>
+        <TD><a href="<? echo $BASE_DIR ?>/tenants/tenants_print.php?prop_status=<? echo $prop_status?>&tenant_status=<? echo $tenant_status ?>&sortby=zip">Rent</a> </TD>
+        <TD><a href="<? echo $BASE_DIR ?>/tenants/tenants_print.php?prop_status=<? echo $prop_status?>&tenant_status=<? echo $tenant_status ?>&sortby=tenant">Phone</a> </TD>
+        <TD><a href="<? echo $BASE_DIR ?>/tenants/tenants_print.php?prop_status=<? echo $prop_status?>&tenant_status=<? echo $tenant_status ?>&sortby=tenant">Lease Start</a> </TD>
+        <TD><a href="<? echo $BASE_DIR ?>/tenants/tenants_print.php?prop_status=<? echo $prop_status?>&tenant_status=<? echo $tenant_status ?>&sortby=tenant">Lease End</a> </TD>
+        <TD><a href="<? echo $BASE_DIR ?>/tenants/tenants_print.php?prop_status=<? echo $prop_status?>&tenant_status=<? echo $tenant_status ?>&sortby=tenant">Moved out</a> </TD>
+    </TR>
+   <?
+       foreach($lines as $line)
+        {
+        ?>
+            <TR>
+                <td><? echo $line['cv_name']?></td>
+                <td><? echo $line['item_name'] ?></td>
+                <td><? echo $line['tenant_rent'] ?></td>
+                <td><? echo $line['cv_default_phone']?></td>
+                <td><? echo $line['lease_start_date'] ?></td>
+                <td><? echo $line['lease_end_date'] ?></td>
+                <td><? echo $line['move_out_date'] ?></td>
+            
+            </TR>
+        <?
+        }
+    ?>	
+</table>
+</div>

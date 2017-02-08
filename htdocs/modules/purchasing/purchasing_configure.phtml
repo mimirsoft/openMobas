@@ -1,0 +1,176 @@
+<?
+include("../../../framework/theme.css");
+include("purchasing_configure.css");
+framework::navbar();
+?>
+<div class="portlet" >
+<form action="<? echo $BASE_DIR ?>/purchasing/purchasing_configure.php"  method=POST>
+    <div class="divheader">Configure Purchasing - Set Expense Accounts</div>
+    <div class="row">
+        <span class="label1">Accounts:</span>
+        <span class="formw">
+                <SELECT  class="smallsans" SIZE="20" NAME="account_id" id="account_id" >
+                <?
+                transactions::build_accountstree_selectoptions($expense_set, '');
+                ?>
+                </SELECT>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label1">
+            <input type="SUBMIT"  name="ACTION"  value="Add Expense Account">
+        </span>
+    </div>
+</form>
+</div>
+    
+<div class="portlet2" >
+    <div class="divheader">Expense Accounts</div>
+
+<?
+foreach($revenue_accounts as $row)
+{
+    ?>
+    <form action="<? echo $BASE_DIR ?>/purchasing/purchasing_configure.php"  method=POST>
+    <div class="row">
+        <span class="label"><? echo $row['account_fullname']; ?></span>
+        <span class="form1">
+            <input type="HIDDEN"  name="invoice_account_edit"  value="<? echo $row['account_id']; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Delete Expense Account">
+            <input type="SUBMIT"  name="ACTION"  value="Set Default Expense"><? if($row['default_account'] ==1){ echo "DEFAULT";} ?>
+        </span>
+    </div>
+    </form>
+<?
+}
+?>
+</div>
+    
+<div class="portlet" >
+<form action="<? echo $BASE_DIR ?>/purchasing/purchasing_configure.php"  method=POST>
+    <div class="divheader">Configure Purchasing - Set Disbursement Accounts</div>
+    <div class="row">
+        <span class="label1">Accounts:</span>
+        <span class="formw">
+                <SELECT  class="smallsans" SIZE="20" NAME="account_id" id="account_id" >
+                <?
+                transactions::build_accountstree_selectoptions($asset_set, '');
+                ?>
+                </SELECT>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label1">
+            <input type="SUBMIT"  name="ACTION"  value="Add Remittance Account">
+        </span>
+    </div>
+</form>
+</div>
+    
+<div class="portlet" >
+    <div class="divheader">Disbursement Accounts</div>
+
+<?
+foreach($remittance_accounts as $row)
+{
+    ?>
+    <form action="<? echo $BASE_DIR ?>/purchasing/purchasing_configure.php"  method=POST>
+    <div class="row">
+        <span class="label"><? echo $row['account_fullname']; ?></span>
+        <span class="form1">
+            <input type="HIDDEN"  name="invoice_account_edit"  value="<? echo $row['account_id']; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Delete Remittance Account">
+            <input type="SUBMIT"  name="ACTION"  value="Set Default Remittance"><? if($row['default_account'] ==1){ echo "DEFAULT";} ?>
+        </span>
+    </div>
+    </form>
+<?
+}
+?>
+</div>
+    
+<div class="portlet" >
+<form action="<? echo $BASE_DIR ?>/purchasing/purchasing_configure.php"  method=POST>
+    <div class="divheader">Configure Purchasing - Set GI/IR Clearing Accounts</div>
+    <div class="row">
+        <span class="label1">Accounts:</span>
+        <span class="formw">
+                <SELECT  class="smallsans" SIZE="20" NAME="account_id" id="account_id" >
+                <?
+                transactions::build_accountstree_selectoptions($liability_set, '');
+                ?>
+                </SELECT>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label1">
+            <input type="SUBMIT"  name="ACTION"  value="Add Clearing Account">
+        </span>
+    </div>
+</form>
+</div>
+    
+<div class="portlet" >
+    <div class="divheader">GI/IR Clearing Accounts</div>
+
+<?
+foreach($clearing_accounts as $row)
+{
+    ?>
+    <form action="<? echo $BASE_DIR ?>/purchasing/purchasing_configure.php"  method=POST>
+    <div class="row">
+        <span class="label"><? echo $row['account_fullname']; ?></span>
+        <span class="form1">
+            <input type="HIDDEN"  name="invoice_account_edit"  value="<? echo $row['account_id']; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Delete Clearing Account">
+            <input type="SUBMIT"  name="ACTION"  value="Set Default Clearing"><? if($row['default_account'] ==1){ echo "DEFAULT";} ?>
+        </span>
+    </div>
+    </form>
+<?
+}
+?>
+</div>
+    
+<div class="portlet" >
+<form action="<? echo $BASE_DIR ?>/purchasing/purchasing_configure.php"  method=POST>
+    <div class="divheader">Configure Purchasing - Set AR/AP Clearing Accounts</div>
+    <div class="row">
+        <span class="label1">Accounts:</span>
+        <span class="formw">
+                <SELECT  class="smallsans" SIZE="20" NAME="account_id" id="account_id" >
+                <?
+                transactions::build_accountstree_selectoptions($asset_set, '');
+                ?>
+                </SELECT>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label1">
+            <input type="SUBMIT"  name="ACTION"  value="Add AR/AP Clearing Account">
+        </span>
+    </div>
+</form>
+</div>
+    
+<div class="portlet" >
+    <div class="divheader">AR/AP Clearing Accounts</div>
+
+<?
+foreach($arap_clearing_accounts as $row)
+{
+    ?>
+    <form action="<? echo $BASE_DIR ?>/purchasing/purchasing_configure.php"  method=POST>
+    <div class="row">
+        <span class="label"><? echo $row['account_fullname']; ?></span>
+        <span class="form1">
+            <input type="HIDDEN"  name="invoice_account_edit"  value="<? echo $row['account_id']; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Delete AR/AP Clearing Account">
+            <input type="SUBMIT"  name="ACTION"  value="Set Default AR/AP Clearing"><? if($row['default_account'] ==1){ echo "DEFAULT";} ?>
+        </span>
+    </div>
+    </form>
+<?
+}
+?>
+</div>    

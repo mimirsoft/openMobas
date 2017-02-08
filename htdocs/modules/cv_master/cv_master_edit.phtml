@@ -1,0 +1,1893 @@
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<?php
+include("cv_master_edit.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<script language="JavaScript" type="text/javascript">
+function show_box(obj) {
+    var el = document.getElementById(obj);
+    if ( el.style.display == 'block' ) {
+    el.style.display = 'none';
+    }
+    else {
+    el.style.display = 'block';
+    }
+}
+
+var xmlHttp;
+
+function createXMLHttpRequest() {
+  try {
+    xmlHttp = new XMLHttpRequest();
+  } catch (trymicrosoft) {
+    try {
+      xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (othermicrosoft) {
+      try {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (failed) {
+        xmlHttp = false;
+      }
+    }
+  }
+
+  if (!xmlHttp)
+    alert("Error initializing XMLHttpRequest!");
+}
+
+
+function form_extender(formElement, target_container) {
+    createXMLHttpRequest();
+    form_Name = formElement.getAttribute("name");
+    var queryString = "ACTION="+form_Name;
+    form_Value = formElement.value;
+    queryString += "&VALUE="+form_Value;
+    xmlHttp.open("POST", "cv_master_edit_request.php", true);
+    xmlHttp.onreadystatechange = handleStateChange;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
+    xmlHttp.send(queryString);
+    var div = document.getElementById(target_container);
+    div.innerHTML =  '';
+}
+
+function handleStateChange() {
+     if (xmlHttp.readyState == 4) {
+       if (xmlHttp.status == 200)
+       {
+            var xmlDoc = xmlHttp.responseXML;
+            if(xmlDoc.getElementsByTagName("removerow").length > 0)
+            {
+                for(var i = 0; i < xmlDoc.getElementsByTagName("removerow").length; i++)
+                {
+                    var rowname = xmlDoc.getElementsByTagName("removerow")[i].childNodes[0].nodeValue;
+                    thisrow = document.getElementById(rowname);
+                    if(thisrow != null)
+                    {
+                        while(thisrow.hasChildNodes())
+                        {
+                            thisrow.removeChild(thisrow.lastChild)
+                        }
+                        thisrow.parentNode.removeChild(thisrow);
+                    }
+                }
+            }
+            if(xmlDoc.getElementsByTagName("addrow").length > 0)
+            {
+                for(var i = 0; i < xmlDoc.getElementsByTagName("addrow").length; i++)
+                {
+                    add_current_row = xmlDoc.getElementsByTagName("addrow")[i];
+                    var rowname = add_current_row.getElementsByTagName("rowname")[0].childNodes[0].nodeValue;
+                    var rowformname = add_current_row.getElementsByTagName("rowformname")[0].childNodes[0].nodeValue;
+                    var previousrow = add_current_row.getElementsByTagName("previousrow")[0].childNodes[0].nodeValue;
+                    var label = add_current_row.getElementsByTagName("label")[0].childNodes[0].nodeValue;
+                    var multiple = false;
+                    
+                    thisrow = document.getElementById(previousrow);
+                    newdiv = document.createElement("div");
+                    newdiv.setAttribute("id", rowname);
+                    newdiv.setAttribute("class", "row");
+                    newspan = document.createElement("span");
+                    newspan.innerHTML = label;
+                    newspan.setAttribute("class", "label");
+                    newdiv.appendChild(newspan);
+                    newspan = document.createElement("span");
+                    newspan.setAttribute("class", "form");
+                    
+                    newSelect = document.createElement("select");
+                    if (add_current_row.getElementsByTagName("multiple")[0])
+                    {
+                        var multiple = add_current_row.getElementsByTagName("multiple")[0].childNodes[0].nodeValue;
+                        newSelect.setAttribute("multiple", true);
+                    }
+                    newSelect.setAttribute("name", rowformname);
+                    newSelect.setAttribute("id", rowformname);
+                    newSelect.setAttribute("onchange", "form_extender(this)");
+                    for(var j = 0; j < add_current_row.getElementsByTagName("id").length; j++)
+                    {
+                        newoption  = document.createElement("option");
+                        newoption.setAttribute("value", add_current_row.getElementsByTagName("id")[j].childNodes[0].nodeValue);
+                        newoption.innerHTML = add_current_row.getElementsByTagName("name")[j].childNodes[0].nodeValue;
+                        newSelect.appendChild(newoption);
+                    }
+                    newspan.appendChild(newSelect);
+                    newdiv.appendChild(newspan);
+                    thisrow.parentNode.insertBefore(newdiv, thisrow.nextSibling);
+                    
+                }
+            }
+       }
+       else if (xmlHttp.status == 404)
+         alert("Request URL does not exist");
+       else
+         alert("Error: status code is " + xmlHttp.status);
+      }
+}
+
+var cv_id = <?php echo $cv_id ?>;
+
+
+function remove_tag(tag_id) {
+	  var myForm = document.createElement("form");
+	  myForm.method="post" ;
+	  myForm.action = '<?php echo $_SERVER['PHP_SELF']?>' ;
+	  var myInput = document.createElement("input") ;
+	  myInput.setAttribute("name", 'ACTION') ;
+	  myInput.setAttribute("value", 'Remove Tag');
+	  myForm.appendChild(myInput) ;
+	  var myInput = document.createElement("input") ;
+	  myInput.setAttribute("name", 'cv_id') ;
+	  myInput.setAttribute("value", cv_id);
+	  myForm.appendChild(myInput) ;
+	  var myInput = document.createElement("input") ;
+	  myInput.setAttribute("name", 'cv_category_id') ;
+	  myInput.setAttribute("value", tag_id);
+	  myForm.appendChild(myInput) ;
+	  document.body.appendChild(myForm) ;
+	  myForm.submit() ;
+	  document.body.removeChild(myForm) ;
+}
+function setToDefault(address_id) {
+    document.getElementById("careof["+address_id+"]").value = document.getElementById("cv_default_careof").value;
+    document.getElementById("street["+address_id+"]").value = document.getElementById("cv_default_address").value;
+    document.getElementById("city["+address_id+"]").value = document.getElementById("cv_default_city").value;
+    document.getElementById("state["+address_id+"]").value = document.getElementById("cv_default_state").value;
+    document.getElementById("zip["+address_id+"]").value = document.getElementById("cv_default_zip").value;
+
+}
+function loadDefault(contact_id) {
+    document.getElementById("careof[NULL]"+contact_id).value = document.getElementById("cv_default_careof").value;
+    document.getElementById("street[NULL]"+contact_id).value = document.getElementById("cv_default_address").value;
+    document.getElementById("city[NULL]"+contact_id).value = document.getElementById("cv_default_city").value;
+    document.getElementById("state[NULL]"+contact_id).value = document.getElementById("cv_default_state").value;
+    document.getElementById("zip[NULL]"+contact_id).value = document.getElementById("cv_default_zip").value;
+    document.getElementById("email_address[NULL]"+contact_id).value = document.getElementById("cv_default_email").value;
+    document.getElementById("phone_num[NULL]"+contact_id).value = document.getElementById("cv_default_phone").value;
+    
+}   
+</script>
+<body>
+<div class="col_left">
+    <div class="portlet">
+    <form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php"  method=POST>
+        <div class="divheader">Enter Customer/Vendor Info</div>
+        <div class="row">
+            <span class="label">Name:</span>
+            <span class="formw"><input type="TEXT"  name="cv_name"  value="<?php echo $customer_info['cv_name']; ?>" >
+            DELETE CV?<input type="checkbox" name="delete_cv" value="true"></span>
+
+        </div>    
+        <div class="row">
+            <span class="label">Customer Number:</span>
+            <span class="formw"><input type="TEXT"  name="number"  value="<?php echo $customer_info['cv_number']; ?>" ></span>
+        </div>    
+	    <div class="row">
+            <span class="label">Tax ID:</span>
+            <span class="formw"><input type="TEXT"  name="tax_id"  value="<?php echo $customer_info['tax_id']; ?>" ></span>
+        </div>    
+	    <div class="row">
+	        <span class="label">Tags:</span>
+			<span class="formw"><?php
+	            foreach($cv_tags as $row)
+	            {
+	                ?>
+	                   <div class="cvtag"><?php echo $row['cv_category_name']; ?>|<span onclick="remove_tag(<?php echo $row['cv_category_id']; ?>)"> X&nbsp;</span></div>
+	                <?php
+	            }
+	?>            
+	        </span>
+	    </div>    
+ 	   <div class="row">
+	        <span class="label">Tag:</span>
+	        <span class="formw"><SELECT  class="smallsans" SIZE="1" NAME="cv_category_id" >
+	<?php
+	            foreach($CV_Categories as $row)
+	            {
+	                ?>
+	                    <OPTION VALUE="<?php echo $row['cv_category_id'];?>">
+	                    <?php echo $row['cv_category_name']; ?>
+	                    </OPTION>
+	                <?php
+	            }
+	?>	
+	        </SELECT>
+	        <input type="SUBMIT"  name="ACTION"  value="Add Tag" >
+	        </span>
+    	</div>    
+        <div class="row">
+            <span class="label">Is Closed:</span>
+            <span class="formw"><SELECT class="smallsans" NAME="is_closed">
+                <OPTION
+                <?php
+                if ($customer_info['is_closed'] == 0)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="0">NO</OPTION>
+                <OPTION
+                <?php
+                if ($customer_info['is_closed'] == 1)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="1">YES</OPTION>
+                
+                </SELECT>
+            </span>
+        </div>        <div class="row">
+            <span class="label">Is Customer:</span>
+            <span class="formw"><SELECT class="smallsans" NAME="is_customer">
+                <OPTION
+                <?php
+                if ($customer_info['is_customer'] == 0)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="0">NO</OPTION>
+                <OPTION
+                <?php
+                if ($customer_info['is_customer'] == 1)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="1">YES</OPTION>
+                
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Orders Accepted:</span>
+            <span class="formw"><SELECT class="smallsans" NAME="orders_accepted">
+                <OPTION
+                <?php
+                if ($customer_info['orders_accepted'] == 0)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="0">NO</OPTION>
+                <OPTION
+                <?php
+                if ($customer_info['orders_accepted'] == 1)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="1">YES</OPTION>
+                
+                </SELECT>
+            </span>
+        </div> 
+        <div class="row">
+            <span class="label">Payments Accepted:</span>
+            <span class="formw"><SELECT class="smallsans" NAME="payments_accepted">
+                <OPTION
+                <?php
+                if ($customer_info['payments_accepted'] == 0)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="0">NO</OPTION>
+                <OPTION
+                <?php
+                if ($customer_info['payments_accepted'] == 1)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="1">YES</OPTION>
+                
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Payments Accepted Note:</span>
+            <span class="formw"><input type="TEXT"  name="payments_accepted_note" id="payments_accepted_note"  value="<?php echo $customer_info['payments_accepted_note']; ?>" ></span>
+        </div>    
+        <div class="row">
+            <span class="label">GL Receivable:</span>
+            <span class="formw"><?php
+                if($customer_info['gl_account_receivable']=="")
+                { 
+                    ?><div class=WARNING>GL RECEIVABLE NOT SET </div><?php 
+                } 
+                else{  
+                    ?><a href=<?php echo $BASE_DIR ?>/transactions/transactions_account.php?id=<?php echo $customer_info['gl_account_receivable']?> target="_BLANK"><?php echo $customer_info['GL_AR_fullname'] ?></a><?php
+                }
+                ?>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Clear With Vendor:</span>
+            <span class="formw"><SELECT class="smallsans" NAME="clear_with_vendor">
+                <OPTION
+                <?php
+                if ($customer_info['clear_with_vendor'] == 0)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="0">NO</OPTION>
+                <OPTION
+                <?php
+                if ($customer_info['clear_with_vendor'] == 1)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="1">YES</OPTION>
+                
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Is Vendor:</span>
+            <span class="formw"><SELECT class="smallsans" NAME="is_vendor">
+                <OPTION
+                <?php
+                if ($customer_info['is_vendor'] == 0)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="0">NO</OPTION>
+                <OPTION
+                <?php
+                if ($customer_info['is_vendor'] == 1)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="1">YES</OPTION>
+                
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Purchases Allowed:</span>
+            <span class="formw"><SELECT class="smallsans" NAME="purchases_allowed">
+                <OPTION
+                <?php
+                if ($customer_info['purchases_allowed'] == 0)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="0">NO</OPTION>
+                <OPTION
+                <?php
+                if ($customer_info['purchases_allowed'] == 1)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="1">YES</OPTION>
+                
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Disbursements Allowed:</span>
+            <span class="formw"><SELECT class="smallsans" NAME="disbursements_allowed">
+                <OPTION
+                <?php
+                if ($customer_info['disbursements_allowed'] == 0)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="0">NO</OPTION>
+                <OPTION
+                <?php
+                if ($customer_info['disbursements_allowed'] == 1)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="1">YES</OPTION>
+                
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">GL Payable:</span>
+            <span class="formw"><?php 
+                if($customer_info['gl_account_payable']=="")
+                { 
+                    ?><div class=WARNING>GL PAYABLE NOT SET </div><?php 
+                } 
+                else{  
+                    ?><a href=<?php echo $BASE_DIR ?>/transactions/transactions_account.php?id=<?php echo $customer_info['gl_account_payable']?> target="_BLANK"><? echo $customer_info['GL_AP_fullname'] ?></a><?php
+                }
+                ?>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Clear With Customer:</span>
+            <span class="formw"><SELECT class="smallsans" NAME="clear_with_customer">
+                <OPTION
+                <?php
+                if ($customer_info['clear_with_customer'] == 0)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="0">NO</OPTION>
+                <OPTION
+                <?php
+                if ($customer_info['clear_with_customer'] == 1)
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="1">YES</OPTION>
+                
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Default Email:</span>
+            <span class="formw"><input type="TEXT"  name="cv_default_email" ID="cv_default_email"   value="<?php echo $customer_info['cv_default_email']; ?>" ></span>
+        </div>    
+        <div class="row">
+            <span class="label">Default Phone:</span>
+            <span class="formw"><input type="TEXT"  name="cv_default_phone" ID="cv_default_phone"    value="<?php echo $customer_info['cv_default_phone']; ?>" ></span>
+        </div>    
+        <div class="row">
+            <span class="label">Default Care Of:</span>
+            <span class="formw"><input type="TEXT"  name="cv_default_careof" id="cv_default_careof"  value="<?php echo $customer_info['cv_default_careof']; ?>" ></span>
+        </div>    
+        <div class="row">
+            <span class="label">Default Address:</span>
+            <span class="formw"><input type="TEXT"  name="cv_default_address" id="cv_default_address"  value="<?php echo $customer_info['cv_default_address']; ?>" ></span>
+        </div>    
+        <div class="row">
+            <span class="label">Default City:</span>
+            <span class="formw"><input type="TEXT"  name="cv_default_city" id="cv_default_city"  value="<?php echo $customer_info['cv_default_city']; ?>" ></span>
+        </div>    
+        <div class="row">
+            <span class="label">Default State:</span>
+            <span class="formw"><input type="TEXT"  name="cv_default_state" id="cv_default_state"  value="<?php echo $customer_info['cv_default_state']; ?>" ></span>
+        </div>    
+        <div class="row">
+            <span class="label">Default Zip:</span>
+            <span class="formw"><input type="TEXT"  name="cv_default_zip"  id="cv_default_zip"  value="<?php echo $customer_info['cv_default_zip']; ?>" ></span>
+        </div>    
+        <div class="row">
+            <span class="label">Default Statement Type:</span>
+            <span class="formw"><SELECT class="smallsans" NAME="cv_default_statement_type">
+                <OPTION
+                <?php
+                if ($customer_info['cv_default_statement_type'] == 'PRINT')
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="PRINT">PRINT</OPTION>
+                <OPTION
+                <?php
+                if ($customer_info['cv_default_statement_type'] == 'EMAIL')
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="EMAIL">EMAIL</OPTION>
+                
+                </SELECT>
+            </span>
+        </div>    
+         <div class="row">
+            <span class="label">Default Invoice Type:</span>
+            <span class="formw"><SELECT class="smallsans" NAME="cv_default_invoice_type">
+                <OPTION
+                <?php
+                if ($customer_info['cv_default_invoice_type'] == 'PRINT')
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="PRINT">PRINT</OPTION>
+                <OPTION
+                <?php
+                if ($customer_info['cv_default_invoice_type'] == 'EMAIL')
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="EMAIL">EMAIL</OPTION>
+                
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Default Payment Type:</span>
+            <span class="formw"><SELECT class="smallsans" NAME="cv_default_payment_type">
+                <OPTION
+                <?php
+                if ($customer_info['cv_default_payment_type'] == 'CHECK')
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="CHECK">CHECK</OPTION>
+                <OPTION
+                <?php
+                if ($customer_info['cv_default_payment_type'] == 'ELECTRONIC')
+                    {
+                        echo "SELECTED";
+                    }
+                ?>
+                VALUE="ELECTRONIC">ELECTRONIC</OPTION>
+                
+                </SELECT>
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">Notes:</span>
+            <span class="formw"><textarea type="TEXT"  style="width: 25em" name="cv_notes"  ><?php echo $customer_info['cv_notes']; ?></textarea></span>
+        </div>    
+        <div class="row">
+            <input type="HIDDEN"  name="cv_id"  value="<?php echo $customer_info['cv_id']; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Update" >
+            <input type="SUBMIT"  name="ACTION"  value="Verify AR/AP" >
+        </div>    
+    </form>
+    </div>
+    <div class="portlet">
+    <div class="divheader">Users</div>
+        <div class="row">
+                <table>
+                    <tr>
+	                    <td> First Name:
+	                    </td>
+	                    <td> Last Name:
+	                    </td>
+	                    <td> Username:
+	                    </td>
+	                    <td> Email:
+	                    </td>
+					</tr>	
+   <?php  if(is_array($cv_users))
+        {
+        foreach($cv_users as $row)
+        {
+            ?>
+                <form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php"  method=POST>
+                    <tr>
+	                    <td> <?php echo $row['user_firstname']; ?>
+	                    </td>
+	                    <td> <?php echo $row['user_lastname']; ?>
+	                    </td>
+	                    <td> <?php echo $row['username']; ?>
+	                    </td>
+	                    <td> <?php echo $row['user_email']; ?>
+	                    </td>
+					    <td><input type="HIDDEN"  name="cv_id"  value="<?php echo $customer_info['cv_id']; ?>" >
+            			<input type="HIDDEN"  name="user_id"  value="<?php echo $row['user_id']; ?>" >
+            			<input type="SUBMIT"  name="ACTION"  value="Reset Password" >
+	                    <input type="SUBMIT"  name="ACTION"  value="Remove User" >
+	                    </td>
+					</tr>	
+					
+        	    	
+                </form>    
+        <?php 
+        
+        }
+        
+        }
+        
+        ?>
+			</table>
+        </div>    
+    </div>    
+
+    <div class="portlet">
+    <div class="divheader">Contacts</div>
+        
+    <?php  if(is_array($contacts))
+        {
+        foreach($contacts as $contact)
+        {
+            $contact_info = contact::get_contact_from_id($contact['contacts_id']);
+            $phones = contact::getall_phonenumbers_from_contact_id($contact['contacts_id']);
+            $addresses = contact::getall_addresses_from_contact_id($contact['contacts_id']);
+            $emails = contact::getall_emailaddys_from_contact_id($contact['contacts_id']);
+            ?>
+            <div class="box"><span  style="float:left"><?php echo $contact_info['lastname'].", ".$contact_info['firstname']; ?></span><span onclick="show_box('contact_box<?php echo $contact['contacts_id'] ?>')" style="float:right;display:inline">+</span>
+            </div>
+            <div class="contact_box" style="display:none" id="contact_box<? echo $contact['contacts_id'] ?>" >
+                <div class="border_box"> 
+                <form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php"  method=POST>
+                    <span class="label">
+                    </span>
+                    <span class="formw">
+                        <input type="HIDDEN"  name="cv_id"  value="<?php echo $customer_info['cv_id']; ?>" >
+                        <input type="SUBMIT"  name="ACTION"  value="Remove Contact">
+                        <input type="HIDDEN"  name="contacts_id"  value="<?php echo $contact_info['contacts_id'] ?>">
+                        <input type="HIDDEN"  name="cv_contacts_id"  value="<?php echo $contact['cv_contacts_id'] ?>">
+                    </span>
+                    <div class="row">
+                        <span class="label">First Name:</span>
+                        <span class="formw">
+                            <input type="TEXT"  name="firstname"  value="<?php echo $contact_info['firstname']; ?>" >
+                        </span>
+                    </div>    
+                    <div class="row">
+                        <span class="label">Last Name or Company Name:</span>
+                        <span class="formw">
+                            <input type="TEXT"  name="lastname"  value="<?php echo $contact_info['lastname']; ?>" >
+                        </span>
+                    </div>    
+                    <div class="row">
+                        <span class="label">SSN:</span>
+                        <span class="formw">
+                            <input type="TEXT"  name="ssn"  value="<?php echo $contact_info['ssn']; ?>" >
+                        </span>
+                    </div>    
+                    <div class="row">
+                        <span class="label">Notes:</span>
+                        <span class="formw">
+                            <textarea name="contact_notes" ><?php echo $contact_info['contact_notes']; ?></textarea>
+                        </span>
+                    </div>    
+                    <div class="row">
+                        <span class="label">Catagory:</span>
+                        <span class="formw">
+                            <SELECT  SIZE="1" NAME="contacttype_id" >
+                    <?php
+                                foreach($contact_types as $row)
+                                {
+                                    ?>
+                                        <OPTION VALUE="<?php echo $row['contacttype_id']; ?>"<?php 
+                                        if ($contact_info['contacttype_id'] == $row['contacttype_id'])
+                                        {
+                                            echo " SELECTED";
+                                        }
+                                        ?>
+                                        >
+                                        <?php echo $row['contacttype_name']; ?></OPTION>
+                                    <?php
+                                }
+                    ?>	
+                            </SELECT>
+                        </span>
+                    </div>    
+                    <?php
+                    if(is_array($addresses))
+                    {
+                        foreach($addresses as $address)
+                        {	
+                        ?>
+                            <div class="row">
+                                <span class="label">Type</span>
+                                <span class="formw">
+                                <SELECT  SIZE="1" NAME="addresstype_id[<? echo $address['address_id']; ?>]" >
+                                    <?php
+                                    foreach($addresstypes as $row2)
+                                    {	
+                                        ?>
+                                        <OPTION value="<?php echo $row2['addresstype_id'] ?>" <?php if($row2['addresstype_id'] == $address['addresstype_id']){echo "SELECTED"; } ?> > <?php echo $row2['addresstype_name'] ?></OPTION>
+                                        <?php
+                                    }
+                                    ?>
+                                    </SELECT>DELETE ADDRESS?<input type="checkbox" name="delete_address[]" value="<?php echo $address['address_id']; ?>" >
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">Care Of:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="careof[<?php echo $address['address_id']; ?>]" id="careof[<?php echo $address['address_id']; ?>]"  value="<?php echo $address['careof']; ?>" ><BUTTON type=button onclick="setToDefault(<?php echo $address['address_id']; ?>)">Set to Default</BUTTON>
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">Address:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="street[<?php echo $address['address_id']; ?>]" id="street[<?php echo $address['address_id']; ?>]"  value="<?php echo  $address['street']; ?>" > 
+        
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">City</span>
+                                <span class="formw">
+                                        <input type="TEXT"  name="city[<?php echo $address['address_id']; ?>]" id="city[<?php echo $address['address_id']; ?>]"  value="<?php echo $address['city']; ?>" >
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">State:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="state[<?php echo $address['address_id']; ?>]" id="state[<?php echo $address['address_id']; ?>]"  value="<?php echo $address['state']; ?>" >
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">Zip:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="zip[<?php echo $address['address_id']; ?>]" id="zip[<?php echo $address['address_id']; ?>]"  value="<?php echo $address['zip']; ?>" >  
+                                </span>
+                                <input type="HIDDEN"  name="address_id[]"  value="<?php echo $address['address_id']; ?>" >
+                            </div>    
+                        <?php
+                        }
+                    }
+                    foreach($phones as $phone)
+                    {
+                    ?>
+                        <div class="row">
+                            <span class="label">Type</span>
+                            <span class="formw">
+                            <SELECT  SIZE="1" NAME="phonetype_id[<?php echo $phone['phone_id']; ?>]" >
+                                <?php
+                                foreach($phonetypes as $phonetype)
+                                {	
+                                    ?>
+                                    <OPTION value="<?php echo $phonetype['phonetype_id'] ?>" <?php if($phonetype['phonetype_id'] == $phone['phonetype_id']){echo "SELECTED"; } ?> > <?php echo $phonetype['phonetype_name'] ?></OPTION>
+                                    <?php
+                                }
+                                ?>
+                                </SELECT>DELETE PHONE NUMBER?<input type="checkbox" name="delete_phone[]" value="<?php echo $phone['phone_id']; ?>">
+                            </span>
+                        </div>    
+                        <div class="row">
+                            <span class="label">Number:</span>
+                            <span class="formw">
+                                <input type="TEXT"  name="phone_num[<?php echo $phone['phone_id']; ?>]"  value="<?php echo $phone['phone_num']; ?>" >
+                            </span>
+                            <input type="HIDDEN"  name="phone_id[]"  value="<?php echo $phone['phone_id']; ?>" >
+                        </div>    
+                    <?php
+                    }
+                    foreach($emails as $email)
+                    {
+                    ?>
+                        <div class="row">
+                            <span class="label">Type</span>
+                            <span class="formw">
+                            <SELECT  SIZE="1" NAME="emailtype_id[<?php echo $email['email_id']; ?>]" >
+                                <?php
+                                foreach($emailtypes as $emailtype)
+                                {	
+                                    ?>
+                                    <OPTION value="<?php echo $emailtype['emailtype_id'] ?>" <?php if($emailtype['emailtype_id'] == $email['emailtype_id']){echo "SELECTED"; } ?> > <?php echo $emailtype['emailtype_name'] ?></OPTION>
+                                    <?php
+                                }
+                                ?>
+                                </SELECT>DELETE EMAIL ADDRESS?<input type="checkbox" name="delete_email[]" value="<?php echo $email['email_id']; ?>">
+                            </span>
+                        </div>    
+                        <div class="row">
+                            <span class="label">EMAIL ADDRESS:</span>
+                            <span class="formw">
+                                <input type="TEXT"  size=30 name="email_address[<?php echo $email['email_id']; ?>]"  value="<?php echo $email['email_address']; ?>" >
+                            </span>
+                            <input type="HIDDEN"  name="email_id[]"  value="<?php echo $email['email_id']; ?>" >
+                        </div>    
+                    <?php
+                    }
+                    ?>
+                    <div class="row">
+                        <span class="label"></span>
+                        <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Update Contact" ></span>
+                    </div>
+                    </form>
+                </div>
+                <div class="border_box">
+                    <form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php"  method=POST>
+                        <input type="HIDDEN"  name="cv_id"  value="<?php echo $customer_info['cv_id']; ?>" >
+                        <input type="HIDDEN"  name="contacts_id"  value="<?php echo $contact_info['contacts_id'] ?>">
+                            <BUTTON type=button onclick="loadDefault(<?php echo $contact_info['contacts_id'] ?>)">Load CV Values</BUTTON>
+                            <div class="row">
+                                <span class="label">Type</span>
+                                <span class="formw">
+                                <SELECT  SIZE="1" NAME="addresstype_id[NULL]" >
+                                    <?php
+                                    foreach($addresstypes as $row2)
+                                    {	
+                                        ?>
+                                        <OPTION value="<?php echo $row2['addresstype_id'] ?>"  > <?php echo $row2['addresstype_name'] ?></OPTION>
+                                        <?php
+                                    }
+                                    ?>
+                                    </SELECT>
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">Care Of:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="careof[NULL]" ID="careof[NULL]<?php echo $contact['contacts_id'] ?>" value="" >
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">Address:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="street[NULL]" ID="street[NULL]<?php echo $contact['contacts_id'] ?>"  value="" > 
+        
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">City</span>
+                                <span class="formw">
+                                        <input type="TEXT"  name="city[NULL]" ID="city[NULL]<?php echo $contact['contacts_id'] ?>"  value="" >
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">State:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="state[NULL]" ID="state[NULL]<?php echo $contact['contacts_id'] ?>" value="" >
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">Zip:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="zip[NULL]" ID="zip[NULL]<?php echo $contact['contacts_id'] ?>"  value="" >  
+                                </span>
+                                <input type="HIDDEN"  name="address_id"  value="NULL" >
+                            </div>    
+                            <div class="row">
+                                <span class="label"></span>
+                                <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Add Address" ></span>
+                            </div>
+                            <div class="row">
+                                <span class="label">Type</span>
+                                <span class="formw">
+                                <SELECT  SIZE="1" NAME="phonetype_id[NULL]" >
+                                    <?php
+                                    foreach($phonetypes as $phonetype)
+                                    {	
+                                        ?>
+                                        <OPTION value="<?php echo $phonetype['phonetype_id'] ?>" > <?php echo $phonetype['phonetype_name'] ?></OPTION>
+                                        <?php
+                                    }
+                                    ?>
+                                    </SELECT>
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">Number:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="phone_num[NULL]" ID="phone_num[NULL]<?php echo $contact['contacts_id'] ?>"  value="" >
+                                </span>
+                                <input type="HIDDEN"  name="phone_id"  value="NULL" >
+                            </div>    
+                            <div class="row">
+                                <span class="label"></span>
+                                <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Add Phone" ></span>
+                            </div>
+                            <div class="row">
+                                <span class="label">Email Type</span>
+                                <span class="formw">
+                                <SELECT  SIZE="1" NAME="emailtype_id[NULL]" >
+                                    <?php
+                                    foreach($emailtypes as $emailtype)
+                                    {	
+                                        ?>
+                                        <OPTION value="<?php echo $emailtype['emailtype_id'] ?>" > <?php echo $emailtype['emailtype_name'] ?></OPTION>
+                                        <?php
+                                    }
+                                    ?>
+                                    </SELECT>
+                                </span>
+                            </div>    
+                            <div class="row">
+                                <span class="label">Email Address:</span>
+                                <span class="formw">
+                                    <input type="TEXT"  name="email_address[NULL]" ID="email_address[NULL]<?php echo $contact['contacts_id'] ?>"  value="" >
+                                </span>
+                                <input type="HIDDEN"  name="email_id"  value="NULL" >
+                            </div>    
+                            <div class="row">
+                                <span class="label"></span>
+                                <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Add Email" ></span>
+                            </div>
+                    </form>
+                </div>
+            </div>
+             <?php
+        }
+        }
+    ?>
+    </div>
+
+
+</div>
+
+<div class="col_right">
+    <div class="portlet2">
+        <form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php"  method=POST>
+            <div class="divheader">Attach Users</div>
+            <div class="row">
+                <span class="label">Catagory:</span>
+                <span class="formw"><SELECT  class="smallsans" SIZE="1" NAME="user_id" >
+                    <OPTION value="null"></OPTION>
+                    <?php
+                    foreach($users_all as $row)
+                    {
+                        ?>
+                            <OPTION VALUE="<?php echo $row['user_id']; ?>"><?php echo $row['username']; ?></OPTION>
+                        <?php
+                    }
+        ?>  
+                </SELECT></span>
+            </div>    
+            <div id="fillin_container">
+        
+            </div>    
+            <div class="row">
+                <span class="label"></span>
+                <span class="formw">
+                    <input type="HIDDEN"  name="cv_id"  value="<?php echo $customer_info['cv_id'] ?>">
+                    <input type="SUBMIT"  name="ACTION"  value="Attach User" >
+                </span>
+            </div>    
+        </form>
+    </div>
+    <div class="portlet2">
+        <form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php"  method=POST>
+            <div class="divheader">Attach Contacts</div>
+            <div class="row" id="target_row">
+                <span class="label">Catagory:</span>
+                <span class="formw"><SELECT  class="smallsans" SIZE="1" NAME="target" onchange="form_extender(this, 'fillin_container');">
+                    <OPTION value="null"></OPTION>
+                    <?php
+                    foreach($contact_types as $row)
+                    {
+                        ?>
+                            <OPTION VALUE="<?php echo $row['contacttype_id']; ?>"><?php echo $row['contacttype_name']; ?></OPTION>
+                        <?php
+                    }
+        ?>	
+                </SELECT></span>
+            </div>    
+            <div id="fillin_container">
+        
+            </div>    
+            <div class="row">
+                <span class="label"></span>
+                <span class="formw">
+                    <input type="HIDDEN"  name="cv_id"  value="<?php echo $customer_info['cv_id'] ?>">
+                    <input type="SUBMIT"  name="ACTION"  value="Attach Contact" >
+                </span>
+            </div>    
+        </form>
+    </div>
+    <div class="portlet2">
+        <form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php"  method=POST>
+            <div class="divheader">Create and Attach Contact</div>
+            <div class="row">
+                <span class="label">First Name:</span>
+                <span class="formw"><input type="TEXT"  name="firstname"  value="<?php echo $firstname; ?>" ></span>
+            </div>    
+            <div class="row">
+                <span class="label">Last Name or Company Name:</span>
+                <span class="formw"><input type="TEXT"  name="lastname"  value="<?php echo $lastname; ?>" ></span>
+            </div>    
+            <div class="row">
+                <span class="label">Catagory:</span>
+                <span class="formw"><SELECT  class="smallsans" SIZE="1" NAME="contacttype_id" >
+                 <OPTION VALUE="">PLEASE SELECT CATAGORY</OPTION>
+        <?php
+                    foreach($contact_types as $row)
+                    {
+                        ?>
+                            <OPTION VALUE="<?php echo $row['contacttype_id']; ?>"><?php echo $row['contacttype_name']; ?></OPTION>
+                        <?php
+                    }
+        ?>	
+                </SELECT></span>
+            </div>    
+            <div class="row"><span class="label"><input type="SUBMIT"  name="ACTION"  value="Create and Attach Contact" ></span>
+                <input type="HIDDEN"  name="cv_id"  value="<?php echo $customer_info['cv_id']; ?>" >
+                    <input type="HIDDEN"  name="contacts_id"  value="NULL" >                   
+                    <input type="HIDDEN"  name="cv_default_email"  value="<?php echo $customer_info['cv_default_email'] ?>">
+                    <input type="HIDDEN"  name="cv_default_phone"  value="<?php echo $customer_info['cv_default_phone'] ?>">
+                    <input type="HIDDEN"  name="cv_default_address"  value="<?php echo $customer_info['cv_default_address'] ?>">
+                    <input type="HIDDEN"  name="cv_default_city"  value="<?php echo $customer_info['cv_default_city'] ?>">
+                    <input type="HIDDEN"  name="cv_default_state"  value="<?php echo $customer_info['cv_default_state'] ?>">
+                    <input type="HIDDEN"  name="cv_default_zip"  value="<?php echo $customer_info['cv_default_zip'] ?>">
+                    <input type="HIDDEN"  name="cv_default_careof"  value="<?php echo $customer_info['cv_default_careof'] ?>">
+                    <input type="HIDDEN"  name="cv_name"  value="<?php echo $customer_info['cv_name'] ?>">
+                    <input type="HIDDEN"  name="cv_default_careof"  value="<?php echo $customer_info['cv_default_careof'] ?>">
+                    
+                    <input type="SUBMIT"  name="ACTION"  value="Create Default Contact" >
+            </div>    
+        </form>
+    </div>
+   <div class="portlet2">
+    <form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php" method=POST>
+    <div class="divheader">Set GL Accounts</div>
+        <div class="row">
+            <span class="label">ACCOUNT</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="account_id" >
+                <?php
+                transaction::build_accountstree_selectoptions($account_array, $empty);
+                ?>
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">ACCOUNT TYPE</span>
+            <span class="formw"><SELECT class="smallsans" NAME="account_type">
+                <OPTION
+            VALUE="RECEIVABLE">RECEIVABLE</OPTION>
+                <OPTION
+                VALUE="PAYABLE">PAYABLE</OPTION>
+                </SELECT></span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                <input type="HIDDEN"  name="cv_id"  value="<?php echo $customer_info['cv_id']; ?>" >
+                <input type="SUBMIT"  name="ACTION"  value="Update GL Accounts">
+            </span>
+        </div>    
+    </form>
+    </div>
+<?php if($customer_info['is_vendor'])
+{
+    ?>
+    <div class="portlet2">
+    <form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php"  method=POST>
+        <div class="divheader">Create Inventory Items</div>
+        <div class="row" id="inventory_type">
+            <span class="label">Type:</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="item_type" onchange="form_extender(this, 'inventory_block');"> 
+                <OPTION value="none" > </OPTION> 
+                <?php foreach($inventorytypes as $inventorytype)
+                {
+                    ?>                
+                    <OPTION VALUE="<?php echo $inventorytype['inventorytype_id']; ?>"><?php echo $inventorytype['inventorytype_name']; ?></OPTION>
+                    <?php
+                }
+                ?>
+                </SELECT>
+            </span>
+        </div>
+        <div class="row"  iD="inventory_block">
+        </div>
+        <div class="row">
+            <span class="label"></span>
+            <span class="formw">    
+                <input type="HIDDEN"  name="cv_id"  value="<?php echo $customer_info['cv_id']; ?>" >
+                <input type="SUBMIT"  name="ACTION"  value="Create Inventory Item">
+            </span>
+        </div>
+    </form>
+    </div>
+    <?php 
+}
+?>
+</div>
+    <?php if($customer_info['is_vendor'])
+    {
+    ?>
+        <div class="portlet3">
+        <div class="divheader">Inventory Items</div>
+        <table style='table-layout:fixed'>
+        	<colgroup>
+    		<col span="12" />
+        	<col class="date" />
+        	</colgroup>
+        	<tr>
+        	<th>Item Name:</th>
+        	<th>Item Type:</th>
+        	<th>Description:</th>
+        	<th>Wholesale<br/> Price:</th>
+        	<th>Retail<br/> Price:</th>
+        	<th>Maintenance Service Policy:</th>
+        	<th>Notes:</th>
+        	<th>Item Available?:</th>
+        	<th>Item In Stock?:</th>
+        	<th>Item Current?:</th>
+        	<th>On Sale Auto Purchase?:</th>
+        	<th>Email Vendor On Purchase?:</th>
+        	<th>Date Avail:</th>
+        	<th>External Link:</th>
+        	<th>Item Manager:</th>
+        	<th></th>
+        	<th></th>
+        	<th></th>
+        	</tr>
+        <?php  if(is_array($inventory_items))
+            {
+            foreach($inventory_items as $inventory_item)
+            {
+                ?>
+                <form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php"  method=POST>
+                <tr>
+                <td><input type="TEXT"  name="item_name[<?php echo $inventory_item['inventory_id']; ?>]"  value="<?php echo $inventory_item['item_name']; ?>" ></td>
+                <td><?php echo $inventory_item['inventorytype_name'] ?></td>
+                <td><input type="TEXT"  name="description[<?php echo $inventory_item['inventory_id']; ?>]"  value="<?php echo $inventory_item['item_description']; ?>" ></td>
+                <td><input type="TEXT" size=6 name="wholesale_price[<?php echo $inventory_item['inventory_id']; ?>]"  value="<?php echo $inventory_item['wholesale_price']; ?>" ></td>
+                <td><input type="TEXT" size=6 name="retail_price[<?php echo $inventory_item['inventory_id']; ?>]"  value="<?php echo $inventory_item['retail_price']; ?>" ></td>
+                <td><SELECT  SIZE="1" NAME="service_policy[<?php echo $inventory_item['inventory_id']; ?>]" >
+                		<OPTION VALUE="none" <?php if($inventory_item['service_policy']=='none'){echo " SELECTED ";} ?> >NONE</OPTION>
+                        <OPTION VALUE="by_us" <?php if($inventory_item['service_policy'] == 'by_us'){echo " SELECTED ";} ?> >BY US - BILL TO VENDOR</OPTION>
+                        <OPTION VALUE="by_us_with_approval" <?php if($inventory_item['service_policy'] == 'by_us_with_approval'){echo " SELECTED ";} ?> >BY US - APPROVAL REQUIRED</OPTION>
+                        <OPTION VALUE="by_vendor" <?php if( $inventory_item['service_policy'] == 'by_vendor'){echo " SELECTED ";} ?> >VENDOR ONLY</OPTION>
+                        <OPTION VALUE="third_party_warranty" <?php if( $inventory_item['service_policy'] == 'third_party_warranty'){ echo " SELECTED ";} ?> >THIRD PARTY WARRANTY</OPTION>
+                    </SELECT>
+                </td>
+                <td><textarea  style="width: 22em" name="item_notes[<?php echo $inventory_item['inventory_id']; ?>]" ><?php echo $inventory_item['item_notes']; ?></textarea></td>
+                <td><INPUT TYPE=RADIO NAME="available[<?php echo $inventory_item['inventory_id']; ?>]" <?php
+                                    if ($inventory_item['available'] == 1)
+                                        {
+                                            echo "CHECKED";
+                                        }
+                                    ?>
+                                    VALUE="1">YES<BR>
+                                    <INPUT TYPE=RADIO NAME="available[<?php echo $inventory_item['inventory_id']; ?>]" <?php
+                                    if ($inventory_item['available'] == 0)
+                                        {
+                                            echo "CHECKED";
+                                        }
+                                    ?>
+                                    VALUE="0">NO<BR>
+                </td>
+                <td><INPUT TYPE=RADIO NAME="in_stock[<?php echo $inventory_item['inventory_id']; ?>]" <?php
+                                    if ($inventory_item['instock'] == 1)
+                                        {
+                                            echo "CHECKED";
+                                        }
+                                    ?>
+                                    VALUE="1">YES<BR>
+                                    <INPUT TYPE=RADIO NAME="in_stock[<?php echo $inventory_item['inventory_id']; ?>]" <?php
+                                    if ($inventory_item['instock'] == 0)
+                                        {
+                                            echo "CHECKED";
+                                        }
+                                    ?>
+                                    VALUE="0">NO<BR></td>
+                <td><INPUT TYPE=RADIO NAME="current[<?php echo $inventory_item['inventory_id']; ?>]" <?php
+                                    if ($inventory_item['current'] == 1)
+                                        {
+                                            echo "CHECKED";
+                                        }
+                                    ?>
+                                    VALUE="1">YES<BR>
+                                    <INPUT TYPE=RADIO NAME="current[<?php echo $inventory_item['inventory_id']; ?>]" <?php
+                                    if ($inventory_item['current'] == 0)
+                                        {
+                                            echo "CHECKED";
+                                        }
+                                    ?>
+                                    VALUE="0">NO<BR></td>
+                <td><INPUT TYPE=RADIO NAME="on_sale_auto_purchase[<?php echo $inventory_item['inventory_id']; ?>]" <?php
+                                    if ($inventory_item['on_sale_auto_purchase'] == 1)
+                                        {
+                                            echo "CHECKED";
+                                        }
+                                    ?>
+                                    VALUE="1">YES<BR>
+                                    <INPUT TYPE=RADIO NAME="on_sale_auto_purchase[<?php echo $inventory_item['inventory_id']; ?>]" <?php
+                                    if ($inventory_item['on_sale_auto_purchase'] == 0)
+                                        {
+                                            echo "CHECKED";
+                                        }
+                                    ?>
+                                    VALUE="0">NO<BR></td>
+                <td><INPUT TYPE=RADIO NAME="email_on_purchase[<?php echo $inventory_item['inventory_id']; ?>]" <?php
+                                    if ($inventory_item['email_vendor_on_purchase'] == 1)
+                                        {
+                                            echo "CHECKED";
+                                        }
+                                    ?>
+                                    VALUE="1">YES<BR>
+                                    <INPUT TYPE=RADIO NAME="email_on_purchase[<?php echo $inventory_item['inventory_id']; ?>]" <?php
+                                    if ($inventory_item['email_vendor_on_purchase'] == 0)
+                                        {
+                                            echo "CHECKED";
+                                        }
+                                    ?>
+                                    VALUE="0">NO<BR></td>
+                <td class="date"><?php
+                                    $FRAMEWORK->date_selectors(substr($inventory_item['availabledate'], 0 ,4), substr($inventory_item['availabledate'], 5 ,2), substr($inventory_item['availabledate'], 8 ,2), "availabledate_",  "[".$inventory_item['inventory_id']."]");
+                                    ?></td>
+                <td><input type="TEXT" size=30 name="external_link[<?php echo $inventory_item['inventory_id']; ?>]"  value="<?php echo $inventory_item['external_link']; ?>" ></td>
+                <td><SELECT  SIZE="1" NAME="item_manager[<?php echo $inventory_item['inventory_id']; ?>]" >
+                                <?php foreach($users as $row)
+                                {	
+                                    ?><OPTION VALUE="<?php echo $row['user_id'] ?>" <?php if($row['user_id'] == $inventory_item['item_manager']){echo " SELECTED ";} ?> ><?php echo $row['username'] ?></OPTION><?php
+                                }
+                                ?>
+                                </SELECT></td>
+                <td><SELECT  SIZE="1" NAME="property_id[<?php echo $inventory_item['inventory_id']; ?>]" >
+    				<OPTION VALUE="NULL" >NULL</OPTION>
+                
+                                <?php foreach($properties as $row)
+                                {	
+                                    ?><OPTION VALUE="<?php echo $row['property_id'] ?>" <?php if($row['property_id'] == $inventory_item['property_id']){echo " SELECTED ";} ?> ><?php echo $row['property_address'].$row['property_aptnum'] ?></OPTION><?php
+                                }
+                                ?>
+                                </SELECT></td>
+                <td>
+                                    <input type="HIDDEN"  name="cv_id"  value="<?php echo $customer_info['cv_id']; ?>" >
+                                    <input type="HIDDEN"  name="cv_account_id"  value="<?php echo $inventory_item['inventory_id'] ?>"><input type="HIDDEN"  name="cv_id"  value="<?php echo $customer_info['cv_id']; ?>" >
+                                    <input type="HIDDEN"  name="inventory_id[]"  value="<?php echo $inventory_item['inventory_id']; ?>" >
+                                    <input type="SUBMIT"  name="ACTION"  value="Update Items">Check to Delete<input type="checkbox" name="delete_inventory[]" value="<?php echo $inventory_item['inventory_id']; ?>"></td>
+                                    <td>
+                                    </td>
+                </tr>
+                        </form>
+                <?php
+            }
+            }
+        ?>
+        </table>
+        </div>
+    <?php
+    }
+    ?>
+<div class="portlet2">
+    <div class="divheader">Print Statement</div>
+    <form action="<?php echo $BASE_DIR ?>/cv_master/cv_master_statement_handler.php"  target="_blank" method=POST>
+            <div class="row">
+            <span class="label">Statement Type:</span>
+            <span class="formw"><SELECT class="smallsans" NAME="statementtype">
+                <OPTION VALUE="summary">Summary</OPTION>
+                <OPTION VALUE="simplified_outstanding">Summary with Outstanding Only</OPTION>
+                <OPTION VALUE="itemized_outstanding">Itemized Outstanding</OPTION>
+                <OPTION VALUE="itemized_outstanding2">Itemized Outstanding2</OPTION>
+                <OPTION VALUE="scheduleE">ScheduleE</OPTION>
+                
+                </SELECT>
+            </span>
+        </div>    
+    <div class="row" >
+ 
+    </div> 
+        <div class="row">
+            <span class="label">Starting Date(YYYY-MM-DD):</span>
+            <span class="formw">
+                <?php
+                $FRAMEWORK->date_selectors($startdate_year, $startdate_month, $startdate_day, "start", "")
+                ?>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Ending Date(YYYY-MM-DD):</span>
+            <span class="formw">
+                <?php
+                $FRAMEWORK->date_selectors($enddate_year, $enddate_month, $enddate_day, "end", "")
+                ?>
+            </span>
+        </div>    
+    <div class="row">
+       	<span class="label"></span>
+   	    <span class="formw">    
+        	<input type="HIDDEN"  name="cv_id"  value="<?php echo $customer_info['cv_id']; ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="PRINT SUMMARY STATEMENT">
+    	</span>
+	</div>
+    </form>
+</div>
+<?php if($customer_info['is_customer'])
+{
+    ?>
+    <div class="portlet2">
+        <div class="divheader">Recurring Invoices</div>
+        <div class="row" >
+            <table>
+                    <TR>
+                        <TD>
+                             Start Date
+                        </TD>
+                        <TD>
+                             End Date
+                        </TD>
+                        <TD>
+                             Last Charged
+                        </TD>
+                        <TD>
+                              Description
+                        </TD>
+                        <TD>
+                             Invoice Total
+                        </TD>
+                        
+                    </TR>
+    <?php
+                foreach($recurring_invoices as $row)
+                {
+                    ?>
+                    <TR>
+                        <TD>
+                              <?php echo $row['start_date'] ?>
+                        </TD>
+                        <TD>
+                              <?php echo $row['end_date'] ?>
+                        </TD>
+                        <TD>
+                              <?php echo $row['lastcharged'] ?>
+                        </TD>
+                        <TD>
+                              <?php echo $row['invoice_description'] ?>
+                        </TD>
+                        <TD>
+                              <?php 
+                                 echo $row['invoice_total'];
+                                  ?>
+                        </TD>
+                        <TD>
+                            <form action="<?php echo $BASE_DIR ?>/invoices/invoices_recurring_items.php" target="_blank" METHOD=POST>
+                                <input type=SUBMIT name="ACTION" value="EDIT INVOICE" >
+                                <input type=hidden name="recurringinvoice_id" value=<?php echo $row['recurringinvoice_id']?>>
+                            </form>    
+                         </TD>
+                        
+                        
+                    </TR>
+                    
+                    <?php
+                }
+    ?>  
+            </table>
+        </div>   
+    </div> 
+    <div class="portlet2">
+        <div class="divheader">Invoices</div>
+        <div class="row" >
+            <table>
+                    <TR>
+                        <TD>
+                             Invoice#
+                        </TD>
+                        <TD>
+                             Date Charged
+                        </TD>
+                        <TD>
+                              Description
+                        </TD>
+                        <TD>
+                              Customer Name
+                        </TD>
+                        <TD>
+                             Invoice Total
+                        </TD>
+                        <TD>
+                              Total Remitted
+                        </TD>
+                        <TD>
+                              Remaining Balance
+                        </TD>
+                    </TR>
+    <?php
+                $invoice_total = 0;
+                $invoice_remit_total = 0;
+                $invoice_remaining_total = 0;
+                foreach($invoices as $row)
+                {
+                    ?>
+                    <TR>
+                        <TD>
+                              <?php echo $row['invoice_id'] ?></a>
+                        </TD>
+                        <TD>
+                              <?php echo $row['date_charged'] ?>
+                        </TD>
+                        <TD>
+                              <?php echo $row['invoice_description'] ?>
+                        </TD>
+                        <TD>
+                              <?php echo $row['cv_name'] ?>
+                        </TD>
+                        <TD class="col_right">
+                              <?php 
+                                 echo $row['invoice_total'];
+                                 $invoice_total += $row['invoice_total'];
+                                  ?>
+                        </TD>
+                        <TD class="col_right">
+                              <?php echo $row['total_remitted'];
+                                 $invoice_remit_total += $row['total_remitted'];
+                              ?>
+                        </TD>
+                        <TD class="col_right">
+                              <?php echo $row['invoice_total']-$row['total_remitted'] ;
+                                 $invoice_remaining_total += ($row['invoice_total']-$row['total_remitted']);
+                              ?>
+                        </TD>
+                        <TD>
+                            <form action="<?php echo $BASE_DIR ?>/invoices/invoices_view.php" target="_blank" METHOD=POST>
+                        		<input type=SUBMIT name="ACTION" value="VIEW" >
+       							<input type=hidden name="invoice_id" value=<?php echo $row['invoice_id']?>>
+                            </form>    
+                         </TD>
+                        <TD>
+                            <form action="<?php echo $BASE_DIR ?>/invoices/invoices_view.php" target="_blank" METHOD=POST>
+                        		<input type=SUBMIT name="ACTION" value="PRINT" >
+       							<input type=hidden name="invoice_id" value=<?php echo $row['invoice_id']?>>
+                            </form>    
+                       	</TD>
+                        <TD>
+                            <form action="<?php echo $BASE_DIR ?>/invoices/invoices_email.php" target="_blank" METHOD=POST>
+                        		<input type=SUBMIT name="ACTION" value="EMAIL" >
+       							<input type=hidden name="invoice_id" value=<?php echo $row['invoice_id']?>>
+                            </form>    
+                       	</TD>
+                        
+                        
+                    </TR>
+                    
+                    <?php
+                }
+    ?>	
+                 <TR>
+                        <TD>
+                              
+                        </TD>
+                        <TD>
+                             
+                        </TD>
+                        <TD>
+                             
+                        </TD>
+                        <TD>
+                              TOTAL
+                        </TD>
+                        <TD  class="col_right">
+                        <?php 
+                                 echo $invoice_total;
+                        ?>
+                        </TD>
+                        <TD class="col_right">
+                        <?php 
+                                 echo $invoice_remit_total;
+                        ?>
+                        </TD>
+                        <TD class="col_right">
+                        <?php 
+                                 echo $invoice_remaining_total;
+                        ?>
+                        </TD>
+                        
+                </TR>
+            </table>
+        </div>    
+    </div>    
+       <div class="portlet2">
+        <div class="divheader">Remittances</div>
+        <div class="row" >
+            <table>
+                    <TR>
+                        <TD>
+                             Disbursement#
+                        </TD>
+                        <TD>
+                              Date
+                        </TD>
+                        <TD>
+                              Check No
+                        </TD>
+                        <TD>
+                              Comment
+                        </TD>
+                        <TD>
+                             Total Amount
+                        </TD>
+                        <TD>
+                              Total Applied
+                        </TD>
+                        <TD>
+                              Total Remaining
+                        </TD>
+                        <TD>
+                             Clearing
+                        </TD>
+                    </TR>
+                <?php
+$remit_total = 0;
+$applied_remit_total = 0;
+$remaining_remit_total = 0;
+$clearing_total = 0;
+                foreach($remittances as $row)
+                {
+                    ?>
+                    <TR>
+                        <TD>
+                              <?php echo $row['remit_no'] ?></a>
+                        </TD>
+                        <TD>
+                              <?php echo $row['remit_date'] ?>
+                        </TD>
+                        <TD>
+                              <?php echo $row['checkno'] ?>
+                        </TD>
+                        <TD>
+                              <?php echo $row['comment'] ?>
+                        </TD>
+                        <TD class="col_right">
+                              <?php echo $row['total_received'];
+                              $remit_total += $row['total_received']; ?>
+                        </TD>
+                
+                        <TD class="col_right">
+                              <?php echo $row['total_applied'];
+                              $applied_remit_total += $row['total_applied']; ?>
+                        </TD>
+                        <TD class="col_right">
+                              <?php echo $row['total_received']-$row['total_applied'];
+                                 $remaining_remit_total += ($row['total_received']-$row['total_applied']);
+                              ?>
+                        </TD>
+                        <TD class="col_right">
+                        <?php
+                        if($row['credit_or_clearing'] == 1)
+                        {
+                              echo $row['total_received'];
+                              $clearing_total += $row['total_received'];
+                        }
+                        else
+                        {
+                            echo "0.00";    
+                        }
+                        ?>
+                              
+                        </TD>
+                        <TD class="col_right">
+                            <form action="<?php echo $BASE_DIR ?>/invoices/invoices_edit_remittance.php" target="_blank" METHOD=POST>
+                                <input type=SUBMIT name="ACTION" value="EDIT" >
+                                <input type=hidden name="remit_no" value=<?php echo $row['remit_no']?>>
+                            </form>    
+                        </TD>
+
+                        
+                        
+                    </TR>
+                    
+                    <?php
+                }
+            ?>  
+                 <TR>
+                        <TD>
+                              
+                        </TD>
+                        <TD>
+                             
+                        </TD>
+                        <TD>
+                             
+                        </TD>
+                        <TD>
+                              TOTAL
+                        </TD>
+                        <TD class="col_right">
+                        <?php 
+                                 echo $remit_total;
+                        ?>
+                        </TD>
+                        <TD class="col_right">
+                        <?php 
+                                 echo $applied_remit_total;
+                        ?>
+                        </TD>
+                        <TD class="col_right">
+                        <?php 
+                                 echo $remaining_remit_total;
+                        ?>
+                        </TD>
+                        <TD class="col_right">
+                        <?php 
+                                 echo $clearing_total;
+                        ?>
+                        </TD>
+                        
+                        
+                </TR>
+            </table>
+        </div>    
+   </div>    
+    <?php 
+}
+$po_total = 0;
+$po_remit_total = 0;
+$po_remaining_total = 0;
+if($customer_info['is_vendor'])
+{
+    ?>
+    <div class="portlet2">
+        <div class="divheader">Purchase Orders</div>
+        <div class="row" >
+            <table>
+                    <TR>
+                        <TD>
+                             PO#
+                        </TD>
+                        <TD>
+                             Date Charged
+                        </TD>
+                        <TD>
+                              Description
+                        </TD>
+                        <TD>
+                              Customer Name
+                        </TD>
+                        <TD>
+                             Invoice Total
+                        </TD>
+                        <TD>
+                              Total Remitted
+                        </TD>
+                        <TD class="col_right">
+                              Remaining Balance
+                        </TD>
+                        <TD>
+                            Invoice#
+                        </TD>
+                        <TD>
+                            Invoice Total#
+                        </TD>
+                        
+                    </TR>
+                <?php
+                 $invoice_po_total = 0 ;
+                foreach($purchases as $row)
+                {
+                    ?>
+                    <TR <?php if($row['po_total'] > $row['invoice_total'] && $row['invoice_total'] != "") echo "class=red " ?>>
+                        <TD>
+                              <?php echo $row['po_id'] ?></a>
+                        </TD>
+                        <TD>
+                              <?php echo $row['po_date'] ?>
+                        </TD>
+                        <TD>
+                              <?php echo $row['purchase_description'] ?>
+                        </TD>
+                        <TD>
+                              <?php echo $row['cv_name'] ?>
+                        </TD>
+                        <TD class="col_right">
+                              <?php echo $row['po_total'];
+                                 $po_total += $row['po_total'];
+                              ?>
+                        </TD>
+                        <TD class="col_right">
+                              <?php echo $row['total_disbursed'] ;
+                                 $po_remit_total += $row['total_disbursed'];
+                              ?>
+                              </TD>
+                        <TD class="col_right">
+                              <?php echo $row['po_total']-$row['total_disbursed'];
+                                 $po_remaining_total += ($row['po_total']-$row['total_disbursed']);
+                              ?>
+                        </TD>
+                        <TD>
+                         	<a href="<?php echo $BASE_DIR ?>/invoices/invoices_view.php?invoice_id=<?php echo $row['invoice_id']?>&ACTION=VIEW" target="_blank"><?php echo $row['invoice_id']?>
+                        </TD>
+                        <TD class="col_right">
+                              <?php echo $row['invoice_total'];
+                              $invoice_po_total +=  $row['invoice_total'] ?>
+                        </TD>
+                        <TD>
+                            <form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_view.php" target="_blank" METHOD=POST>
+                                <input type=SUBMIT name="ACTION" value="VIEW" >
+                                <input type=hidden name="pr_id" value=<?php echo $row['pr_id']?>>
+                            </form>    
+                        </TD>
+                        <TD>
+                            <form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_items.php" target="_blank" METHOD=POST>
+                                <input type=SUBMIT name="ACTION" value="PRINT" >
+                                <input type=hidden name="po_id" value=<?php echo $row['po_id']?>>
+                            </form>    
+                        </TD>
+                        
+                        
+                    </TR>
+                    
+                    <?php
+                }
+            ?>  
+                 <TR>
+                        <TD>
+                              
+                        </TD>
+                        <TD>
+                             
+                        </TD>
+                        <TD>
+                             
+                        </TD>
+                        <TD>
+                              TOTAL
+                        </TD>
+                        <TD class="col_right">
+                        <?php 
+                                 echo $po_total;
+                        ?>
+                        </TD>
+                        <TD class="col_right">
+                        <?php 
+                                 echo $po_remit_total;
+                        ?>
+                        </TD>
+                        <TD class="col_right">
+                        <?php 
+                                 echo $po_remaining_total;
+                        ?>
+                        </TD>
+                        <TD>
+                             
+                        </TD>
+                        <TD class="col_right">
+                        <?php 
+                                 echo $invoice_po_total;
+                        ?>
+                        </TD>
+                        
+                </TR>
+            </table>
+        </div>    
+   </div>    
+    <div class="portlet2">
+        <div class="divheader">Disbursements</div>
+        <div class="row" >
+            <table>
+                    <TR>
+                        <TD>
+                             Disbursement#
+                        </TD>
+                        <TD>
+                              Date
+                        </TD>
+                        <TD>
+                              Check No
+                        </TD>
+                        <TD>
+                              Comment
+                        </TD>
+                        <TD>
+                             Total Amount
+                        </TD>
+                        <TD>
+                              Total Applied
+                        </TD>
+                        <TD>
+                              Total Remaining
+                        </TD>
+                        <TD>
+                             Clearing
+                        </TD>
+                    </TR>
+                <?php
+$disburse_total = 0;
+$applied_disburse_total = 0;
+$clearing_total = 0;
+$remaining_disburse_total = 0;
+
+                foreach($disbursements as $row)
+                {
+                    ?>
+                    <TR>
+                        <TD>
+                              <?php echo $row['cd_no'] ?></a>
+                        </TD>
+                        <TD>
+                              <?php echo $row['cd_date'] ?>
+                        </TD>
+                        <TD>
+                              <?php echo $row['checkno'] ?>
+                        </TD>
+                        <TD>
+                              <?php echo $row['comment'] ?>
+                        </TD>
+                        <TD class="col_right">
+                              <?php echo $row['total_amount'];
+                              $disburse_total += $row['total_amount']; ?>
+                        </TD>
+                        <TD class="col_right">
+                              <?php echo $row['total_applied'];
+                              $applied_disburse_total += $row['total_applied']; ?>
+                        </TD>
+                        <TD class="col_right">
+                              <?php echo $row['total_amount']-$row['total_applied'];
+                                 $remaining_disburse_total += ($row['total_amount']-$row['total_applied']);
+                              ?>
+                        </TD>
+                        <TD class="col_right">
+                        <?php 
+                        if($row['credit_or_clearing'] == 1)
+                        {
+                              echo $row['total_amount'];
+                              $clearing_total += $row['total_amount'];
+                        }
+                        else
+                        {
+                            echo "0.00";    
+                        }
+                        ?>
+                              
+                        </TD>
+                        <TD>
+                            <form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_edit_disbursement.php" target="_blank" METHOD=POST>
+                                <input type=SUBMIT name="ACTION" value="EDIT" >
+                                <input type=hidden name="cd_no" value=<?php echo $row['cd_no']?>>
+                            </form>
+                        </TD>
+                            <?php  
+                            if($row['total_amount'] != $row['total_applied'])
+                            {
+                            ?>
+                            <TD>
+                        	<form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_disbursement_advice.php"  target="_blank"  method=POST>
+                          	<input type="HIDDEN"  name="cd_no" value="<?php echo $row['cd_no'] ?>" >
+                          	<input type="SUBMIT"  name="ACTION" value="Apply Disbursement" >
+                          	<input type="HIDDEN"  name="payable_gl_account" value="<?php echo $row['account_id'] ?>" >
+           					</form>
+           					</TD>
+                        	
+           					<?php 
+                            }
+           					?>
+                    </TR>
+                    
+                    <?php
+                }
+            ?>  
+                 <TR>
+                        <TD>
+                              
+                        </TD>
+                        <TD>
+                             
+                        </TD>
+                        <TD>
+                             
+                        </TD>
+                        <TD>
+                              TOTAL
+                        </TD>
+                        <TD class="col_right">
+                        <?php 
+                                 echo $disburse_total;
+                        ?>
+                        </TD>
+                        <TD class="col_right">
+                        <?php 
+                                 echo $applied_disburse_total;
+                        ?>
+                        </TD>
+                        <TD class="col_right">
+                        <?php 
+                                 echo $remaining_disburse_total;
+                        ?>
+                        </TD>
+                        <TD class="col_right">
+                        <?php 
+                                 echo $clearing_total;
+                        ?>
+                        </TD>
+                        
+                        
+                </TR>
+            </table>
+        </div>    
+   </div>    
+    <?php 
+}
+?>
+</div>

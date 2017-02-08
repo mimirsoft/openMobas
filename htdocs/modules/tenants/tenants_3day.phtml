@@ -1,0 +1,58 @@
+<?php
+include("../../../framework/theme.css");
+include("tenants_3day.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+?>
+
+
+<div class="module_container">
+    <div class="portlet">
+        <div class="divheader"><a href="<?php echo $BASE_DIR ?>/tenants/tenants_3dayfillin.php" >FILL-IN NOTICE</a></div>
+    </div>
+    <div class="portlet2">
+        <div class="divheader">ACCOUNTS OUTSTANDING</div>
+        <table>
+        <tr>
+        <th>Tenants
+        </th>
+        <th>Amount
+        </th>
+        </tr>
+ 
+    
+        <?php
+    foreach($TenantsLines as $Tenants)
+    {
+        ?>
+        <form action="<?php echo $BASE_DIR ?>/tenants/tenants_3dayprep.php" target="_blank" method=POST>
+        <tr>
+        <td><?php
+                if(is_array($Tenants["tenant_contacts"]))
+                {
+                    foreach ($Tenants["tenant_contacts"] as $row)
+                    {
+                            echo "<a href=\"".$BASE_DIR."/contacts/contacts_edit.php?contacts_id=".$row['contacts_id']."\" >".$row['firstname'].", ".$row['lastname']."</a><BR />";
+                    }
+                }
+                ?>
+        </td>
+        <td>
+        <?php echo $Tenants["receivable_invoices_total"]; ?>
+        </td>
+        <td>
+        <input type="submit"  name="ACTION"  value="Print 3 Day Notice">
+                <input type="hidden"  name="tenant_id" value="<?php echo $Tenants["tenant_id"]; ?>">
+        </td>
+        </tr>
+        </form>
+        <?php
+    }	
+    ?>
+        </table>
+        <div class="row">
+            <span>
+            <input type="SUBMIT"  name="ACTION"  value="MAKE 3 DAY NOTICES">
+            </span>
+        </div>    
+    </div>
+</div>

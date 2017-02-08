@@ -1,0 +1,151 @@
+<? 
+require_once("../../../framework/theme.css");
+require_once("casesystem.css");
+?>
+<script language="JavaScript"
+
+type="text/javascript">
+var xmlHttp;
+var woid ="<? echo $woinfo['wo_id'] ?>"
+        
+
+function createXMLHttpRequest() {
+  try {
+    xmlHttp = new XMLHttpRequest();
+  } catch (trymicrosoft) {
+    try {
+      xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (othermicrosoft) {
+      try {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (failed) {
+        xmlHttp = false;
+      }
+    }
+  }
+
+  if (!xmlHttp)
+    alert("Error initializing XMLHttpRequest!");
+}
+
+function add_update(id) {
+    createXMLHttpRequest();
+    var title =  document.getElementById("wo_title["+id+"]").value;
+    var entry = document.getElementById("woentry_txt["+id+"]").value;
+    var whoAssigned =   document.getElementById("whoassigned_id["+id+"]").value;
+    var queryString = "ACTION=add_update&wo_id=" + id + "&wo_title=" + title + "&woentry_txt=" + encodeURIComponent(entry)
+        + "&whoassigned_id=" +whoAssigned;
+                
+    xmlHttp.open("POST", "../workorder/workorder_save.php", true);
+    xmlHttp.onreadystatechange = handleStateChange;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    
+}
+function close_case(id) {
+    createXMLHttpRequest();
+    var title =  document.getElementById("wo_title["+id+"]").value;
+    var entry = document.getElementById("woentry_txt["+id+"]").value;
+    var whoAssigned =   document.getElementById("whoassigned_id["+id+"]").value;
+    var queryString = "ACTION=close_case&wo_id=" + id + "&wo_title=" + title + "&woentry_txt=" + encodeURIComponent(entry)
+        + "&whoassigned_id=" +whoAssigned;
+                
+    xmlHttp.open("POST", "../workorder/workorder_save.php", true);
+    xmlHttp.onreadystatechange = handleStateChange;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    
+}
+function handleStateChange() {
+     if (xmlHttp.readyState == 4) {
+       if (xmlHttp.status == 200)
+       {
+            var xmlDoc = xmlHttp.responseXML;
+            if(xmlDoc.getElementsByTagName("transaction").length > 0)
+            {
+                var transaction_status = xmlDoc.getElementsByTagName("transaction")[0].childNodes[0].nodeValue;
+                if(transaction_status == "SAVED")
+                { 
+                    draw_table();
+                }
+            }    
+            if(xmlDoc.getElementsByTagName("login").length > 0)
+            {
+                var login_status = xmlDoc.getElementsByTagName("login")[0].childNodes[0].nodeValue;
+                if(login_status == "FAILED")
+                {
+                    
+                    loginwindow = window.open('../interface/login_popup.html', 'Login', 'height=100,width=300');
+                }
+            }
+               
+       }
+       else if (xmlHttp.status == 404)
+         alert("Request URL does not exist");
+       else
+         alert("Error: status code is " + xmlHttp.status);
+      }
+}
+function draw_table() {
+         window.location = '<?php echo $_SERVER['REQUEST_URI']."?".$_SERVER['QUERY_STRING']?>';
+}
+
+</script>
+
+
+<div class="portlet3">
+    <div class="divheader">WORK ORDER</div>
+    <div class="row">
+        <span class="col2">Title:</span>
+        <span class="col3"><span class="bold"><? echo $woinfo['wo_title'] ?></span></span>
+    </div>    
+    <?
+    if(is_array($woentrys))
+    {
+        foreach($woentrys as $row)
+        {
+            ?>
+    <div class="row">
+        <span class="col2">
+         	<span class="bold">   <? echo $userArray[$row['user_id']] ?>   </span>
+         	<BR /><? echo $row['woentry_date'] ?>
+         </span>
+     
+        <span class="col3">
+            <span class="shown">
+                <? echo $row['woentry_txt'] ?><HR></span>
+        </span>
+     <HR />
+    </div>
+            <?
+        }
+    }
+    ?>
+</div>
+<div class="portlet3">
+    <div class="divheader">Update</div>
+    <div class="row">
+        <span class="label">Title:</span>
+        <span class="bold"><INPUT type=TEXT name="wo_title" id="wo_title[<? echo $woinfo['wo_id'] ?>]" value="<? echo $woinfo['wo_title'] ?>"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Comments:</span>
+        <span class="formw"><TEXTAREA name="woentry_txt" id="woentry_txt[<? echo $woinfo['wo_id'] ?>]" rows="10" cols="63"></TEXTAREA></span>
+    </div>    
+    <div class="row">
+        <span class="label">Assign To:</span>
+        <span class="formw"><SELECT  SIZE="1" NAME="whoassigned_id" id="whoassigned_id[<? echo $woinfo['wo_id'] ?>]" >
+        <? foreach($users as $row)
+        {	
+            ?><OPTION VALUE="<? echo $row['user_id'] ?>" <? if($row['user_id'] == $woinfo['whoassigned_id']){echo " SELECTED";}?> ><? echo $row['username'] ?></OPTION><?
+        }
+        ?>
+        </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label"><input type="BUTTON"  name="ACTION"  value="Close Case" onclick="close_case(<? echo $woinfo['wo_id'] ?>)"></span>
+        <span class="formw"><input type="BUTTON"  name="ACTION"  value="Add Update" onclick="add_update(<? echo $woinfo['wo_id'] ?>)">
+        </span>
+    </div>    
+</div>    

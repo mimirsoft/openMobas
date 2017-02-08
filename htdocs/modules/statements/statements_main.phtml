@@ -1,0 +1,185 @@
+<?php
+include("../../../framework/theme.css");
+include("statements_main.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<script language="JavaScript"
+
+type="text/javascript">
+
+function createXMLHttpRequest() {
+  try {
+    xmlHttp = new XMLHttpRequest();
+  } catch (trymicrosoft) {
+    try {
+      xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (othermicrosoft) {
+      try {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (failed) {
+        xmlHttp = false;
+      }
+    }
+  }
+
+  if (!xmlHttp)
+    alert("Error initializing XMLHttpRequest!");
+}
+
+function form_extender(formElement) {
+    createXMLHttpRequest();
+    form_Name = formElement.getAttribute("name");
+    var queryString = "ACTION="+form_Name;
+    form_Name = formElement.getAttribute("name");
+    form_Name = formElement.getAttribute("name");
+    form_Value = formElement.value;
+    queryString += "&VALUE="+form_Value;
+    xmlHttp.open("POST", "statements_request.php", true);
+    xmlHttp.onreadystatechange = handleStateChange;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+}
+
+function handleStateChange() {
+     if (xmlHttp.readyState == 4) {
+       if (xmlHttp.status == 200)
+       {
+            var xmlDoc = xmlHttp.responseXML;
+            if(xmlDoc.getElementsByTagName("removerow").length > 0)
+            {
+                var rowname = xmlDoc.getElementsByTagName("removerow")[0].childNodes[0].nodeValue;
+                thisrow = document.getElementById(rowname);
+                if(thisrow != null)
+                {
+                    while(thisrow.hasChildNodes())
+                    {
+                        thisrow.removeChild(thisrow.lastChild)
+                    }
+                    thisrow.parentNode.removeChild(thisrow);
+                }
+            }
+            if(xmlDoc.getElementsByTagName("addrow").length > 0)
+            {
+                var rowname = xmlDoc.getElementsByTagName("rowname")[0].childNodes[0].nodeValue;
+                var rowformname = xmlDoc.getElementsByTagName("rowformname")[0].childNodes[0].nodeValue;
+                var previousrow = xmlDoc.getElementsByTagName("previousrow")[0].childNodes[0].nodeValue;
+                var label = xmlDoc.getElementsByTagName("label")[0].childNodes[0].nodeValue;
+                thisrow = document.getElementById(previousrow);
+                newdiv = document.createElement("div");
+                newdiv.setAttribute("id", rowname);
+                newdiv.setAttribute("class", "row");
+                newspan = document.createElement("span");
+                newspan.innerHTML = label;
+                newspan.setAttribute("class", "label");
+                newdiv.appendChild(newspan);
+                newspan = document.createElement("span");
+                newspan.setAttribute("class", "formw");
+                
+                newSelect = document.createElement("select");
+                newSelect.setAttribute("name", rowformname);
+                newSelect.setAttribute("id", rowformname);
+                newSelect.setAttribute("onchange", "form_extender(this)");
+                for(var i = 0; i < xmlDoc.getElementsByTagName("id").length; i++)
+                {
+                    newoption  = document.createElement("option");
+                    newoption.setAttribute("value", xmlDoc.getElementsByTagName("id")[i].childNodes[0].nodeValue);
+                    newoption.innerHTML = xmlDoc.getElementsByTagName("name")[i].childNodes[0].nodeValue;
+                    newSelect.appendChild(newoption);
+                }
+                newspan.appendChild(newSelect);
+                newdiv.appendChild(newspan);
+                thisrow.parentNode.insertBefore(newdiv, thisrow.nextSibling);
+                
+            }
+       }
+       else if (xmlHttp.status == 404)
+         alert("Request URL does not exist");
+       else
+         alert("Error: status code is " + xmlHttp.status);
+      }
+}
+
+
+</script>
+
+<div class="portlet">
+ <a href="<?php echo $MODULE_NAME?>_main.php?VIEWALL=Y">View All</A>
+    <form action="<?php echo $BASE_DIR ?>/statements/statements_render.php"  target="_blank" method=POST>
+        <div class="divheader">Enter Statement Info</div>
+        <div class="row">
+            <span class="label">Statement Type:</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="statement_id" ID="statement_id">
+                <?php
+                foreach($statement_list AS $row)
+                {
+                    echo "<OPTION value=\"".$row['statement_id']."\">".$row['statement_name']."</OPTION>\n";
+                }
+                ?>
+                </SELECT>
+            </span>
+        </div>    
+        <?php
+        if(Rbac_User::IsAllowedTo($USER->GetUserID(), "address_statement", "statements_module"))
+        {
+        ?>
+        <div class="row" id="addressed_row">
+            <span class="label">Addressed:</span>
+            <span class="formw">
+                <SELECT  SIZE="1" NAME="addressed" ID="addressed" onchange="form_extender(this)">
+                <OPTION value="N">NO</OPTION>
+                <OPTION value="Y">YES</OPTION>
+                </SELECT>
+            </span>
+        </div>    
+        <?php
+        }
+        ?>
+        <div class="row">
+            <span class="label">Accounts:</span>
+            <span class="formw">
+                <SELECT NAME="account_array[]" multiple>
+                <?php
+                foreach($account_array AS $key => $value)
+                {
+                    echo "<OPTION value=\"".$key."\"";
+                    if($first_only)
+                    {
+                        $first_only = false;
+                        echo " selected";
+                    }
+                    echo ">".$value."</OPTION>\n";
+                }
+                ?>
+                </SELECT>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Starting Date(YYYY-MM-DD):</span>
+            <span class="formw">
+                <?php
+                Framework::date_selectors($startdate_year, $startdate_month, $startdate_day, "start", "")
+                ?>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Ending Date(YYYY-MM-DD):</span>
+            <span class="formw">
+                <?php
+                Framework::date_selectors($enddate_year, $enddate_month, $enddate_day, "end", "")
+                ?>
+            </span>
+        </div>    
+        <div class="row" id="config">
+        </div>    
+        <div class="row">
+            <span class="label">
+                <input type="SUBMIT"  name="ACTION"  value="Make Statement">
+            </span>
+            <span class="label">
+                <input type="SUBMIT"  name="ACTION"  value="Make PDF">
+            </span>
+        </div>    
+    </form>
+</div>

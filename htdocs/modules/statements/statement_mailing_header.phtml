@@ -1,0 +1,31 @@
+    <div style="position: static; height: 85mm; ">
+    <?php if($statement['company_header'] == 'Y')
+    {
+        ?>
+        <div class="block1">
+        <p class="coname"><?php echo $SYS_INFO['COMPANY_NAME'] ?></p>
+        <p class="coaddy"><?php echo $SYS_INFO['COMPANY_MAILADDRESS1'] ?></p>
+        <p class="coaddy2"><?php echo $SYS_INFO['COMPANY_MAILADDRESS2'] ?></p>
+        <p class="cophone"><?php echo $SYS_INFO['COMPANY_PHONE'] ?></p>
+        <p class="maildate"><?php echo $statement['date'] ?></p>
+        </div>
+        <?php
+    }
+    if($statement['mailing_header'] == 'Y')
+    {
+        if($statement['mh']['city'] != ""){$statement['mh']['city'] .= ",";}
+        ?>
+        <div class="block3">
+        <p class="mailaddress1"><?php echo $statement['mh']['firstname']." ".$statement['mh']['lastname'] ?></p>
+        <?php if($statement['mh']['careof'] != "")
+        {
+            ?><p class="mailaddress1"><?php echo $statement['mh']['careof'] ?></p><?php
+        }
+        ?>
+        <p class="mailaddress2"><?php echo $statement['mh']['street'] ?></p>
+        <p class="mailaddress3"><?php echo $statement['mh']['city']." ".$statement['mh']['state']." ".$statement['mh']['zip'] ?></p>
+        </div>
+    <?php
+    }
+    ?>
+    </div>

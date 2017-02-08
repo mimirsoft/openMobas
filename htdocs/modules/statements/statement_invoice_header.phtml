@@ -1,0 +1,44 @@
+    <div style="position: static; height: 115mm; ">
+        <div class="invoice_block1">
+        <p ><?php echo $statement['date'] ?></p>
+        </div>
+        <div class="invoice_block2">
+        <p ><?php echo $statement['amount_due'] ?></p>
+        </div>
+        <div class="invoice_block3">
+<?php
+    if($statement['mailing_header'] == 'Y')
+    {
+        if($statement['mh']['city'] != ""){$statement['mh']['city'] .= ",";}
+        ?>
+        <p><?php echo $statement['mh']['firstname']." ".$statement['mh']['lastname'] ?></p>
+        <?php if($statement['mh']['careof'] != "")
+        {
+            ?><p><?php echo $statement['mh']['careof'] ?></p><?php
+        }
+        ?>
+        <p"><?php echo $statement['mh']['street'] ?></p>
+        <p><?php echo $statement['mh']['city']." ".$statement['mh']['state']." ".$statement['mh']['zip'] ?></p>
+    <?php
+    }
+?>
+        </div>
+        <div class="invoice_block4">
+        <p ><?php echo $SYS_INFO['COMPANY_NAME'] ?></p>
+        <p ><?php echo $SYS_INFO['COMPANY_MAILADDRESS1'] ?></p>
+        <p ><?php echo $SYS_INFO['COMPANY_MAILADDRESS2'] ?></p>
+        </div>
+        <div class="invoice_block5">
+        <p class="yardi_reg_indent"><?php echo $statement['account_no'] ?></p>
+        </div>
+        <div class="invoice_block6">
+        <p><?php echo $SYS_INFO['COMPANY_NAME'] ?></p>
+        <p><?php echo $SYS_INFO['COMPANY_MAILADDRESS1'] ?></p>
+        <p><?php echo $SYS_INFO['COMPANY_MAILADDRESS2'] ?></p>
+        <p><?php echo $SYS_INFO['COMPANY_PHONE'] ?></p>
+        <p><?php echo $SYS_INFO['COMPANY_GENERALEMAIL'] ?></p>
+        </div>
+        <div class="invoice_block7">
+        <p><?php echo $statement['account_memo'] ?></p>
+        </div>
+    </div>

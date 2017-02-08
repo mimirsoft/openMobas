@@ -1,0 +1,61 @@
+<?php
+include("../../../framework/theme.css");
+include("invoices_cash_receipts.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+
+<div class="portlet">
+    <div class="divheader">Write Check</div>
+<form id='disburse_form' action="<?php echo $BASE_DIR ?>/invoices/invoices_edit_remittance.php" method="POST">
+    <div class="row"><span class="label">Date of Check:</span> 
+        <span class="formw"> 
+        <?php 
+        Framework::date_selectors(substr($remit_info['remit_date'], 0 ,4), substr($remit_info['remit_date'], 5 ,2), substr($remit_info['remit_date'], 8 ,2), "cd_", "")
+        ?>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">Check No:</span> 
+        <span class="formw"> <input type="TEXT" name="checkno" size="5" value="<?php  echo $remit_info['checkno'] ?>"> </span>
+    </div>
+    <div class="row">
+        <span class="label">Comment:</span> 
+        <span class="formw"><input type="TEXT" name="comment" size="25" value="<?php  echo $remit_info['comment'] ?>"></span> 
+    </div>
+    <div class="row">
+        <span class="label">Amount:</span> 
+        <span class="formw" id='check_total_display'><?php  echo $remit_info['total_received'] ?></span> 
+    </div>
+    <div class="row">
+        <span class="label">Amount Applied:</span> 
+        <span class="formw" id='check_total_display'><?php  echo $remit_info['total_applied'] ?></span> 
+    </div>
+    <div class="row">
+        <span class="label">Credit/Clearing:</span> 
+        <span class="formw" >
+            <input type="checkbox" name="credit_or_clearing" id="credit_or_clearing"  
+            value=1 <?php if ($remit_info['credit_or_clearing'] == 1)echo "checked" ?> >
+        </span> 
+    </div>
+    <div class="row">
+        <span class="label"></span> 
+        <span class="formw">
+            <input type="SUBMIT" name="ACTION" size="5" value="Update">
+            <input type="HIDDEN" name="remit_no" value="<?php echo $remit_info['remit_no'] ?>"> 
+        </span>
+            <input type="SUBMIT" name="ACTION" size="5" value="Delete">
+        
+    </div>
+        <div class="row">
+        <span class="label"></span> 
+        <span class="formw">
+            <input type="SUBMIT" name="ACTION" size="5" value="Unapply Remittance">
+        </span>
+        
+    </div>
+    
+
+</form>
+
+</div>

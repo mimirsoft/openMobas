@@ -1,0 +1,81 @@
+<?
+include("../../../framework/theme.css");
+include("transactions_details.css");
+?>
+
+<div class="portlet">
+    <div class="divheader">Transaction Info</div>
+<table>
+        <tr> 
+            <td ><a href="#" onclick="ts_resortTable(this);return false;">Date:<span class="sortarrow">&nbsp;&nbsp;&uarr;</span></a></td>
+            <td><a href="#" onclick="ts_resortTable(this);return false;">Check Num:<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></a></td>
+            <td ><a href="#" onclick="ts_resortTable(this);return false;">Comment:<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></a></td>
+            <td ><a href="#" onclick="ts_resortTable(this);return false;">Debit Account:<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></a>
+                <HR/><a href="#" onclick="ts_resortTable(this);return false;">Credit Account:<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></a></td>
+            <td ><a href="#" onclick="ts_resortTable(this);return false;">R:<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></a></td>
+            <td><a href="#" onclick="ts_resortTable(this);return false;">Amount:<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></a></td>
+        </tr>
+        <tr>
+            <td>
+                <? echo $row['transaction_date'] ?>
+            </td>
+            <td align="right">
+                <? echo $row['transaction_checkno']; ?>
+            </td>
+            <td>
+                <? echo $row['transaction_comment']; ?>
+            </td>
+            <td>
+                <? echo $all_accounts[$row['transaction_accountW']]    ?>
+            <HR >
+               <? echo $all_accounts[$row['transaction_accountD']]    ?>
+            </td>
+            <td align="right">
+                <? echo $row['transaction_reconcile']; ?>
+            </td>
+            <td align="right">
+                <? echo $row['transaction_amount']; ?>
+            </td>
+        </tr>    
+</table>
+</div>
+<div class="portlet">
+    <div class="divheader">Upload Files</div>
+    <form action="transactions_details.php" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <span class="formw"><input type="file" name="userfile" /> </span>
+    </div>    
+    <div class="row">
+        <span class="formw">
+            <input type="HIDDEN"  name="transaction_id"  value="<? echo $transaction_id ?>" />
+            <input type="submit"  name="ACTION"  value="Upload Files" />
+        </span>
+    </div>    
+    </form>
+</div>
+<div class="portlet4">
+    <div class="divheader">Property Files</div>
+<?
+
+if(is_array($files))
+{
+    foreach($files as $row)
+    {
+        ?>
+        <div class="float">
+        <a href="<? echo $BASE_DIR ?>/interface/download_file.php?file=<?echo $row['file_id'] ?>&permission=transaction">
+            <img src="../../thumbnails/<? echo $DB_SETTINGS['dbname']?>/<?echo $row['file_id'] ?>?permission=transaction" alt="<?echo $row['fileName'] ?>">
+        </a>
+        <form action="<? echo $BASE_DIR ?>/properties/properties_edit.php" method="post">
+            <textarea name="fileDesc"><?echo $row['fileDesc'] ?></textarea><BR />
+            <input type="HIDDEN"  name="file_id"  value="<? echo $row['file_id'] ?>" >
+            <input type="HIDDEN"  name="property_id"  value="<? echo $property_id ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Update Description">
+            <input type="SUBMIT"  name="ACTION"  value="Delete File">
+        </form>
+        </div>    
+       <?
+    }
+}
+?>
+</div>

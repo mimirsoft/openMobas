@@ -1,0 +1,128 @@
+<?
+include("../../../framework/theme.css");
+include("invoices_cash_receipts.css");
+framework::navbar();
+framework::warning($WARNING);
+?>
+
+<script language="JavaScript" type="text/javascript">
+var remaining_invoice = <?php echo $invoice_info['invoice_total']-$invoice_info['total_remitted'];?> ;
+
+var po_remainder = new Array();
+<?
+foreach($unpaid_purchases as $row)
+{
+	?>
+	po_remainder[<?php echo $row['po_id']?>] = <?php echo $row['po_total']-$row['total_disbursed']; ?>;
+	<?php 
+}
+?>
+
+function verify_clear_amount(el, po_id) {
+    el.value = parseFloat(el.value);
+	if(el.value > remaining_invoice)
+	{
+		el.value = remaining_invoice;
+	}
+	if(el.value > po_remainder[po_id])
+	{
+		el.value = po_remainder[po_id];
+	}
+		
+}
+
+
+</script>
+
+
+<div class="portlet">
+<div class="divheader">Invoice</div>
+<div class="row" id="search_results">
+<table>
+	<TR>
+		<TD>Invoice #</TD>
+		<TD>Date</TD>
+		<TD>Description</TD>
+		<TD>Customer Name</TD>
+		<TD>Invoice Total</TD>
+		<TD>Amount Applied</TD>
+		<TD>Amount Remaining</TD>
+	</TR>
+	<TR>
+		<TD><? echo $invoice_info['invoice_id'] ?></TD>
+		<TD><? echo $invoice_info['date_charged'] ?></TD>
+		<TD><? echo $invoice_info['invoice_description'] ?></TD>
+		<TD><? echo $invoice_info['cv_name'] ?></TD>
+		<TD align=right><? echo $invoice_info['invoice_total'] ?></TD>
+		<TD align=right><? echo $invoice_info['total_remitted'];
+		$remaining = $invoice_info['invoice_total']-$invoice_info['total_remitted']; ?>
+		</TD>
+		<TD align=right><? echo number_format($remaining, 2); ?></TD>
+	</TR>
+	</form>
+
+</table>
+</div>
+</div>
+
+<div class="portlet">
+<div class="divheader">Outstanding Purchase Orders</div>
+<div class="row">
+<table>
+	<TR>
+		<TD>PO #</TD>
+		<TD>Date Charged</TD>
+		<TD>Customer Name</TD>
+		<TD>Description</TD>
+		<TD>PO Total</TD>
+		<TD>PO Disbursed</TD>
+		<TD>Remaining Balance</TD>
+		<TD>Amount to Clear</TD>
+		<TD>Clearing Account</TD>
+	</TR>
+	<?
+	foreach($unpaid_purchases as $row)
+	{
+		$remaining_po = $row['po_total']-$row['total_disbursed'];
+		?>
+	<form action="<? echo $BASE_DIR ?>/invoices/invoices_clearing.php"
+		method=POST>
+	
+	
+	<TR>
+		<TD><? echo $row['po_id'] ?></TD>
+		<TD><? echo $row['po_date'] ?></TD>
+		<TD><? echo $row['cv_name'] ?></TD>
+		<TD><? echo $row['purchase_description'] ?></TD>
+		<TD align=right><? echo $row['po_total'] ?></TD>
+		<TD align=right><? echo number_format($row['total_disbursed'], 2); ?></TD>
+		<TD align=right><? echo number_format($remaining_po, 2); ?></TD>
+		<TD><input type=text id="clearing_amount" name="clearing_amount"
+			value="<? if($remaining_po < $remaining){ echo $remaining_po;}else{ echo $remaining ;}?>" onchange="verify_clear_amount(this, '<? echo $row['po_id']?>')" />
+		</TD>
+		<TD><Select id="clearing_account" name="clearing_account">
+		<?  foreach($clearing_accounts as $c_account)
+		{
+			?>
+			<OPTION value="<? echo $c_account['account_id'] ?>"
+			<? if($c_account['default_account'] == 1){echo "SELECTED";} ?>><? echo $c_account['account_fullname'] ?></OPTION>
+			<?
+		}
+			
+		?>
+		</Select></TD>
+		<TD><input type="SUBMIT" name="ACTION" value="Clear Against PO"> <input
+			type=hidden name="invoice_id"
+			value=<? echo $invoice_info['invoice_id']?>> <input type=hidden
+			name="po_id" value=<? echo $row['po_id']?>></TD>
+
+	</TR>
+	</form>
+	<?
+	}
+	?>
+</table>
+</div>
+</div>
+
+

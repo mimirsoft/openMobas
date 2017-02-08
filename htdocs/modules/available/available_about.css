@@ -1,0 +1,20 @@
+<style type="text/css">
+    .portlet {
+        width: auto;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+    
+div.row {
+  clear: both;
+  padding-top: .5em;
+  }
+
+
+ 
+</style>
+

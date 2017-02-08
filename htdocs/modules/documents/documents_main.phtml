@@ -1,0 +1,223 @@
+<?
+include("../../../framework/theme.css");
+include("documents_main.css");
+framework::navbar();
+
+if(Rbac_User::IsAllowedTo($USER->GetUserID(), "upload_documents", "documents_module"))
+{
+?>
+<script language="JavaScript" type="text/javascript">
+function remove_tag(tag_id, doc_id) {
+      var myForm = document.createElement("form");
+      myForm.method="post" ;
+      myForm.action = '<? echo $_SERVER['PHP_SELF']?>' ;
+      var myInput = document.createElement("input") ;
+      myInput.setAttribute("name", 'ACTION') ;
+      myInput.setAttribute("value", 'Remove Tag');
+      myForm.appendChild(myInput) ;
+      var myInput = document.createElement("input") ;
+      myInput.setAttribute("name", 'document_id') ;
+      myInput.setAttribute("value", doc_id);
+      myForm.appendChild(myInput) ;
+      var myInput = document.createElement("input") ;
+      myInput.setAttribute("name", 'document_cat') ;
+      myInput.setAttribute("value", tag_id);
+      myForm.appendChild(myInput) ;
+      document.body.appendChild(myForm) ;
+      myForm.submit() ;
+      document.body.removeChild(myForm) ;
+}
+
+</script>
+<div class="portlet">
+    <div class="divheader">Upload Files</div>
+    <form action="documents_main.php" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <span class="label">Document Name:</span>
+        <span class="formw">
+            <input type="text" name="document_name[]" /> </span>
+    </div>    
+    <div class="row">
+        <span class="label">File:</span>
+        <span class="formw">
+            <input type="file" name="userfile[]" /> </span>
+    </div>    
+    <div class="row">
+        <span class="label">Document Name:</span>
+        <span class="formw">
+            <input type="text" name="document_name[]" /> </span>
+    </div>    
+    <div class="row">
+        <span class="label">File:</span>
+        <span class="formw">
+            <input type="file" name="userfile[]" /> </span>
+    </div>    
+    <div class="row">
+        <span class="label">Document Name:</span>
+        <span class="formw">
+            <input type="text" name="document_name[]" /> </span>
+    </div>    
+    <div class="row">
+        <span class="label">File:</span>
+        <span class="formw">
+            <input type="file" name="userfile[]" /> </span>
+    </div>    
+    <div class="row">
+        <span class="label">Document Name:</span>
+        <span class="formw">
+            <input type="text" name="document_name[]" /> </span>
+    </div>    
+    <div class="row">
+        <span class="label">File:</span>
+        <span class="formw">
+            <input type="file" name="userfile[]" /> </span>
+    </div>    
+    <div class="row">
+        <span class="formw">
+            <input type="HIDDEN"  name="property_id"  value="<? echo $property_id ?>" />
+            <input type="submit"  name="ACTION"  value="Upload Files" />
+        </span>
+    </div>    
+    </form>
+</div>
+
+<?
+}
+
+if(Rbac_User::IsAllowedTo($USER->GetUserID(), "edit_documents", "documents_module"))
+{
+?>
+
+
+    <div class="portlet">
+        <div class="divheader">Documents</div>
+        <form action="<? echo $BASE_DIR ?>/documents/documents_main.php"  method=POST>
+        <div class="row">
+            <span class="label">Tag:</span>
+            <span class="forml">
+            <SELECT  SIZE="1" NAME="document_cat" >
+                <?
+                foreach($docTypes as $docType)
+                {
+                    ?>
+                    <OPTION value="<? echo $docType['category_id'] ?>"> <? echo $docType['category_name'] ?></OPTION>
+                    <?
+                }	
+                ?>
+                </SELECT>
+                
+                
+            <input type="SUBMIT"  name="ACTION"  value="Add Tag" >
+            <input type="SUBMIT"  name="ACTION"  value="Remove Tags" >
+            <input type="HIDDEN"  name="previous_search"  value="<?php echo $SEARCH; ?>" >
+            </span>
+        </div>
+    <table>
+        <TR>
+            <TD>Link</TD>
+            <TD>Date</TD>
+            <TD>Document Name</TD>
+            <TD>File Name</TD>
+            <TD>Security</TD>
+            <TD>Categories</TD>
+        </TR>
+    <?
+    
+    if(is_array($docs))
+    {
+        foreach($docs as $row)
+        {
+            ?>
+            <TR>
+                <TD>
+                    <input type=checkbox name="document_ids[]" value="<? echo $row['document_id'] ?>" />
+                </TD>
+                <TD><a href="../interface/download_file.php?file=<?echo $row['file_id'] ?>&permission=document"><?echo $row['document_name'] ?></a></TD>
+                <TD> 
+                <?
+                    Framework::date_selectors(substr($row['document_date'], 0 ,4), substr($row['document_date'], 5 ,2), substr($row['document_date'], 8 ,2), "doc", "")
+                    ?>
+                </TD>
+                <TD><input type="text" name="document_name" value="<?echo $row['document_name'] ?>" ></TD>
+                <TD><?echo $row['fileName'] ?></TD>
+                <TD><SELECT name="document_security">
+                <? foreach($DOCUMENT_SECURITY as $security_level )
+                {
+                    ?><OPTION value="<? echo $security_level ?>" <?if($security_level == $row['document_security']){ echo " selected "; } ?> ><? echo $security_level ?></OPTION> 
+                    <?
+                }
+                ?>
+                </SELECT>
+                </TD>
+                <TD>
+                <? $tags = Document::getall_document_tags($row['document_id']);
+                foreach($tags as $tag)
+                {
+                ?>
+					<div class="cvtag"><? echo $tag['category_name']; ?>|<span onclick="remove_tag(<? echo $tag['category_id']; ?>, <? echo $row['document_id'] ?>)"> X&nbsp;</span></div>
+                    <?php 
+                }	
+                
+                ?>
+                </TD>
+                <TD>
+                    <input type="HIDDEN"  name="document_id"  value="<? echo $row['document_id'] ?>" >
+                    <input type="SUBMIT"  name="ACTION"  value="Update Doc Info">
+                    <input type="SUBMIT"  name="ACTION"  value="Delete Document">
+                </TD>
+            </TR>
+        <?
+        }
+    }
+    ?>
+	</table>
+	</form>
+    </div>
+<?
+
+}
+elseif(Rbac_User::IsAllowedTo($USER->GetUserID(), "access_documents", "documents_module"))
+{
+?>
+
+    <div class="portlet">
+        <div class="divheader">Documents</div>
+    <table>
+        <TR>
+            <TD>Link</TD>
+            <TD>Date</TD>
+            <TD>Document Name</TD>
+            <TD>File Name</TD>
+        </TR>
+    <?
+    
+    if(is_array($docs))
+    {
+        foreach($docs as $row)
+        {
+            ?>
+            <form action="<? echo $BASE_DIR ?>/documents/documents_main.php" method="post">
+            <TR>
+                <TD><a href="../interface/download_file.php?file=<?echo $row['file_id'] ?>&permission=document"><?echo $row['document_name'] ?></a></TD>
+                <TD><? echo $row['document_date']; ?>
+                </TD>
+                <TD><?echo $row['document_name'] ?></TD>
+                <TD><?echo $row['fileName'] ?></TD>
+            </TR>
+            </form>
+        <?
+        }
+    }
+    ?>
+    </table>
+    </div>
+
+
+
+
+
+<?
+}
+
+
+?>

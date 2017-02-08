@@ -1,0 +1,184 @@
+<?php
+include("../../../framework/theme.css");
+include("purchasing_cash_disbursements.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+
+if(count($remittance_accounts) > 0)
+{
+?>
+<form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_cash_disbursements.php"  method=POST>
+    <input type="SUBMIT"  name="ACTION"  value="Verify Disbursement Advice" >
+</form>
+
+<div class="portlet">
+    <div class="divheader">Unpaid Purchase Orders</div>
+    <div class="row">
+        <table>
+            <TR>
+                <TD>PO No</TD>
+                <TD>Vendor</TD>
+                <TD>Total</TD>
+                <TD>Remaining Balance</TD>
+            </TR>
+        <?php  foreach($unpaid_purchase as $purchase_order)
+            {
+            ?>
+                <form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_disburse.php" method=POST>
+                <TR>
+                    <TD><?php echo $purchase_order['po_id'] ?></TD>
+                    <TD><a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<?php echo $purchase_order['cv_id'] ?>" target="_blank" method=POST><?php echo $purchase_order['cv_name'] ?></a></TD>
+                    <TD><?php echo $purchase_order['po_total'] ?></TD>
+                    <TD><?php echo number_format($purchase_order['po_total']-$purchase_order['total_disbursed'], 2); ?></TD>
+                    <TD>
+                    <input type=SUBMIT name="ACTION" value="DISBURSE CHECK" >
+                    <input type=hidden name="po_id" value=<?php echo $purchase_order['po_id']?>>
+                    <input type=hidden name="vendor_id" value=<?php echo $purchase_order['vendor_id']?>>
+                </TR>
+                </form>
+            <?php
+            }
+            ?>
+        </table>
+</div>
+ 
+<div class="portlet">
+    <div class="divheader">Unapplied Disbursements</div>
+    <div class="row" id="search_results">
+        <table>
+                <TR>
+                    <TD>
+                         Date Recieved
+                    </TD>
+                    <TD>
+                          Customer Name
+                    </TD>
+                    <TD>
+                          Check No
+                    </TD>
+                    <TD>
+                          Check Amount
+                    </TD>
+                    <TD>
+                          Amount Applied
+                    </TD>
+                </TR>
+<?php
+            foreach($disbursements as $row)
+            {
+                ?>
+                <form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_disbursement_advice.php"  method=POST>
+                <TR>
+                    <TD>
+                          <?php echo $row['cd_date'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['cv_name'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['checkno'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['total_amount'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['total_applied'] ?>
+                    </TD>
+                    <TD>
+                          <input type="HIDDEN"  name="cd_no" value="<?php echo $row['cd_no'] ?>" >
+                          <input type="SUBMIT"  name="ACTION" value="Apply Disbursement" >
+                          <input type="HIDDEN"  name="payable_gl_account" value="<?php echo $row['account_id'] ?>" >
+                    </TD>
+                    
+                </TR>
+                </form>
+                <?php
+            }
+?>	
+        </table>
+    </div>    
+</form>
+</div>
+<div class="portlet">
+    <div class="divheader">Remittances Without GL Entrys</div>
+    <div class="row" id="search_results">
+        <table>
+                <TR>
+                    <TD>
+                         Date Recieved
+                    </TD>
+                    <TD>
+                          Customer Name
+                    </TD>
+                    <TD>
+                          Check No
+                    </TD>
+                    <TD>
+                          Amount Recieved
+                    </TD>
+                    <TD>
+                          Payable GL Account
+                    </TD>
+                    <TD>
+                          Disbursement GL Account
+                    </TD>
+                </TR>
+<?php
+            foreach($disbursements_no_ledger as $row)
+            {
+                $customer_info = CV_Main::get_cv_from_id($row['vendor_id']);
+                ?>
+                <form action="<?php echo $BASE_DIR ?>/purchasing/purchasing_cash_disbursements.php"  method=POST>
+                <TR>
+                    <TD>
+                          <?php echo $row['cd_date'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['cv_name'] ?>
+                    </TD>
+                    <TD>
+                          <?php echo $row['checkno'] ?>
+                    </TD>
+                    <TD>
+                        <?php echo $row['total_amount'];?>
+                    </TD>
+                    <TD>
+                          <?php echo $customer_info['GL_AP_fullname'] ?>
+                    </TD>
+                    <TD>
+                    <SELECT  class="smallsans" SIZE="1" NAME="remittance_deposit" id="remittance_deposit" >
+                    <?php
+                    foreach($remittance_accounts as $remittance_account)
+                    {
+                    ?>
+                    <OPTION value="<?php echo $remittance_account['account_id'];?>" <?php if($remittance_account['default_account']== 1)echo " SELECTED ";?> ><?php echo $remittance_account['account_fullname']?> </OPTION>
+                    
+                    <?php
+                    }
+                    ?>
+                    </SELECT>
+                    </TD>
+                    <TD>
+                          <input type="HIDDEN"  name="cd_no" value="<?php echo $row['cd_no'] ?>" >
+                          <input type="SUBMIT"  name="ACTION" value="Update GL" >
+                    </TD>
+                    <TD>
+                          <input type="SUBMIT"  name="ACTION" value="Delete Disbursement" >
+                    </TD>
+                    
+                </TR>
+                </form>
+                <?php
+            }
+?>	
+        </table>
+    </div>    
+</form>
+</div>
+<?php
+}
+else
+{
+
+?><div class="warning">ERROR:NO REMITTANCE DEPOSIT ACCOUNTS DEFINED!</div><?php
+}

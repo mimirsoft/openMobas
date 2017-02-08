@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><?php  ?></title>
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="seo_pages_main.css" media="screen" >
+</head>
+<body>
+<?php
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/seo_pages/seo_pages_main.php" method=POST>
+    <div class="divheader">Enter SEO Page Info</div>
+    <div class="row">
+        <span class="label">Page Url:</span>
+        <span class="formw"><input type="TEXT"  name="seopage[seo_page_url]"  size=50 value="<?php echo $seo_page['seo_page_url']; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Page Title:</span>
+        <span class="formw"><input type="TEXT"  name="seopage[seo_page_title]"  size=50  value="<?php echo $seo_page['seo_page_title']; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Page Content:</span>
+        <span class="formw"><textarea type="TEXT"  style="width: 35em; height: 30em" name="seopage[seo_page_content]"  ><?php echo $seo_page['seo_page_content']; ?></textarea></span>
+    </div>    
+    <div class="row">
+        <span class="label">Meta Description:</span>
+        <span class="formw"><input type="TEXT"  name="seopage[meta_description]"  size=50 value="<?php echo $seo_page['meta_description']; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Meta Keywords:</span>
+        <span class="formw"><input type="TEXT"  name="seopage[meta_keywords]"  size=50 value="<?php echo $seo_page['meta_keywords']; ?>" ></span>
+    </div>    
+    <div class="row">
+       <span class="label">Save/Update:</span> <span><input type="HIDDEN"  name="seopage[seo_page_id]"  value="<?php echo $seo_page['seo_page_id']; ?>" >
+       <input type="SUBMIT"  name="ACTION"  value="Save" ></span>
+    </div>    
+</form>
+</div>
+<div class="portlet">
+	<div class="divheader">SEO Pages</div>
+<table>
+	<tr>
+		<td>page_url</td>
+    	<td>page_title</td>
+    	<td>page_content</td>
+    	<td>meta_description</td>
+    	<td>meta_keywords</td>
+	</tr>
+<?php 
+foreach($seo_data as $row)
+{
+    ?><tr>
+    	<td><?php echo $row['seo_page_url'] ; ?></td>
+    	<td><?php echo $row['seo_page_title'] ; ?></td>
+    	<td><?php echo $row['seo_page_content'] ; ?></td>
+    	<td><?php echo $row['meta_description'] ; ?></td>
+    	<td><?php echo $row['meta_keywords'] ; ?></td>
+    	<td><form action="<?php echo $BASE_DIR ?>/seo_pages/seo_pages_main.php" method=POST>
+    		<input type="HIDDEN"  name="seo_page_edit"  value="<?php echo $row['seo_page_id']; ?>" >
+       		<input type="SUBMIT"  name="ACTION"  value="Edit" >
+    		<input type="SUBMIT"  name="ACTION"  value="Delete" >
+    		</form></td>
+    </tr>
+    <?php 
+}
+?>
+
+</table>
+</div>

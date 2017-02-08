@@ -1,0 +1,44 @@
+<style type="text/css">
+    .portlet {
+        width: 70em;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+div.row {
+  padding-top: .5em;
+  clear: both;
+  z-index: 1;
+  }
+div.vis_container {
+  visibility:hidden;
+  position: absolute;
+  z-index: 0;
+  }
+
+div.row span.label {
+  float: left;
+  width: 14em;
+  text-align: right;
+  }
+div.row span.right {
+  float: right;
+  width: 100px;
+  text-align: right;
+  }
+div.row span.col1 {
+  float: left;
+  text-align: left;
+  width: 130px;
+  }
+
+div.row span.formw {
+  float: right;
+  width: 56em;
+  text-align: left;
+  } 
+</style>
+

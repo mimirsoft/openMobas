@@ -1,0 +1,230 @@
+<?php 
+
+header("Content-type: text/css"); ?>
+
+
+   .portlet {
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+    }
+   .close_box {
+        float: right;
+        font-weight:bold;
+    }
+
+   .simple_edit_box {
+        font-size:14px;
+        position:absolute;
+        visibility: hidden;
+        z-index: 3;
+        padding: 5px;
+        width: 1220px;
+        background-color:#D6DCE2;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+    }
+   .new_trans {
+        font-size:14px;
+        position:absolute;
+        visibility: hidden;
+        z-index: 3;
+        top: 3em;
+        padding: 5px;
+        width: 1120px;
+        background-color:#D6DCE2;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+    }
+    div.row {
+        clear: both;
+        padding-top: 10px;
+    }
+    input {
+        border:0;
+        margin:0px 0px;
+        padding:0;
+    }
+    select {
+        border:0;
+        margin:0;
+        padding:0;
+    }
+    td {
+        border:0;
+        margin:0;
+        padding:0;
+    }
+    .portlet2 {
+        width:auto;
+        clear:both;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+    }
+   
+    table.fixed {
+        background-color: <? echo $FRAMEWORK_COLORS['background_color'] ?>;
+        table-layout:fixed;
+    }
+    div.edit_box {
+        position:absolute;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+    }
+
+    td {
+        vertical-align: top;
+        font-size:12px;
+        text-align: center;
+    }
+    td div{
+       width:100%;
+       height:100%;
+       overflow:hidden 
+
+    }
+    table.fixed td {
+        vertical-align: top;
+        font-size:12px;
+        height: 1.5em;
+        text-align: center;
+    }
+    table.fixed td.left {
+        vertical-align: top;
+        font-size:12px;
+        text-align: left;
+    }
+    table.fixed td.right {
+        vertical-align: top;
+        font-size:12px;
+        text-align: right;
+    }
+    table.nb {
+    float:left;
+
+    }
+    table.nb td{
+        border-right:0px solid #ccc;
+        border-bottom:0px solid #ccc;
+        font-size:8pt;
+        background:#D6DCE2;
+        vertical-align: top;
+    }
+    table.fixed td.neg {
+        text-align: right;
+    }
+    table.fixed td.black {
+        text-align: right;
+    }
+    table.fixed td.negnb {
+        text-align: right;
+        color: red;
+        border-right:0px solid #ccc;
+        border-bottom:0px solid #ccc;
+    }
+    table.fixed td.blacknb {
+        text-align: right;
+        border-right:0px solid #ccc;
+        border-bottom:0px solid #ccc;
+    }
+    table.fixed td.nb {
+        border-right:0px solid #ccc;
+        border-bottom:0px solid #ccc;
+        width: auto;
+        clear: both;
+        
+    }
+    tr.green td{
+        background-color: #99CC32;    
+    }
+    tr.yellow td{
+        background-color: #DBDB70;    
+    }
+    .nbdate {
+        width: 6.5em;
+        border-right:0px solid #ccc;
+        border-bottom:0px solid #ccc;
+    }
+    .account_title{
+        font-size: 16pt;
+        border-right:0px solid #ccc;
+        border-bottom:0px solid #ccc;
+    }
+    div.CREDIT_LABEL{
+        font-size: 14px;
+        text-align: center;
+        float:right;
+        width: 550px;
+    }
+    div.DEBIT_LABEL{
+        font-size: 14px;
+        text-align: center;
+        float:left;
+        width: 550px;
+    }
+    div.dc_amount{
+        font-size: 14px;
+        text-align: right;
+        float: right;
+    }
+    div.dc_account{
+        font-size: 14px;
+        text-align: left;
+        float: left;
+   }
+    input.dc_account2{
+        text-align: left;
+        font-size: 14px;
+        border: 2px solid black;
+        float:right;
+        color:#050;
+        font-family:'trebuchet ms',helvetica,sans-serif;
+        font-size:small;
+        font-weight:bold;
+   }
+    div.DEBIT_CREDIT_BOX{
+        color: black;
+        float:left;
+        width: 500px;
+        height: 16px;
+        margin: 2px;
+        background-color: #CCCCCC;
+        border-top: 2px solid #035156;
+        border-bottom: 2px solid #035156;
+        border-left: 2px solid #035156;
+        border-right: 2px solid #035156;
+        
+    }
+    div.unbalanced_amount{
+        font-size: 14px;
+        clear: both;
+        text-align: center;
+        width:100%;
+    }
+
+    input.btn{
+
+   border: 2px solid black;
+   color:#050;
+   font-family:'trebuchet ms',helvetica,sans-serif;
+   font-size:small;
+   font-weight:bold;}
+
+

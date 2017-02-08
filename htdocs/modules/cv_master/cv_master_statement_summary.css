@@ -1,0 +1,151 @@
+<style type="text/css">
+* {padding: 0; margin: 0;
+font-family:sans-serif;
+
+}
+
+td
+{
+
+font-family:sans-serif;
+
+}        .block1 {
+        clear: both;
+        position: relative;
+        font-size: 12pt;
+        height: 30mm;
+        top: 0mm;
+        left: 10mm;
+        }
+        .maildate {
+        position: relative;
+        font-size: 12pt;
+        top: 0mm;
+        left: 0mm;
+        }
+        .coname {
+        font-family: sans-serif; 
+        font-size: 16pt; 
+        font-weight:bold; 
+        
+        top: 0mm;
+        left: 0mm;
+        }
+        .coaddy {
+        position: relative;
+        font-family: sans-serif;
+        font-size: 12pt;
+        top: 0mm;
+        left: 0mm;
+        }
+        .coaddy2 {
+        position: relative;
+        font-family: sans-serif;
+        font-size: 12pt;
+        top: 0mm;
+        left: 0mm;
+        }
+        .cophone {
+        position: relative;
+        font-size: 12pt;
+        font-family: sans-serif;
+        top: 0mm;
+        left: 0mm;
+        }
+        .block3 {
+        position: relative;
+        font-size: 12pt;
+        top: 20mm;
+        left: 12mm;
+        }
+
+        .mailaddress1 {
+        position: relative;
+        font-size: 12pt;
+        top: 0mm;
+        left: 0mm;
+        }
+        .mailaddress2 {
+        position: relative;
+        font-size: 12pt;
+        top: 0mm;
+        left: 0mm;
+        }
+        .mailaddress3 {
+        position: relative;
+        font-size: 12pt;
+        top: 0mm;
+        left: 0mm;
+        }
+
+
+td
+{
+
+    font-size:12pt;
+font-family:sans-serif;
+padding: 5px;
+}
+
+table{
+
+		border-collapse: collapse;
+
+}
+
+.col1,.col5,.col9
+{
+	width: 15mm;
+}
+
+.col2,.col6,.col10
+{
+	width: 30mm;
+}
+
+.col3
+{
+	align: left;
+	width: 150mm;
+}
+
+.col4{
+	width: 30mm;
+}
+
+td.leftbottom{
+	border-left: 1px solid black;
+	border-bottom: 1px solid black;
+}
+td.left{
+	border-left: 1px solid black;
+}
+td.lefttop{
+	border-top: 1px solid black;
+	border-left: 1px solid black;
+	border-bottom: 1px solid black;
+	text-align: center;
+}
+td.endcolumn{
+	
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+}
+td.endcolumnbottom{
+	
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
+	text-align: right;
+}
+td.endcolumntop{
+	
+	border-bottom: 1px solid black;
+	border-top: 1px solid black;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	text-align: center;
+}
+
+</style>
+

@@ -1,0 +1,146 @@
+<style type="text/css">
+* {padding: 0; margin: 0;}
+	.block1 {
+	position: relative;
+	font-size: 12pt;
+	height: 30mm;
+        top: 19mm;
+	left: 10mm;
+	}
+	div.block1 .checkname {
+	position: relative;
+	font-size: 12pt;
+	top: 0mm;
+	left: 4mm;
+	}
+	div.block1 .checkamount {
+	position: relative;
+	font-size: 12pt;
+	top: 7mm;
+	left: 0mm;
+	}
+	div.block1 .checkmemo {
+	position: relative;
+	font-size: 12pt;
+	top: 10mm;
+	left: 0mm;
+	}
+	.block2 {
+	position: relative;
+	font-size: 12pt;
+	top: -23mm;
+	left: 165mm;
+	}
+	div.block2 .checkdate {
+	position: relative;
+	font-size: 12pt;
+	top: 0mm;
+	left: -5mm;
+	}
+	div.block2 .checknet {
+	position: relative;
+	font-size: 12pt;
+	top: 9mm;
+	left: 0mm;
+	}
+	.block3 {
+	position: relative;
+	font-size: 12pt;
+	top: 8mm;
+	left: 8mm;
+	}
+	div.block3 .checkaddressname {
+	position: relative;
+	font-size: 12pt;
+	top: 0mm;
+	left: 0mm;
+	}
+	div.block3 p.checkaddress {
+	position: relative;
+	font-size: 12pt;
+	top: 0mm;
+	left: 0mm;
+	}
+	div.block3 .checkaddress2 {
+	position: relative;
+	font-size: 12pt;
+	top: 0mm;
+	left: 0mm;
+	}
+	.maildate {
+	position: relative;
+	font-size: 12pt;
+	top: 0mm;
+	left: 0mm;
+	}
+	.coname {
+	position: relative;
+	font-size: 12pt;
+	top: 0mm;
+	left: 0mm;
+	}
+	.coaddy {
+	position: relative;
+	font-size: 12pt;
+	top: -4mm;
+	left: 0mm;
+	}
+	.coaddy2 {
+	position: relative;
+	font-size: 12pt;
+	top: -8mm;
+	left: 0mm;
+	}
+	.cophone {
+	position: relative;
+	font-size: 12pt;
+	top: -12mm;
+	left: 0mm;
+	}
+	.mailaddress1 {
+	position: relative;
+	font-size: 12pt;
+	top: 16mm;
+	left: 10mm;
+	}
+	.mailaddress2 {
+	position: relative;
+	font-size: 12pt;
+	top: 12mm;
+	left: 10mm;
+	}
+	.mailaddress3 {
+	position: relative;
+	font-size: 12pt;
+	top: 8mm;
+	left: 10mm;
+	}
+	.neg {
+	color: red;
+	}
+	.tiny {
+	font-size: 10pt;
+	}
+    .warning {
+        font-weight: bold;
+        font-size: 200%;
+        color: <? echo $FRAMEWORK_COLORS["warningtext_color"] ?> ;
+        text-transform: uppercase;
+    }
+    .warning_box {
+        text-transform: uppercase;
+        position:absolute;
+        top:100;
+        left:30%;
+        BORDER: firebrick solid; 
+        PADDING:10px;  
+        FONT-SIZE: 11pt;  
+        WIDTH: 40%; 
+        height: 40%;
+        COLOR: black; 
+        background-color:white; 
+        z-index: 10;
+        clip:rect(auto);
+
+   }
+</style>

@@ -1,0 +1,117 @@
+<?php
+include("../../../framework/theme.css");
+include("timecard_main.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+
+
+?><div class="portlet">
+    <div class="divheader">View Card</div>
+    <form action="timecard_print.php" method="post"  target="_blank" >
+    <div class="row">
+        <span class="label">Who's:</span>
+        <span class="formw">
+        <SELECT  SIZE="1" NAME="print_user" >
+        <?php foreach($users as $row)
+        {	
+            ?><OPTION VALUE="<?php echo $row['user_id'] ?>" ><?php echo $row['username'] ?></OPTION><?php
+        }
+        ?>
+        </SELECT>
+        </span>
+    </div>    <div class="row">
+    	<span class="label">Starting Date(YYYY-MM-DD):</span>
+        <span class="formw">
+                <?php
+                Framework::date_selectors($startdate_year, $startdate_month, $startdate_day, "start", "")
+                ?>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Ending Date(YYYY-MM-DD):</span>
+            <span class="formw">
+                <?php
+                Framework::date_selectors($enddate_year, $enddate_month, $enddate_day, "end", "")
+                ?>
+            </span>
+     </div> 
+     <div class="row">
+        <span class="formw">
+            <input type="submit"  name="ACTION"  value="Print Card" />
+        </span>
+    </div>    
+    </form>
+</div>
+<div class="portlet">
+    <div class="divheader">edit Card</div>
+    <form action="timecard_edit.php" method="post">
+    <div class="row">
+        <span class="label">Who's:</span>
+        <span class="formw">
+        <SELECT  SIZE="1" NAME="edit_user" >
+        <?php foreach($users as $row)
+        {	
+            ?><OPTION <?php if($row['user_id'] == $edit_user){ echo " SELECTED ";}?> VALUE="<?php echo $row['user_id'] ?>" ><?php echo $row['username'] ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT>
+        </span>
+    </div>    <div class="row">
+    	<span class="label">Starting Date(YYYY-MM-DD):</span>
+        <span class="formw">
+                <?php
+                Framework::date_selectors($startdate_year, $startdate_month, $startdate_day, "start", "")
+                ?>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Ending Date(YYYY-MM-DD):</span>
+            <span class="formw">
+                <?php
+                Framework::date_selectors($enddate_year, $enddate_month, $enddate_day, "end", "")
+                ?>
+            </span>
+     </div> 
+     <div class="row">
+        <span class="formw">
+            <input type="submit"  name="ACTION"  value="Find Clockins" />
+        </span>
+    </div>    
+    </form>
+</div>
+<?php 
+if(isset($clockins))
+{
+?>
+
+<div class="portlet">
+<div class="divheader">Timecards</div>
+    <Table>
+	<tr>
+		<th>Time In</th>
+		<th>Time Out</th>
+		
+	</tr>
+	<?php 
+	//now display all the clock in and out entries
+	foreach($clockins as $row)
+	{
+		?> <form action="timecard_edit.php" method="post">	
+		<tr>
+		<td><input type=text name=clock_in value='<?php echo $row['clock_in']?>' ></td>
+		<td><input type=text name=clock_out value='<?php echo $row['clock_out']?>' ></td>
+		<td align=right><input type=hidden name=timecard_id value=<?php echo $row['timecard_id']?> ></input>
+		<input type=submit name=ACTION value=SAVE></input></td>
+		
+		</tr>
+		</form>
+		<?php 
+	}
+}
+
+
+?>
+
+
+</Table>
+</div>

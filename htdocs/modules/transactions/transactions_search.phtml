@@ -1,0 +1,112 @@
+<?
+include("../../../framework/theme.css");
+include("transactions_recurring.css");
+framework::navbar();
+?>
+<div class="portlet">
+<form action="<? echo $BASE_DIR ?>/transactions/transactions_search.php"  method=POST>
+    <div class="divheader">Search Transactions</div>
+    <div class="row">
+        <span class="label">Search String:</span>
+        <span class="formw"><input type="TEXT"  name="search_string"  value="" ></span>
+    </div>    
+    <div class="row">
+            <input type="SUBMIT"  name="ACTION"  value="Search Amount" >
+    </div>    
+    <div class="row">
+            <input type="SUBMIT"  name="ACTION"  value="Search Check Number" >
+    </div>    
+</form>
+</div>
+
+<div class="portlet" >
+        <div class="divheader">Found Transactions</div>
+ 
+        <table>
+            <TR>
+                <th>Date:</th>
+                <th>Checkno:</th>
+                <th>Comment:</th>
+                <th>Reconcile:</th>
+                <th>Debit:</th>
+                <th>Amounts:</th>
+                <th>Credit:</th>
+                <th>Amounts:</th>
+            </TR>
+            
+    <?
+$class = "green";
+    foreach($results as $row)
+    {
+        $selected = $row['recurringtype_id'];
+        ?>
+          <tr class="<? echo $class?>" >
+            <td>
+                <? echo $row['transaction_date'] ?>
+            </td>
+            <td class="right">
+                <? echo $row['transaction_checkno']; ?>
+            </td>
+            <td  class="left">
+                <? echo $row['transaction_comment']; ?>
+            </td>
+            <td>
+                <? echo $row['transaction_reconcile']; ?>
+            </td>
+            <TD>
+                <?
+                $debits = transactions::get_debits_by_transaction($row["transaction_id"]);
+                foreach($debits as $debit)
+                {
+                    echo "<a href=\"transactions_account.php?id=".$debit['transaction_account']."\" target=\"_BLANK\">".$account_array[$debit["transaction_account"]]."</a>";
+                }
+                ?>
+            </TD>
+            <TD>
+                <?foreach($debits as $debit)
+                {
+                    echo $debit["transaction_dc_amount"];
+                } 
+                ?>
+            </TD>
+
+           <TD>
+                <?
+                $credits = transactions::get_credits_by_transaction($row["transaction_id"]);
+                foreach($credits as $credit)
+                {
+                    echo "<a href=\"transactions_account.php?id=".$credit['transaction_account']."\" target=\"_BLANK\">".$account_array[$credit["transaction_account"]]."</a>";
+                }
+                ?>
+            </TD>
+            <TD>
+                <?foreach($credits as $credit)
+                {
+                    echo $credit["transaction_dc_amount"];
+                } 
+                ?>
+            </TD>            
+
+    </tr>
+        <?
+        switch ($class)
+        {
+            case "green":
+                $class = "yellow";
+                break;
+            
+            case "yellow":
+                $class = "green";
+                break;
+        }
+
+    }
+    ?>
+        </table>
+    </div>
+</div>
+</body>
+</html>  
+
+
+

@@ -1,0 +1,141 @@
+<?php
+include("../../../framework/theme.css");
+include("timecard_main.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+
+if(Rbac_User::IsAllowedTo($USER->GetUserID(), "access_module", "timecard_module"))
+{
+
+if(!$Timecard->isClockedIn())
+{	
+?>
+
+<div class="portlet">
+    <div class="divheader">Timecard</div>
+    <form action="timecard_main.php" method="post">
+    <div class="row">
+        <span class="formw">
+            <input type="submit"  name="ACTION"  value="Clock In" />
+        </span>
+    </div>    
+    </form>
+</div>
+
+<?php 
+}
+else
+{
+	?>
+	<div class="portlet">
+	    <div class="divheader">Timecard</div>
+	    <form action="timecard_main.php" method="post">
+	    <div class="row">
+	        <span class="label"><?php echo $Timecard->getClockIn()?></span>
+	        <span class="formw">
+	            <input type="submit"  name="ACTION"  value="Clock Out" />
+	        </span>
+	    </div>    
+	    </form>
+	</div>
+	<?php 
+}
+
+?>
+<div class="portlet">
+    <div class="divheader">Print Card</div>
+    <form action="timecard_print.php" target="_blank" method="post">
+    <div class="row">
+    	<span class="label">Starting Date(YYYY-MM-DD):</span>
+        <span class="formw">
+                <?php
+                Framework::date_selectors($startdate_year, $startdate_month, $startdate_day, "start", "")
+                ?>
+            </span>
+    </div>    
+    <div class="row">
+            <span class="label">Ending Date(YYYY-MM-DD):</span>
+            <span class="formw">
+                <?php
+                Framework::date_selectors($enddate_year, $enddate_month, $enddate_day, "end", "")
+                ?>
+            </span>
+     </div> 
+     <div class="row">
+            <span class="label">Holiday(hours):</span>
+            <span class="formw">
+				<input type=text name=holiday></input>
+            </span>
+     </div> 
+     <div class="row">
+            <span class="label">PTO Used(hours):</span>
+            <span class="formw">
+				<input type=text name=pto></input>
+            </span>
+     </div> 
+     <div class="row">
+            <span class="label">Meeting/CompTime(hours):</span>
+            <span class="formw">
+				<input type=text name=comp></input>
+            </span>
+     </div> 
+     <div class="row">
+            <span class="label">Mileage:</span>
+            <span class="formw">
+				<input type=text name=mileage></input>
+            </span>
+     </div> 
+     <div class="row">
+        <span class="formw">
+            <input type="submit"  name="ACTION"  value="Print Card" />
+        </span>
+    </div>    
+    </form>
+</div>
+
+
+<div class="portlet">
+<div class="divheader">Timecards</div>
+    <Table>
+	<tr>
+		<th>Time In</th>
+		<th>Time Out</th>
+		<th>Duration<br/>(minutes)</th>
+	</tr>
+<?php 
+$clockins = $Timecard->getAllClockIns();
+//now display all the clock in and out entries
+foreach($clockins as $row)
+{
+	?>	
+	<tr>
+	<td><?php echo $row['clock_in']?></td>
+	<td><?php echo $row['clock_out']?></td>
+	<td align=right><?php 
+		if($row['clock_out'] != "")
+		{
+		$sec_dif = strtotime($row['clock_out'])-strtotime($row['clock_in']);
+		$minute = $sec_dif / 60;
+		echo number_format($minute, 2);
+		}
+	?></td>
+	
+	</tr>
+	<?php 
+}
+
+
+
+?>
+
+
+
+
+
+
+</Table>
+</div>
+
+<?php 
+}
+
+?>

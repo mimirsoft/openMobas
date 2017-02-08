@@ -1,0 +1,124 @@
+<link rel="stylesheet" type="text/css"
+ media="screen" href="../../css/theme.css.php">
+<link rel="stylesheet" type="text/css"
+ media="screen" href="maintenance.css.php">
+<?php
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+?>
+
+<SCRIPT type="text/javascript" SRC="../../js/CheckLogin.class.js">
+</SCRIPT>
+<script 
+type="text/javascript"  SRC="maintenance_main.js"></script>
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/maintenance/maintenance_update.php" name="newMaintenance" method=POST>
+    <div class="divheader">New Maintenance Issue</div>
+    <div class="row">
+        <span class="label">Maintenance Title:</span>
+        <span class="formw"><INPUT type=TEXT name="maintenance_title" SIZE="40"></span>
+    </div>    
+    <div class="row" id="inventory_id_row">
+        <span class="label">Property:</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="inventory_id" ID="inventory_id" onchange="form_extender(this);maintenanceFinder(this);">
+            	<OPTION value="all">ALL</OPTION>
+                    <?php 
+                foreach ($properties as $row)
+                {
+                    ?> 
+                    <OPTION value="<?php echo $row['inventory_id'] ?>">
+                    <?php echo $row['item_name'];
+                    if( $row['service_policy'] == 'none')
+                    {
+                        echo "(NO MAINTENANCE ALLOWED)";
+                    }
+                    if( $row['service_policy'] == 'by_us_with_approval')
+                    {
+                        echo "(VENDOR APPROVAL REQUIRED ON ALL SERVICE)";
+                    }
+                    if( $row['service_policy'] == 'by_vendor')
+                    {
+                        echo "(VENDOR PERFORMS OWN SERVICE)";
+                    }
+                    ?></OPTION>
+                    <?php
+                }
+            ?>
+            </SELECT>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">Details:</span>   
+        <span class="formw"><TEXTAREA name="maintenance_txt" rows="10" cols="60"></TEXTAREA></span>
+    </div>
+
+    <div class="row">
+        <span><input type="HIDDEN"  name="ACTION" value="" ">
+        <input type="BUTTON" onclick="checkLoginSubmitForm(this.form, this.value)" value="Open Maintenance Issue" ></span>
+    </div>
+</form>
+</div>   
+
+
+<div class="portlet2">
+    <div class="divheader">RESULTS</div>    
+<?php  if($USER->CheckPermissionType($MODULE_NAME) == 'U')
+    {
+    ?>
+        <div class="row">
+            <span class="colleft"><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=YES" ?>" >VIEW CLOSED CASES</a></span>
+            <span class="colright"><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=YES&VIEW_CLOSED=".$VIEW_CLOSED ?>">VIEW ALL CASES</a></span>
+        </div>    
+    <?php
+    }
+?>
+        <div class="row">
+            <form action="<?php echo $BASE_DIR ?>/maintenance/maintenance_print.php" name="newMaintenance" method=POST>
+        
+<table id="results_table">
+    <TR >
+        <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=property_address" ?>">PROPERTY</A></TD>
+        <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=maintenance_title" ?>">TITLE</A></TD>
+        <TD></TD>
+        <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=vendors" ?>">VENDORS</A></TD>
+        <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whenopen_date" ?>">OPEN</A></TD>
+        <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whenclosed_date" ?>">CLOSED</A></TD>
+        <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whenupdate" ?>">UPDATED</A></TD>
+        <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_CLOSED=".$VIEW_CLOSED."&SORTBY=whenfollowup" ?>">FOLLOWUP</A></TD>
+        <TD></TD>
+    </TR>
+<?php
+    if(is_array($cases))
+    {
+        foreach($cases as $row)
+        {
+            $m_cases = Maintenance::get_maintenance_cases($row['maintenance_id']);
+                
+            ?>
+            <TR class="action<?php echo $row['action_needed']?>">
+           
+                <TD><?php echo $row['item_name'] ?></TD>
+                <TD> <a href ="<?php echo $BASE_DIR ?>/maintenance/maintenance_update.php?maintenance_id=<?php echo $row['maintenance_id'] ?>" target="_blank"><?php echo $row['maintenance_title'] ?> </a></TD>
+                <TD><?php foreach($m_cases as $m_case)
+                {
+                    echo $m_case['status_text']."<BR/>";
+                }
+                ?>
+                </TD>
+                <TD><?php echo $row['vendor_string'] ?></TD>
+                <TD><?php echo $row['whenopen_date'] ?></TD>
+                <TD><?php echo $row['whenclosed_date'] ?></TD>
+                <TD><?php echo $row['whenupdate'] ?></TD>
+                <TD><?php echo $row['whenfollowup'] ?></TD>
+                <TD><input type="checkbox" name="maintenance_tickets[]" value="<?php echo $row['maintenance_id'] ?>" CHECKED /></TD>
+           
+            </TR>    
+            <?php
+        }	
+    }
+    ?>
+    <input type="SUBMIT"  value="Print Checked" >
+</table>
+    </form>
+</div>
+

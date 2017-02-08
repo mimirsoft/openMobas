@@ -1,0 +1,74 @@
+<?php if($statement['header'] == 'Y')
+{
+    switch($statement['header_type'])
+    {
+        case "MAILING":
+            include_once("statements_render.css");
+            include_once("statement_mailing.css");
+            include("statement_mailing_header.phtml");
+        break;
+        case "YARDI":
+            include_once("statements_render.css");
+            include_once("statement_yardi.css");
+            include("statement_yardi_header.phtml");
+        break;
+        case "INVOICE":
+            include_once("statements_render.css");
+            include_once("statement_invoice.css");
+            include("statement_invoice_header.phtml");
+        break;
+    }
+}
+?>
+<div class="body" >
+    <div class="body_header"><?php echo $statement['body_header']?></div>
+<?php
+foreach($statement['body'] as $table)
+{
+    ?>
+    <table class="element">
+    <?php
+    foreach($table as $row)
+    {
+        ?>
+        <TR>
+        
+        <?php
+        $colspanskip = 0;
+        foreach($row as $cell)
+        {
+            $colspanskip--;
+            if($colspanskip > 0)
+            {
+                continue;
+            }
+            ?>
+            <TD 
+            <?php if(@$cell['colspan']){ echo "colspan=".$cell['colspan'];}?>
+            class="<?php echo $cell['class']?>"><?php echo $cell['text']?>
+            </TD>
+            <?php
+            if(@$cell['colspan'] > 1 )
+            {
+                $colspanskip = $cell['colspan'];
+            }
+        }
+        ?>
+        </TR>
+        <?php
+    }
+    ?>
+    </table>
+    <?php
+}
+?>
+
+</div>
+<?php
+if($NOTLAST || $NOTLAST2)
+{
+    ?>
+    <div style="clear: both;page-break-after:always;"></div>
+    <?php
+}
+?>

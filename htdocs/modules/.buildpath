@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildpath>
+	<buildpathentry kind="src" path="admin"/>
+	<buildpathentry kind="src" path="available"/>
+	<buildpathentry kind="src" path="calendar"/>
+	<buildpathentry kind="src" path="calllog"/>
+	<buildpathentry kind="src" path="casesystem"/>
+	<buildpathentry kind="src" path="checks"/>
+	<buildpathentry kind="src" path="clients"/>
+	<buildpathentry kind="src" path="contacts"/>
+	<buildpathentry kind="src" path="cv_master"/>
+	<buildpathentry kind="src" path="documents"/>
+	<buildpathentry kind="src" path="install"/>
+	<buildpathentry kind="src" path="interface"/>
+	<buildpathentry kind="src" path="invoices"/>
+	<buildpathentry kind="src" path="leads"/>
+	<buildpathentry kind="src" path="mailing"/>
+	<buildpathentry kind="src" path="maintenance"/>
+	<buildpathentry kind="src" path="profile"/>
+	<buildpathentry kind="src" path="properties"/>
+	<buildpathentry kind="src" path="purchasing"/>
+	<buildpathentry kind="src" path="statements"/>
+	<buildpathentry kind="src" path="tenants"/>
+	<buildpathentry kind="src" path="timecard"/>
+	<buildpathentry kind="src" path="tools"/>
+	<buildpathentry kind="src" path="transactions"/>
+	<buildpathentry kind="src" path="workorder"/>
+	<buildpathentry kind="src" path="yearend"/>
+	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
+	<buildpathentry kind="src" path="seo_pages"/>
+</buildpath>

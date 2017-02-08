@@ -1,0 +1,69 @@
+<style type="text/css">
+    
+   .portlet {
+        width: 39em;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+   .portlet2 {
+        width: 40em;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+   .rightcolwrapper {
+    width: 100%;
+    float: left;
+    }
+   .rightcol {
+    margin-left: 40em;
+    }
+   .leftcol {
+    width: 41em;
+    float: left;
+    margin-left: -100%;
+    }
+textarea
+{
+    width: 100%;
+    height: 5em;
+}
+div.row {
+  padding-top: .5em;
+  clear: both;
+  }
+
+div.row span.label {
+  float: left;
+  width: 15em;
+  text-align: right;
+  }
+  
+div.row span.formw {
+  float: left;
+  width: 22em;
+  text-align: left;
+  padding-right: 2em;  
+} 
+div.row span.col1 {
+  float: left;
+  text-align: left;
+  width: 7em;
+  }
+div.row span.col2 {
+  float: right;
+  text-align: left;
+  width: 7em;
+  }
+div.row span span.bc {
+  font-weight: bold;
+  font-size: 125%;
+  }
+
+</style>
+

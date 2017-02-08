@@ -1,0 +1,43 @@
+<style type="text/css">
+* {padding: 0; margin: 0;}
+div.container
+{
+    width: 8.5in;
+    font-size: 10pt;
+
+}
+
+div.col1
+{
+    width: 66mm;
+    margin-right: 4mm;
+    float: left;
+    height: 1in;
+}
+
+div.col2
+{
+    width: 66mm;
+    margin-right: 4mm;
+    float: left;
+    height: 1in;
+
+}
+div.col3
+{
+    width: 66mm;
+    margin-right: 4mm;
+    float: left;
+    height: 1in;
+
+}
+div.breaker
+{
+    page-break-after:always
+    clear:both;
+    height: 5mm;
+
+}
+
+
+</style>

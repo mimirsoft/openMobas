@@ -1,0 +1,28 @@
+<?
+include("contacts_print.css");
+?>
+
+<div class="portlet">
+    <div class="divheader">Contacts(<? echo $type_info['contacttype_name'] ?>)<a href="<? echo $BASE_DIR ?>/contacts/contacts_print2.php?type_id=<? echo$row['contacttype_id'] ?>&view=label">Mailing Label</a></div>
+<table>
+    <TR>
+        <TD><a href="<? echo $BASE_DIR ?>/contacts/contacts_print.php?type_id=<? echo$row['contacttype_id'] ?>&sort=lastname">Last Name</a></TD>
+        <TD><a href="<? echo $BASE_DIR ?>/contacts/contacts_print.php?type_id=<? echo$row['contacttype_id'] ?>&sort=firstname">First Name</a></TD>
+        <TD><a href="<? echo $BASE_DIR ?>/contacts/contacts_print.php?type_id=<? echo$row['contacttype_id'] ?>&sort=phone">Phone Numbers</a></TD>
+        <TD><a href="<? echo $BASE_DIR ?>/contacts/contacts_print.php?type_id=<? echo$row['contacttype_id'] ?>&sort=address">Address</a></TD>
+    </TR>
+   <?
+       foreach($contacts as $contact)
+        {
+        ?>
+            <TR>
+                <TD><? echo $contact['lastname'] ?></TD>
+                <TD><? echo $contact['firstname'] ?></TD>
+                <TD><? echo $contact['phone'] ?></TD>
+                <TD><? echo $contact['addresses'] ?></TD>
+            </TR>
+        <?
+        }
+    ?>	
+</table>
+</div>

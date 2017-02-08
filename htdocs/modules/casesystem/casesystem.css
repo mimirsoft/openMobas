@@ -1,0 +1,123 @@
+<style type="text/css">
+    .portlet {
+        width: auto;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+   .portlet2 {
+        width: auto;
+        display: block;
+        float: left;
+        clear: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+   .portlet3 {
+        width: auto;
+        display: block;
+        float: left;
+        clear: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+	.casehidden {
+		background: <? echo framework::$colors["theme_color1"] ?>;
+		color: red;
+	}
+div.row {
+  clear: both;
+  padding-top: .5em;
+  }
+
+div.row span.formw {
+  float: left;
+  width: auto;
+  text-align: left;
+  } 
+div.row span.label {
+  float: left;
+  width: 10em;
+  text-align: right;
+  }
+
+
+div.row span.col2 {
+  float: left;
+  text-align: right;
+  margin-right: .5em;
+  width: 10em;
+  }
+div.row span.col2b {
+  float: left;
+  text-align: right;
+ font-weight: bold;
+  margin-right: .5em;
+  width: 15em;
+  }
+div.row span.col3 {
+  float: left;
+  text-align: left;
+  width: 40em;
+  }
+div.row span.hidden {
+width: 100%;
+  float: left;
+  text-align: left;
+  font-weight: bold;
+  color: red;
+  }
+div.row span.shown {
+width: 100%;
+          float: left;
+  text-align: left;
+  }
+
+div.row span.colleft {
+  float: left;
+  text-align: left;
+  width: 20em;
+  }
+
+table{
+border-collapse: collapse;
+}
+  
+tr.action0 td {
+
+}
+
+tr.action1 td {
+    
+    background-color: #F54D70;
+}
+tr.action2 td {
+    
+    background-color: #5DFC0A;
+}
+tr.action3 td {
+    
+    background-color:#FBEC5D ;
+}
+
+div.leadtag{
+	float:left;
+   color:green;  
+   background-color:white;
+   display: block;
+   margin: 2px;
+}   
+
+td{
+	
+	padding-left: 1em;
+	}
+</style>
+

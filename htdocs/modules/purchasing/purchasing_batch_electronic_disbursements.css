@@ -1,0 +1,87 @@
+<style type="text/css">
+    .portlet {
+        width: 110em;
+        display: block;
+        clear: both;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+
+div.row {
+  padding-top: .5em;
+  clear: both;
+  }
+
+div.row span.label {
+  float: left;
+  width: 10em;
+  text-align: right;
+  }
+div.row span.formw {
+  float: left;
+  width: 25em;
+  text-align: left;
+  } 
+div.row span.formw2 {
+  float: left;
+  width: 45em;
+  text-align: left;
+  } 
+div.row span.formr {
+  float: left;
+  width: 15em;
+  text-align: right;
+  } 
+
+div.col_left {
+  float: left;
+  } 
+div.col_right {
+  float: left;
+  } 
+td.date{
+    width: 9em;
+}
+
+div.box{
+  float: left;
+  margin: .5em;
+  padding: .5em;
+  border: 3px solid gray;
+  font-weight: bold;
+  font-size: 150%;
+  text-transform: uppercase;
+  color: white;
+  background-color: #0099CC;
+}
+div.box_s {
+  float: left;
+  margin: .5em;
+  padding: .5em;
+  border: 3px solid gray;
+  text-transform: uppercase;
+  color: white;
+  background-color: #0099CC;
+}
+div.contact_box{
+  float: left;
+  display: none;
+  margin: .5em;
+  padding: .5em;
+  text-transform: uppercase;
+}
+div.border_box{
+  float: left;
+  border: 3px solid gray;
+  text-transform: uppercase;
+}
+td.td_right{
+    
+    text-align: right;
+               
+}
+</style>
+

@@ -1,0 +1,24 @@
+<?php
+$list = array ();
+foreach($tenants as $row)
+{
+
+    $l = array("", $row['item_name'],$row['item_name'],"","","","",$row['tenant_rent'], $row['tenant_rent'],"","","","",$row['cv_name'],"","","","",$row['lease_start_date'],$row['lease_end_date']);
+	$list[]=$l;    
+            
+}
+
+/*
+*/
+header('Content-Type: text/csv; charset=utf-8');
+header('Content-Disposition: attachment; filename=tenant.csv');
+
+// create a file pointer connected to the output stream
+$output = fopen('php://output', 'w');
+foreach ($list as $fields) {
+    fputcsv($output, $fields);
+}
+
+
+?>	
+       

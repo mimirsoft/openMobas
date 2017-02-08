@@ -1,0 +1,82 @@
+<style type="text/css">
+    .portlet {
+        width: auto;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+   .portlet2 {
+        width: auto;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+	.casehidden {
+		background: <? echo framework::$colors["theme_color1"] ?>;
+		color: red;
+	}
+div.row {
+  padding-top: .5em;
+  clear: both;
+  }
+
+div.row span.label {
+  float: left;
+  width: 15em;
+  text-align: right;
+  }
+  
+div.row span.formw {
+  float: left;
+  width: auto;
+  text-align: left;
+  } 
+div.row span.col1 {
+  float: left;
+  text-align: left;
+  width: 14em;
+  }
+div.row span.col2 {
+  float: left;
+  text-align: right;
+  margin-right: 1em;
+  width: 5em;
+  }
+div.row span.col3 {
+  float: left;
+  text-align: right;
+  margin-right: 1em;
+  width: 6em;
+  }
+div.row span.col4 {
+  float: left;
+  text-align: left;
+  width: 10em;
+  }
+div.row span span.bc {
+  font-weight: bold;
+  font-size: 125%;
+  }
+tr.action0 td {
+
+}
+
+tr.notice td {
+    background-color:#FBEC5D ;
+}
+tr.alert td {
+    
+    background-color: #F54D70;
+}
+tr.alarm td {
+      background-color: #5DFC0A;
+     
+}
+</style>
+

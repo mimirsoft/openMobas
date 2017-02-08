@@ -1,0 +1,108 @@
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<?php
+
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+
+if(!(Rbac_User::IsAllowedTo($USER->GetUserID(), "configure_accounts", "transactions_module")))
+{
+    echo "PERMISSION DENIED TO CONFIGURE ACCOUNTS IN TRANSACTIONS MODULE!!";
+    exit;
+}
+include("transactions_config.css");
+?>
+<div class="portlet2">
+    <form action="<?php echo $BASE_DIR ?>/transactions/transactions_config2.php"  method=POST>
+        <div class="divheader">Create New Account Type</div>
+        <div class="row">
+            <span class="label2">Type:</span>
+            <span class="formw2">
+                <input type="TEXT"  name="transactions_accounttype_name"  value="<?php echo $transactions_accounttype_name; ?>">
+            </span>
+        </div>
+        <div class="row">
+            <span class="label2">CREDIT/DEBIT:</span>
+            <span class="formw2">
+                <SELECT  SIZE="1" NAME="transactions_accounttype_sign" >
+                <OPTION value="CREDIT"<?php 
+                if($transactions_accounttype_sign == 'CREDIT') // This prepicks the owner from the list, if we are editing an existing contact event.
+                {
+                    echo " SELECTED";
+                }
+                ?> >CREDIT</OPTION>
+                <OPTION value="DEBIT" <?php
+                if($transactions_accounttype_sign == 'DEBIT') // This prepicks the owner from the list, if we are editing an existing contact event.
+                {
+                    echo " SELECTED ";
+                }
+                ?> >DEBIT</OPTION>
+                </SELECT>
+            </span>
+        </div>
+        <div class="row">
+            <span class="label2"><input type="SUBMIT"  name="action"  value="Edit Account Type"></span>
+            <span class="formw2">
+                <SELECT  SIZE="1" NAME="transactions_accounttype_edit" >
+                <?php
+                foreach($accounttypes as $row)
+                {
+                    ?>
+                    <OPTION value="<?php echo $row['accounttype_id']?>"><?php echo $row['accounttype_name'] ?></OPTION>
+                    <?php
+                }
+                ?>
+                </SELECT>
+            </span>
+        </div>
+        <div class="row">
+            <span class="label2"></span>
+            <span class="formw2">
+                <input type="HIDDEN"  name="transactions_accounttype_ID2"  value="<?php echo $transactions_accounttype_ID2 ?>">
+                <input type="SUBMIT"  name="action"  value="Save Account Type">
+        </span>
+        </div>
+    </form>	
+    </div>
+    <?php
+    if ($accounttypes_num == 0)
+    {
+        ?>
+        <div class="portlet2">
+        <p class="warning" align="center" >YOU MUST CREATE AT LEAST ONE TYPE OF ACCOUNT</p>
+        </div>
+        <?php
+        exit;
+    }
+    ?>
+    <form action="<?php echo $BASE_DIR ?>/transactions/transactions_config2.php"  method=POST>                <input type="SUBMIT"  name="EDIT"  value="CONVERT DEBIT/CREDIT">
+
+</form>
+
+<div class="portlet2">
+    <form action="<?php echo $BASE_DIR ?>/transactions/transactions_config2.php"  method=POST>
+        <div class="divheader">Close Accounts</div>
+        <div class="row">
+            <span class="label">Record Transaction on (YYYY-MM-DD):</span>
+            <span class="formw">
+                <?php
+                $FRAMEWORK->date_selectors($recorddate_year, $recorddate_month, $recorddate_day, "record", "")
+                ?>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label1">To Account:</span>
+            <span class="formw">
+                    <SELECT  class="smallsans" SIZE="20" NAME="account_id" id="account_id" >
+                    <?php
+                    transactions::build_accountstree_selectoptions($account_array, '');
+                    ?>
+                    </SELECT>
+            </span>
+        </div>
+         <div class="row">
+            <span class="label2"></span>
+            <span class="formw2">
+                <input type="SUBMIT"  name="ACTION"  value="CLOSE YEAR END INCOME AND EXPENSE">
+        </span>
+        </div>
+    </form>	
+</div>

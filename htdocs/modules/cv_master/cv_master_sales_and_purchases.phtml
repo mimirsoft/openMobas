@@ -1,0 +1,76 @@
+<?
+include("../../../framework/theme.css");
+include("cv_master_sales_and_purchases.css");
+framework::navbar();
+?>
+<div class="leftcol">
+
+<div class="portlet">
+<form action="<? echo $BASE_DIR ?>/cv_master/cv_master_sales_and_purchases.php"  method=POST>
+    <div class="divheader">Search</div>
+        <div class="row">
+            <span class="label">Starting Date(YYYY-MM-DD):</span>
+            <span class="formw">
+                <?
+                Framework::date_selectors($startdate_year, $startdate_month, $startdate_day, "start", "")
+                ?>
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Ending Date(YYYY-MM-DD):</span>
+            <span class="formw">
+                <?
+                Framework::date_selectors($enddate_year, $enddate_month, $enddate_day, "end", "")
+                ?>
+            </span>
+        </div>    
+    <div class="row">
+        <span class="label"></span>
+        <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Get Data" ></span>
+    </div>    
+</form>
+</div>
+
+
+
+<div class="portlet2">
+    <div class="divheader">Results</div>
+        <form action="<? echo $BASE_DIR ?>/cv_master/cv_master_statement.php"  method=POST>
+        <div class="row">
+
+    <TABLE>
+            <TR>
+                <TD>Customer Name:</TD>
+                <TD>Sales:</TD>
+                <TD>Invoices:</TD>
+                <TD>Purchases:</TD>
+            </TR>
+      <?if(is_array($results))
+        {
+        foreach($results as $row)
+        {
+        ?>
+            <TR <?php if($row['purchases_total'] != $row['sales_total']){ echo "class=red";}?> >
+                
+                <TD>
+                <a href="<? echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<? echo $row['cv_id'] ?>" target="_blank" method=POST><? echo $row['cv_name'] ?></a>
+                </TD>
+                <TD>
+                    <a target="_blank" method=POST href="<? echo $BASE_DIR ?>/cv_master/cv_master_search_invoices.php?search_item=<? echo $row['inventory_id'] ?>&ACTION=Get%20Data&startdate=<? echo urlencode($startdate) ?>&enddate=<? echo urlencode($enddate) ?>" ><? echo $row['item_name'] ?></a>
+                </TD>
+                <TD class="col_right">
+                    <? echo $row['sales_total'] ?>
+                </TD>
+                <TD class="col_right">
+                    <? echo $row['purchases_total'] ?>
+                </TD>
+
+            </TR>
+        <?
+        }
+        }
+    ?>	
+    </table>
+    </div>
+</form>
+    </div>

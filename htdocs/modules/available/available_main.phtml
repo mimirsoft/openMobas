@@ -1,0 +1,132 @@
+<?php
+require_once("../../../framework/theme.css");
+require_once("available.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/available/available_main.php"  method=POST>
+    <div class="divheader">Search</div>
+    <div class="row">
+        <span class="label">Price(min):</span>
+        <span class="formw">
+             <input type="text"  name="price_min"  value="<?php echo $price_min ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Price(max):</span>
+        <span class="formw">
+             <input type="text"  name="price_max"  value="<?php echo $price_max ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Bedrooms:</span>
+        <span class="formw">
+            <SELECT  class="smallsans" SIZE="1" NAME="no_beds" >
+                    <OPTION VALUE="0_plus"><?php echo "STUDIO +"?></OPTION>
+                    <OPTION VALUE="1_plus"><?php echo "1+ BEDROOMS"?></OPTION>
+                    <OPTION VALUE="2_plus"><?php echo "2+ BEDROOMS"?></OPTION>
+                    <OPTION VALUE="3_plus"><?php echo "3+ BEDROOMS"?></OPTION>
+                    <OPTION VALUE="4_plus"><?php echo "4+ BEDROOMS"?></OPTION>
+                    <OPTION VALUE="5_plus"><?php echo "5+ BEDROOMS"?></OPTION>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Bathrooms:</span>
+        <span class="formw">
+            <SELECT  class="smallsans" SIZE="1" NAME="no_baths" >
+                    <OPTION VALUE="0_plus"><?php echo "ANY"?></OPTION>
+                    <OPTION VALUE="1_plus"><?php echo "1+ BATHS"?></OPTION>
+                    <OPTION VALUE="2_plus"><?php echo "2+ BATHS"?></OPTION>
+                    <OPTION VALUE="3_plus"><?php echo "3+ BATHS"?></OPTION>
+                    <OPTION VALUE="4_plus"><?php echo "4+ BATHS"?></OPTION>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Zip:</span>
+        <span class="formw">
+             <input type="text"  name="zip_code"  value="<?php echo $zip_code ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label"></span>
+        <span class="formw">
+             <input type="hidden"  name="type"  value="<?php echo $type ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Search" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label"></span>
+        <span class="formw">
+          <?php echo $search_string ?>
+        </span>
+    </div>    
+</form>
+</div>
+
+<div class="portlet2">
+    <div class="divheader" ALIGN="center" COLSPAN="3" >Results - Click to Sort By</div>
+<form action="<?php echo $BASE_DIR ?>/available/available_main.php"  method=POST>
+    <table>
+    <TR>
+        <TD><a href="available_main.php?sortby=avail">Date Available</a></TD>
+        <TD><a href="available_main.php?sortby=area">Area/MAP!</a></TD>
+        <TD><a href="available_main.php?sortby=prop">Address</a></TD>
+        <TD><a href="available_main.php?sortby=manager">Manager</a></TD>
+        <TD>Inquiry</TD>
+        <TD><a href="available_main.php?sortby=city">City</a></TD>
+        <TD><a href="available_main.php?sortby=rent">Rent</a></TD>
+        <TD><a href="available_main.php?sortby=vendor">Owners</a></TD>
+        <TD><a href="available_main.php?sortby=bed">Beds</a></TD>
+        <TD><a href="available_main.php?sortby=bath">Baths</a></TD>
+        <TD>Available</TD>
+       
+        <TD>Save</TD>
+    </TR>
+
+   <?php
+    foreach($results as $row)
+    {
+        ?>
+        <tr>
+            <TD><?php Framework::date_selectors(substr($row['availabledate'], 0 ,4), substr($row['availabledate'], 5 ,2), substr($row['availabledate'], 8 ,2), "availabledate_",  "[".$row['inventory_id']."]");  ?></TD>
+            <TD><?php echo $row['property_area'] ?><a target="_blank"href="http://maps.google.com/?q=loc:<?php echo $row['property_address']." ".$row['property_city'].", ".$row['property_state']." ".$row['property_zip']?>" >MAP IT</a>
+            </TD>
+            <TD><a target="_blank" href="../properties/properties_edit.php?property_id=<?php echo $row['property_id'] ?>"><?php echo $row['property_address']." ".$row['property_aptnum'] ?></a></TD>
+            <TD><a target="_blank" href="../calendar/week.php?user=<?php echo $row['user_id'] ?>" ><?php echo $row['user_firstname']." ".$row['user_lastname']?></a></TD>
+            <TD><a target="_blank"  href="../calllog/calllog_inquiry.php?item=<?php echo $row['inventory_id']?>" >LOG CALL</a></TD>
+            <TD><?php echo $row['property_city']?></TD>
+            <TD><input size="5" type="text" name="price[<?php echo $row['inventory_id']; ?>]" value="<?php echo $row['retail_price'] ?>"></TD>
+            <TD><a target="_blank"  href="../cv_master/cv_master_edit.php?cv_id=<?php echo $row['cv_id']?>" ><?php echo $row['cv_name'] ?></a></TD>
+            <TD><?php echo $row['property_numbed'] ?></TD>
+            <TD><?php echo $row['property_numbath'] ?></TD>
+            <td><INPUT TYPE=RADIO NAME="available[<?php echo $row['inventory_id']; ?>]" <?php
+                                    if ($row['available'] == 1)
+                                        {
+                                            echo "CHECKED";
+                                        }
+                                    ?>
+                                    VALUE="1">YES<BR>
+                                    <INPUT TYPE=RADIO NAME="available[<?php echo $row['inventory_id']; ?>]" <?php
+                                    if ($row['available'] == 0)
+                                        {
+                                            echo "CHECKED";
+                                        }
+                                    ?>
+                                    VALUE="0">NO<BR>
+                </td>
+            
+            <TD><input type=checkbox name=inventory_id[] value='<?php  echo $row['inventory_id']?>'></TD>
+       
+        </tr>
+
+    <?php
+    }
+    ?>
+    </table>
+    <input type=SUBMIT name="ACTION" value="UPDATE" >
+ </form>
+</div>
+

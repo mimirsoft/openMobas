@@ -1,0 +1,109 @@
+<style type="text/css">
+    .portlet {
+        width: 300px;
+        display: block;
+        clear: both;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+   .portlet2 {
+       clear: both;
+        width: auto;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+	.casehidden {
+		background: <? echo framework::$colors["theme_color1"] ?>;
+		color: red;
+	}
+div.row {
+  padding-top: .5em;
+  clear: both;
+  }
+div.float {
+    text-align: center;
+    float: left;
+    margin: .5em;
+  }
+
+div.float p.desc {
+    text-align: center;
+    max-width: 14em;
+}
+
+div.row span.label {
+  float: left;
+  width: 100px;
+  text-align: right;
+  }
+div.row span.right {
+  float: right;
+  width: 100px;
+  text-align: right;
+  }
+div.row span.col1 {
+  float: left;
+  text-align: left;
+  width: 220px;
+  height: 220px;
+  }
+div.row span.col2 {
+  float: left;
+  text-align: left;
+  width: 680px;
+  }
+div.row span.col3 {
+  float: left;
+  text-align: left;
+  width: 15em;
+  }
+div.row span.col4 {
+  text-align: left;
+  width: 15em;
+  clear: right;
+  }
+
+div.row span.formw {
+  float: right;
+  width: 200px;
+  text-align: left;
+  } 
+
+td{
+
+        border-bottom: 2px solid #000000;
+        border-left: 2px solid #000000;
+        border-right: 2px solid #000000;
+        border-top: 2px solid #000000;
+
+}
+table{
+border-collapse: collapse;
+
+}
+
+a.blue
+{
+  color: #3399ff;
+  background-color:#3399ff;
+  text-decoration: none;
+  float: left;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #FFFFFF;
+  margin-bottom: 5px;
+}
+
+</style>
+

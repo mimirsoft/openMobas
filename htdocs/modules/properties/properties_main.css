@@ -1,0 +1,77 @@
+<style type="text/css">
+    
+    .portlet {
+        width: auto;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+   .portlet2 {
+        width: auto;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+    .portlet3 {
+        width: 30em;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+	.casehidden {
+		background: <? echo framework::$colors["theme_color1"] ?>;
+		color: red;
+	}
+div.row {
+  padding-top: .5em;
+  clear: both;
+  }
+
+div.row span.label {
+  float: left;
+  width: 10em;
+  text-align: right;
+  }
+div.row span.formw {
+  float: left;
+  width: auto;
+  text-align: left;
+  padding-right: 2em;
+  } 
+div.row span.right {
+  float: right;
+  width: 100px;
+  text-align: right;
+  }
+div.row span.col1 {
+  float: left;
+  text-align: left;
+  width: 15em;
+  }
+div.row span.col2 {
+  float: left;
+  text-align: left;
+  width: 18em;
+  }
+div.row span.col3 {
+  float: left;
+  text-align: left;
+  width: 9em;
+  }
+div.row span span.bc {
+  font-weight: bold;
+  font-size: 125%;
+  }
+
+
+</style>
+

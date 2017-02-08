@@ -1,0 +1,20 @@
+<?
+include("../../../framework/theme.css");
+include("calllog_main.css");
+framework::navbar();
+?>
+<div class="portlet">
+<form action="<? echo $BASE_DIR ?>/calllog/calllog_main.php"  method=POST>
+    <div class="divheader">CALL LOG</div>
+    <div class="row">
+        <span class="label">Call Type:</span>
+        <span class="formw"><SELECT  class="smallsans" SIZE="1" NAME="calltype" >
+                    <OPTION VALUE="maintenance">MAINTENANCE</OPTION>
+                    <OPTION VALUE="inquiry">INQUIRY</OPTION>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+            <input type="SUBMIT"  name="ACTION"  value="OPEN" >
+    </div>    
+</form>
+</div>

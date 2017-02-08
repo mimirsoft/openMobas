@@ -1,0 +1,215 @@
+<?
+include("../../../framework/theme.css");
+include("transactions_recurring.css");
+framework::navbar();
+?>
+<script language="JavaScript"
+type="text/javascript">
+function passItOn($id, $WorD, $account){ 
+    var evt = (evt) ? evet : ((window.event) ? event : null);
+ 
+       
+}
+
+function replace_inner($id, $WorD, $account, evt)
+{ 
+    var accountNamesID = [
+    <? 
+    foreach($accountIDtoFullnameArray AS $key => $value)
+    {
+    echo "[$key, \"$value\"],\n";
+    }
+    ?>]
+    
+    var objectID = (evt.target) ? evt.target.id : ((evt.srcElement) ? evt.srcElement.id :null);
+    var currentElement = document.getElementById(objectID);
+    var htmlString = "<SELECT  class=\"smallsans\" NAME=\"recurring["+$id+"][recurring_account"+$WorD+"]\" >\n";
+    
+    for(i=0; i < <? echo count($accountIDtoFullnameArray)?>; i++)
+    {
+        htmlString += "<OPTION value=\""+accountNamesID[i][0]+"\" "; 
+        if(accountNamesID[i][0] == $account)
+        {
+            htmlString += " SELECTED ";
+        }
+        htmlString += ">"+accountNamesID[i][1]+"</OPTION>\n";    
+    }
+    htmlString += "</SELECT>\n";
+    currentElement.innerHTML = htmlString;
+  
+    return
+}
+</script>
+<div class="module_container">
+    <div class="portlet" >
+    <form action="<? echo $BASE_DIR ?>/transactions/transactions_recurring.php"  method=POST>
+        <div class="divheader">NEW RECURRING TRANSACTION</div>
+        <table>
+            <TR>
+                <th>Type:</th>
+                <th>Comment:</th>
+                <th>From Account:</th>
+                <th>To Account:</th>
+                <th>Amount:</th>
+            </TR>
+            <TR>
+                <TD><SELECT  class="smallsans" SIZE="1" NAME="recurringtype_id" >
+    <?
+    foreach($types as $row)
+    {
+        ?>
+        <OPTION VALUE="<? echo $row['recurringtype_id']; ?>"><? echo $row['recurringtype_name']; ?></OPTION>
+        <?
+    }
+    ?>          </SELECT>
+                </TD>
+                <TD><input type="TEXT"  name="recurring_comment"  value="<? echo $recurring_comment; ?>" size="20"></TD>
+                <TD><SELECT  class="smallsans" SIZE="20" NAME="recurring_accountW" >
+                <?
+                transactions::build_accountstree_selectoptions($account_array);
+                ?>
+                </SELECT>
+                </TD>
+                <TD>
+                <SELECT  class="smallsans" SIZE="20" NAME="recurring_accountD" >
+                <?
+                transactions::build_accountstree_selectoptions($account_array);
+                ?>
+                </SELECT>
+                </TD>
+                <TD><input type="TEXT"  name="recurring_amount"  value="<? echo $recurring_amount; ?>" size="7">
+                                <input type="HIDDEN"  name="recurring_id"  value="NULL" >
+                <input type="SUBMIT"  name="ACTION"  value="Record">
+                </TD>
+            </TR>
+        </table>
+    </form>
+    </div>
+        
+    <div class="portlet" >
+        <div class="divheader">Recurring Transactions</div>
+        
+        <div class="row" id="rowhead" name="rowhead">
+            <span class="col1">
+                <A href="transactions_recurring.php?rowStart=<? echo $rowStart-25 ?>">PREVIOUS 25</A>
+            </span>
+            <span class="col1">
+                <A href="transactions_recurring.php?rowStart=<? echo $rowStart+25 ?>">NEXT 25</A>
+            </span>
+        <span class="col1">
+            <A href="transactions_recurring.php?VIEWALL=Y">VIEW ALL</A>
+        </span>
+            <span class="col1">
+                <A href="transactions_recurring.php?rowStart=<? echo $rowStart?>&VIEWALL=<? echo $VIEWALL?>&ORDERBY=type">SORT BY TYPE</A>
+            </span>
+        </div>    
+    <form action="<? echo $BASE_DIR ?>/transactions/transactions_recurring.php"  method=POST>
+        <table>
+            <TR>
+                <th>Type:</th>
+                <th>Comment:</th>
+                <th>Debit:</th>
+                <th>Amounts:</th>
+                <th>Credit:</th>
+                <th>Amounts:</th>
+                <th>New Amount:</th>
+            </TR>
+            
+    <?
+$class = "green";
+    foreach($recurring as $row)
+    {
+        $selected = $row['recurringtype_id'];
+        ?>
+            <TR class="<? echo $class?>">
+                <td><SELECT  class="smallsans" SIZE="1" NAME="recurring[<? echo $row['recurring_id']; ?>][recurringtype_id]" >
+    <?
+                foreach($types as $row2)
+                {
+                    ?>
+                        <OPTION <?
+                        if($selected == $row2['recurringtype_id'])
+                        {
+                            echo "SELECTED";
+                        }
+                        ?> VALUE="<? echo $row2['recurringtype_id']; ?>"><? echo $row2['recurringtype_name']; ?></OPTION>
+                    <?
+                }
+    ?></SELECT>
+                </td>
+                <td><input type="TEXT"  name="recurring[<? echo $row['recurring_id']; ?>][recurring_comment]"  value="<? echo $row['recurring_comment']; ?>" size="20"></td>
+            <TD>
+                <?
+                $debits = recurring::getall_debits_of_recurring($row["recurring_id"]);
+                foreach($debits as $debit)
+                {
+                    echo $accountIDtoFullnameArray[$debit["recurring_account"]];
+                }
+                ?>
+            </TD>
+            <TD>
+                <?foreach($debits as $debit)
+                {
+                    echo $debit["recurring_dc_amount"];
+                } 
+                ?>
+            </TD>
+
+           <TD>
+                <?
+                $credits = recurring::getall_credits_of_recurring($row["recurring_id"]);
+                foreach($credits as $credit)
+                {
+                    echo $accountIDtoFullnameArray[$credit["recurring_account"]];
+                }
+                ?>
+            </TD>
+            <TD>
+                <?foreach($credits as $credit)
+                {
+                    echo $credit["recurring_dc_amount"];
+                } 
+                ?>
+            </TD>            
+            <td>
+                <input  type="TEXT"  name="recurring[<? echo $row['recurring_id']; ?>][recurring_newamount]"  value="<? echo $credit['recurring_dc_amount']; ?>">
+            </td>
+            <td>
+                <input type="checkbox"  name="recurring_list[]"  value="<? echo $row['recurring_id']; ?>">
+            </td>
+ 
+            </TR>
+    
+        <?
+        switch ($class)
+        {
+            case "green":
+                $class = "yellow";
+                break;
+            
+            case "yellow":
+                $class = "green";
+                break;
+        }
+
+    }
+    ?>
+        </table>
+        <div class="row">    
+            <span class="col1">
+                <input type="hidden"  name="rowStart"  value="<? echo $rowStart ?>">
+                <input type="hidden"  name="VIEWALL"  value="<? echo $VIEWALL ?>">
+                <input type="SUBMIT"  name="ACTION"  value="Delete">
+            </span>
+           <span class="right">
+                <input type="SUBMIT"  name="ACTION"  value="Save">
+            </span>
+        </div>
+    </form>
+    </div>
+</div>
+</body>
+</html>  
+
+
+

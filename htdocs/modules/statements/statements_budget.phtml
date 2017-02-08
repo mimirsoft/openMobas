@@ -1,0 +1,263 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<?
+include("../../../framework/theme.css");
+include("statements_main.css");
+framework::navbar();
+
+?>
+<script language="JavaScript"
+
+type="text/javascript">
+
+var income_budget_monthly=new Array();
+var income_budget_total_monthly=new Array();
+var income_budget_child_monthly=new Array();
+var income_budget_yearly=new Array();
+var income_budget_child_yearly=new Array();
+var income_budget_total_yearly=new Array();
+var income_parentage=new Array();
+var income_children=new Array();
+income_children[0]=new Array();
+<? 
+foreach($income_parents AS $key => $value)
+{
+echo "income_children[$key] = new Array();\n";
+}
+echo "income_budget_monthly[0] = 0;\n";
+foreach($income_accounts AS $key => $value)
+{
+echo "income_budget_monthly[$value[account_id]] = 0;\n";
+}
+foreach($income_accounts AS $key => $value)
+{
+echo "income_budget_total_monthly[$value[account_id]] = 0;\n";
+}
+foreach($income_accounts AS $key => $value)
+{
+echo "income_budget_child_monthly[$value[account_id]] = 0;\n";
+}
+foreach($income_accounts AS $key => $value)
+{
+echo "income_budget_yearly[$value[account_id]] = 0;\n";
+}
+foreach($income_accounts AS $key => $value)
+{
+echo "income_budget_child_yearly[$value[account_id]] = 0;\n";
+}
+foreach($income_accounts AS $key => $value)
+{
+echo "income_budget_total_yearly[$value[account_id]] = 0;\n";
+}
+foreach($income_accounts AS $key => $value)
+{
+echo "income_parentage[$value[account_id]] = $value[account_parent];\n";
+}
+foreach($income_accounts AS $key => $value)
+{
+echo "income_children[$value[account_parent]][$value[account_id]] = $value[account_id];\n";
+}?>
+
+
+function draw_table() {
+    window.location = '<? $_SERVER['PHP_SELF']."?".$_SERVER['QUERY_STRING']; ?>';
+}
+
+function calculate_budget(id, month_or_year, income_or_expense, budget_item) {
+
+    //update the budget array
+    if(month_or_year == 'month')
+    {
+        income_budget_monthly[id] = parseFloat(budget_item.value);
+        income_budget_yearly[id] = income_budget_monthly[id]*12;
+        yearly_element = document.getElementById("budgetlines["+id+"][yearly]");
+        yearly_element.value =  income_budget_yearly[id];
+    }
+    else
+    {
+        income_budget_yearly[id] = parseFloat(budget_item.value);
+        income_budget_monthly[id] = income_budget_yearly[id]/12;
+        monthly_element = document.getElementById("budgetlines["+id+"][monthly]");
+        monthly_element.value = income_budget_monthly[id];
+    }
+    //update the total array for this account
+    income_budget_total_monthly[id] = income_budget_monthly[id] + income_budget_child_monthly[id];
+    parent_account = income_parentage[id];
+    continue_upward = true;
+    //update child total array
+    //update the total array
+    while(continue_upward)
+    {
+        income_budget_child_monthly[parent_account] = 0;
+        //iterate over all children of this account
+        for(child_account in income_children[parent_account])
+        {
+            //add their total to the child total of this account
+            income_budget_child_monthly[parent_account] += income_budget_total_monthly[child_account];
+        }
+        income_budget_total_monthly[parent_account] = income_budget_monthly[parent_account] + income_budget_child_monthly[parent_account];
+        if(parent_account == 0)
+        {
+            continue_upward = false;
+        }
+        parent_account = income_parentage[parent_account];
+    }
+    for(account in income_budget_monthly)
+    {
+        income_budget_child_yearly[account] = income_budget_child_monthly[account]*12;
+        income_budget_total_yearly[account] = income_budget_total_monthly[account]*12;
+    }
+    //redraw the table
+    for(account in income_budget_yearly)
+    {
+        monthly_element = document.getElementById("budgetlines["+account+"][monthly_child]");
+        monthly_element.innerHTML = income_budget_child_monthly[account]
+        monthly_element = document.getElementById("budgetlines["+account+"][monthly_total]");
+        monthly_element.innerHTML = income_budget_total_monthly[account]
+        yearly_element = document.getElementById("budgetlines["+account+"][yearly_child]");
+        yearly_element.innerHTML = income_budget_child_yearly[account]
+        yearly_element = document.getElementById("budgetlines["+account+"][yearly_total]");
+        yearly_element.innerHTML = income_budget_total_yearly[account]
+    }
+        monthly_element = document.getElementById("budgetlines[0][monthly_total]");
+        monthly_element.innerHTML = income_budget_total_monthly[0];
+        yearly_element = document.getElementById("budgetlines[0][yearly_total]");
+        yearly_element.innerHTML = income_budget_total_yearly[0];
+}
+
+</script>
+
+<div class="portlet">
+    <div class="divheader">Budgets</div>
+    <form action="<? echo $BASE_DIR ?>/statements/statements_budget.php"  method=POST>
+        <div class="row">
+            <span class="label">Statement Type:</span>
+            <span class="formw"><input type=submit name="ACTION" VALUE="New Budget" > </span>
+        </div>
+    </form>
+</div>
+<div class="portlet">
+    <div class="divheader">Budget Iinfo </div>
+        <div class="row">
+            <span class="label">Budget Name:</span>
+            <span class="formw"><input type=text name="budget[name]" VALUE="" > </span>
+        </div>
+        <div class="row">
+            <span class="label">Start Date:</span>
+            <span class="formw"> <?
+                Framework::date_selectors($startdate_year, $startdate_month, $startdate_day, "start", "");
+                ?></span>
+        </div>
+        <div class="row">
+            <span class="label">End Date:</span>
+            <span class="formw"> <?
+                Framework::date_selectors($enddate_year, $enddate_month, $enddate_day, "end", "");
+                ?></span>
+        </div>
+</div>
+
+<div class="portlet">
+    <div class="divheader">Income </div>
+    <table>
+        <TR>
+            <TD>Account:</TD>
+            <TD>Monthly:</TD>
+            <TD>Children:</TD>
+            <TD>Total:</TD>
+            <TD>Yearly:</TD>
+            <TD>Children:</TD>
+            <TD>Total:</TD>
+        </TR>
+<?  foreach($income_accounts as $row)
+    {
+        ?>
+            <TR>
+                <td><? echo $row['account_fullname'] ?></td>
+                <td><input type=text onchange="calculate_budget(<? echo $row['account_id'] ?>, 'month', 'income', this)" name="budgetlines[<? echo $row['account_id'] ?>][monthly]" id="budgetlines[<? echo $row['account_id'] ?>][monthly]" size=5 VALUE="" ></td>
+                <TD id="budgetlines[<? echo $row['account_id'] ?>][monthly_child]" ></TD>
+                <TD id="budgetlines[<? echo $row['account_id'] ?>][monthly_total]" ></TD>
+                <td><input type=text onchange="calculate_budget(<? echo $row['account_id'] ?>, 'year', 'income', this)" name="budgetlines[<? echo $row['account_id'] ?>][yearly]" id="budgetlines[<? echo $row['account_id'] ?>][yearly]"  size=5 VALUE="" ></td>
+                <TD id="budgetlines[<? echo $row['account_id'] ?>][yearly_child]" ></TD>
+                <TD id="budgetlines[<? echo $row['account_id'] ?>][yearly_total]" > </TD>
+            </TR>
+        <?
+    }
+    ?>
+            <TR>
+                <td>TOTAL</td>
+                <TD></TD>
+                <TD></TD>
+                <td name="budgetlines[0][monthly]" ID="budgetlines[0][monthly_total]" ></td>
+                <TD></TD>
+                <TD></TD>
+                <td name="budgetlines[0][yearly]"  ID="budgetlines[0][yearly_total]" ></td>
+            </TR>
+    </table>
+</div>
+
+<div class="portlet">
+    <div class="divheader">Expense </div>
+    <table>
+        <TR>
+            <TD>Account:</TD>
+            <TD>Monthly:</TD>
+            <TD>Yearly:</TD>
+            <TD>Start Date:</TD>
+            <TD>End Date:</TD>
+        </TR>
+<?  foreach($expense_accounts as $row)
+    {
+        ?>
+            <TR>
+                <td><? echo $row['account_fullname'] ?></td>
+
+            </TR>
+        <?
+    }
+    ?>
+    </table>
+</div>
+<form action="<? echo $BASE_DIR ?>/statements/statements_budget.php"  method=POST>
+<div class="portlet">
+    <div class="divheader">New Budget Item</div>
+    <table>
+        <TR>
+            <TD>Account:</TD>
+            <TD>Monthly:</TD>
+            <TD>Yearly:</TD>
+            <TD>Start Date:</TD>
+            <TD>End Date:</TD>
+        </TR>
+        <TR>
+              <TD>
+                <SELECT  class="smallsans" SIZE="20" NAME="budgetline_account" >
+                <?
+                transactions::build_accountstree_selectoptions($account_array, $accountpreselect);
+                ?>
+                </SELECT>
+            </TD>
+            <TD>
+                <input type="TEXT"  name="budgetline_monthly"  value="<? echo $budgetline_monthly; ?>" size="7">
+            </TD>
+            <TD>
+                <input type="TEXT"  name="budgetline_yearly"  value="<? echo $budgetline_yearly; ?>" size="7">
+            </TD>
+            <TD>
+                <?
+                Framework::date_selectors($startdate_year, $startdate_month, $startdate_day, "start", "");
+                ?>
+            </TD>
+            <TD>
+                <?
+                Framework::date_selectors($enddate_year, $enddate_month, $enddate_day, "end", "");
+                ?>
+            </TD>
+            <TD>
+            <input type="HIDDEN"  name="budgetline_id"  value="NULL">
+            <BR />
+            <BR />
+            <input type="SUBMIT"  name="ACTION"  value="Add Budget Item">
+            </TD>
+        </TR>
+    </table>    
+</div>
+</form>

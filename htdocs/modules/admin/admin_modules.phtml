@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><?php  ?></title>
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="admin_modules.css" media="screen" >
+</head>
+<body>
+
+<?php
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+?>
+<div class="module_container">
+<div class="portlet">
+
+    <div class="divheader">Modules Registered</div>
+   <?php
+        if(is_array($regMods))
+        {
+            foreach($regMods as $regMod)
+            {
+                ?>
+                <div class="row">
+                <form action="<?php echo $BASE_DIR ?>/admin/admin_modules.php" method=POST>
+                    <span class="col1"><?php echo strtoupper($regMod); ?></span>
+                    <span class="col2">
+                        <input type="HIDDEN"  name="module_name"  value="<?php echo $regMod ?>" >
+                        <input type="SUBMIT"  name="ACTION"  value="Verify RBAC" >
+                        <input type="SUBMIT"  name="ACTION"  value="Install Module" >
+                        <input type="SUBMIT"  name="ACTION"  value="Load Defaults" >
+                    </span>
+                </form>
+                </div>
+                <?php
+            }
+        }
+    ?>	
+
+</div>
+
+
+</div>
+
+
+</body>
+</html>

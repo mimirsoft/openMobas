@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><?php  ?></title>
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="leads_main.css" media="screen" >
+</head>
+<body>
+
+
+<?php
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+
+?>
+<script language="JavaScript"
+
+type="text/javascript">
+
+function createXMLHttpRequest() {
+  try {
+    xmlHttp = new XMLHttpRequest();
+  } catch (trymicrosoft) {
+    try {
+      xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (othermicrosoft) {
+      try {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (failed) {
+        xmlHttp = false;
+      }
+    }
+  }
+
+  if (!xmlHttp)
+    alert("Error initializing XMLHttpRequest!");
+}
+
+function save_lead() {
+    createXMLHttpRequest();
+
+    var firstname =  document.getElementById("firstname").value;
+    var lastname = document.getElementById("lastname").value;
+    var contacttype_id = document.getElementById("contacttype_id").value;
+    var addresstype_id = document.getElementById("addresstype_id").value;
+    var street = document.getElementById("street").value;
+    var city = document.getElementById("city").value;
+    var state = document.getElementById("state").value;
+    var zip = document.getElementById("zip").value;
+    var careof = document.getElementById("careof").value;
+    var phonetype_id = document.getElementById("phonetype_id").value;
+    var phone_num = document.getElementById("phone_num").value;
+
+    var queryString = "ACTION=save_lead&firstname=" + encodeURIComponent(firstname) + "&lastname=" + encodeURIComponent(lastname) 
+        + "&contacttype_id=" + contacttype_id + "&addresstype_id=" + addresstype_id + "&street=" + street + 
+        "&city=" + city + "&state=" + state + "&zip=" + zip + "&careof=" + careof
+         + "&phonetype_id=" + phonetype_id + "&phone_num=" + phone_num;
+    xmlHttp.open("POST", "leads_savelead.php", true);
+    xmlHttp.onreadystatechange = handleStateChange;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    
+}
+
+function handleStateChange() {
+    if (xmlHttp.readyState == 4) {
+       if (xmlHttp.status == 200)
+       {
+            var xmlDoc = xmlHttp.responseXML;
+            if(xmlDoc.getElementsByTagName("lead").length > 0)
+            {
+                var transaction_status = xmlDoc.getElementsByTagName("lead")[0].childNodes[0].nodeValue;
+                if(transaction_status == "SAVED")
+                { 
+                    window.location = '<? $_SERVER['PHP_SELF']; ?>';
+                }
+            }    
+            if(xmlDoc.getElementsByTagName("login").length > 0)
+            {
+                var login_status = xmlDoc.getElementsByTagName("login")[0].childNodes[0].nodeValue;
+                if(login_status == "FAILED")
+                {
+                    loginwindow = window.open('../interface/login_popup.html', 'Login', 'height=100,width=300');
+                }
+            }
+               
+       }
+       else if (xmlHttp.status == 404)
+         alert("Request URL does not exist");
+       else
+         alert("Error: status code is " + xmlHttp.status);
+      }
+}
+
+</script>
+
+
+<div class="portlet">
+<form action="<? echo $BASE_DIR ?>/leads/leads_main.php"  method=POST>
+    <div class="divheader">Lead</div>
+        <div class="row">
+            <span class="label">Call Time:</span>
+            <span class="formw">
+                <?
+                Framework::date_selectors($calltime_date_year, $calltime_date_month, $calltime_date_day, "calltime_", "")
+                ?>
+            <input type="text" name="calltime_date_hour" size="2" value="<? echo $calltime_date_hour ?>" maxlength="2" />:
+            <input type="text" name="calltime_date_minute" size="2" value="<? echo $calltime_date_minute ?>" maxlength="2" />
+            <input type="radio" name="call_ampm" value="am" <? if( date('H') < 12){ echo "CHECKED";} ?> >am
+            <input type="radio" name="call_ampm" value="pm" <? if( date('H') >= 12){ echo "CHECKED";} ?> >pm
+            </span>
+        </div>    
+    <div class="row">
+        <span class="label">Call Length:</span>
+        <span class="formw">
+            <input type="text" name="calllength_minutes" size="2" value="" maxlength="2" />minutes
+            <input type="text" name="calllength_seconds" size="2" value="" maxlength="2" />seconds
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Registered Phone Number:</span>
+        <span class="formw">
+            <input type="TEXT"  name="reg_phone_num" ID="reg_phone_num"  value="" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Registered Phone Name:</span>
+        <span class="formw">
+            <input type="TEXT"  name="reg_phone_name" ID="reg_phone_name"  value="" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Registered Address:</span>
+        <span class="formw">
+            <input type="TEXT"  name="reg_call_address" ID="reg_call_address"  value="" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Registered Address2:</span>
+        <span class="formw">
+            <input type="TEXT"  name="reg_call_address2" ID="reg_call_address2"  value="" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Call Source:</span>
+        <span class="formw">
+            <SELECT  class="smallsans" SIZE="1" NAME="call_source" >
+            <OPTION VALUE="Google"  >Google</OPTION>
+            <OPTION VALUE="Yahoo"  >Yahoo</OPTION>
+            <OPTION VALUE="MSN"  >MSN</OPTION>
+            <OPTION VALUE="ASK.com"  >ASK.com</OPTION>
+            <OPTION VALUE="Superpages.com"  >Superpages.com</OPTION>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Call Receiver:</span>
+        <span class="formw"><SELECT  SIZE="1" NAME="call_reciever" >
+        <? foreach($users as $row)
+        {	
+            ?><OPTION VALUE="<? echo $row['user_id'] ?>" <?if($USER->GetUserID() ==  $row['user_id']){echo " SELECTED ";} ?>><? echo $row['username'] ?></OPTION><?
+        }
+        ?>
+        </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Person Calling:</span>
+        <span class="formw">
+            <input type="TEXT"  ID="person_calling" name="person_calling"  value="" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Address:</span>
+        <span class="formw">
+            <input type="TEXT"  name="call_address" ID="call_address"  value="" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Address2:</span>
+        <span class="formw">
+            <input type="TEXT"  name="call_address2" ID="call_address2"  value="" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Phone Number:</span>
+        <span class="formw">
+            <input type="TEXT"  name="call_phone_num" ID="call_phone_num"  value="" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Email:</span>
+        <span class="formw">
+            <input type="TEXT"  name="call_enamil" ID="call_enamil"  value="" >
+        </span>
+    </div>    
+
+
+    <div class="row">
+        <span class="label">Call Transfered?:</span>
+        <span class="formw">
+            <SELECT NAME="call_transfered">
+                <OPTION VALUE="YES">YES</OPTION>
+                <OPTION VALUE="NO">NO</OPTION>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Transfered To:</span>
+        <span class="formw"><SELECT  SIZE="1" NAME="call_transferee" >
+        <? foreach($users as $row)
+        {	
+            ?><OPTION VALUE="<? echo $row['user_id'] ?>" <?if($USER->GetUserID() ==  $row['user_id']){echo " SELECTED ";} ?>><? echo $row['username'] ?></OPTION><?
+        }
+        ?>
+        </SELECT>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">Call Put on Hold?:</span>
+        <span class="formw">
+            <SELECT NAME="call_hold">
+                <OPTION VALUE="YES">YES</OPTION>
+                <OPTION VALUE="NO">NO</OPTION>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Call Hold Length:</span>
+        <span class="formw">
+            <input type="text" name="callholdlength_minutes" size="2" value="" maxlength="2" />minutes
+            <input type="text" name="callholdlength_seconds" size="2" value="" maxlength="2" />seconds
+        </span>
+    </div>
+   <div class="row">
+        <span class="label">Call Problem:</span>   
+        <span class="formw"><TEXTAREA name="call_problem" rows="10" cols="60"></TEXTAREA></span>
+    </div>
+   <div class="row">
+        <span class="label">Call Resolution:</span>   
+        <span class="formw"><TEXTAREA name="call_resolution" rows="10" cols="60"></TEXTAREA></span>
+    </div>
+
+    
+    <div class="row">
+        <span class="label">Appointment/Follow-up Scheduled?:</span>
+        <span class="formw">
+            <SELECT NAME="followup_scheduled">
+                <OPTION VALUE="YES">YES</OPTION>
+                <OPTION VALUE="NO">NO</OPTION>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Follow up Date Time:</span>
+        <span class="formw">
+            <?
+            Framework::date_selectors($followup_date_year, $followup_date_month, $followup_date_day, "followup_", "")
+            ?>
+        <input type="text" name="calltime_date_hour" size="2" value="<? echo $followup_date_hour ?>" maxlength="2" />:
+        <input type="text" name="calltime_date_minute" size="2" value="<? echo $followup_date_minute ?>" maxlength="2" />
+        <input type="radio" name="followup_ampm" value="am" <? if( date('H') < 12){ echo "CHECKED";} ?> >am
+        <input type="radio" name="followup_ampm" value="pm" <? if( date('H') >= 12){ echo "CHECKED";} ?> >pm
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Product/Service Sold:</span>
+        <span class="formw">
+            <input type="TEXT"  name="products_sold" ID="products_sold"  value="" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Price to Customer:</span>
+        <span class="formw">
+            $<input type="TEXT"  name="invoice_total" ID="invoice_total"  value="" >
+        </span>
+    </div>    
+
+    <div class="row">
+        <span class="label">Rate Handling:</span>
+        <span class="formw">
+            <SELECT NAME="rate_handling" id="rate_handling">
+                    <?  
+                    for($i = 0; $i < 101; $i++)
+                    {
+                        ?>
+                        <OPTION value="<? echo $i/10?>" ><? echo $i/10?></OPTION>
+                        <?
+                    }
+                    ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Rate Professionalism:</span>
+        <span class="formw">
+            <SELECT NAME="rate_professionalism" id="rate_professionalism">
+                    <?  
+                    for($i = 0; $i < 101; $i++)
+                    {
+                        ?>
+                        <OPTION value="<? echo $i/10?>" ><? echo $i/10?></OPTION>
+                        <?
+                    }
+                    ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Rate Product Knowledge:</span>
+        <span class="formw">
+            <SELECT NAME="rate_knowledge" id="rate_knowledge">
+                    <?  
+                    for($i = 0; $i < 101; $i++)
+                    {
+                        ?>
+                        <OPTION value="<? echo $i/10?>" ><? echo $i/10?></OPTION>
+                        <?
+                    }
+                    ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Need Knowledge?:</span>
+        <span class="formw">
+            <SELECT NAME="need_knowledge">
+                <OPTION VALUE="YES">YES</OPTION>
+                <OPTION VALUE="NO">NO</OPTION>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Knowledge Needed:</span>
+        <span class="formw">
+            <TEXTAREA name="knowledge_needed" rows="10" cols="60"></TEXTAREA>   
+    </div>    
+    <div class="row">
+        <span class="label">Knowledge Sources:</span>
+        <span class="formw">
+            <input type="TEXT"  name="knowledge_sources" ID="knowledge_sources"  value="" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Collect Name?:</span>
+        <span class="formw">
+            <SELECT NAME="collect_name">
+                <OPTION VALUE="YES">YES</OPTION>
+                <OPTION VALUE="NO">NO</OPTION>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Collect Number?:</span>
+        <span class="formw">
+            <SELECT NAME="collect_number">
+                <OPTION VALUE="YES">YES</OPTION>
+                <OPTION VALUE="NO">NO</OPTION>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">collect_email?:</span>
+        <span class="formw">
+            <SELECT NAME="collect_email">
+                <OPTION VALUE="YES">YES</OPTION>
+                <OPTION VALUE="NO">NO</OPTION>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Request to Setup Meeting?:</span>
+        <span class="formw">
+            <SELECT NAME="meeting_request">
+                <OPTION VALUE="YES">YES</OPTION>
+                <OPTION VALUE="NO">NO</OPTION>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Booked a Meeting?:</span>
+        <span class="formw">
+            <SELECT NAME="meeting_booked">
+                <OPTION VALUE="YES">YES</OPTION>
+                <OPTION VALUE="NO">NO</OPTION>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Follow-up Scheduled?:</span>
+        <span class="formw">
+            <SELECT NAME="followup_scheduled">
+                <OPTION VALUE="YES">YES</OPTION>
+                <OPTION VALUE="NO">NO</OPTION>
+            </SELECT>
+        </span>
+    </div>    
+
+
+
+
+           
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     <div class="row">
+        <span class="formw">
+            <input type="SUBMIT"  name="ACTION" value="Save Review" >
+        </span>
+    <div>    
+
+</form>
+</div>

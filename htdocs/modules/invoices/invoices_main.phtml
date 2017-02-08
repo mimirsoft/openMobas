@@ -1,0 +1,257 @@
+<?php
+include("../../../framework/theme.css");
+include("invoices_main.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<div class="portlet">
+    <div class="divheader">Search for Invoices</div>
+    <form action="<?php echo $BASE_DIR ?>/invoices/invoices_main.php"  method=POST>
+    <div class="row">
+        <span class="label">Customer:</span>
+        <span class="formw">
+            <SELECT class="smallsans" NAME="customer_id">
+            <?php
+            foreach($customers as $customer)
+            {
+                ?>
+                <OPTION VALUE="<?php echo $customer['cv_id'] ?>"><?php echo $customer['cv_name'] ?></OPTION>
+                <?php 
+            }
+            
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <input type="SUBMIT"  name="ACTION"  value="Search" >
+    </div>    
+    </form>
+    <form action="<?php echo $BASE_DIR ?>/invoices/invoices_main.php"  method=POST>
+    <div class="row">
+        <span class="label">Invoice Number:</span>
+        <span class="formw"><input type=text name="invoice_id"></input>
+        </span>
+    </div>    
+    <div class="row">
+        <input type="SUBMIT"  name="ACTION"  value="Search Invoice Number" >
+    </div>    
+    <div class="row">
+        <input type="SUBMIT"  name="ACTION"  value="Get Broken Invoices" >
+    </div>    
+    </form>
+    
+</div>
+<div class="portlet2">
+    <div class="divheader">Search Results</div>
+    <div class="row">
+        <table>
+            <TR>
+                <TD>Inv No</TD>
+                <TD>Date</TD>
+                <TD>Customer</TD>
+                <TD>Total</TD>
+                <TD>Total Remitted</TD>
+            </TR>
+        <?php  
+        	foreach($searched_invoices as $searched_invoice)
+            {
+            ?>
+                <TR>
+                    <form action="<?php echo $BASE_DIR ?>/invoices/invoices_view.php"  method=POST>
+                	<TD><?php echo $searched_invoice['invoice_id'] ?></TD>
+                    <TD><?php echo $searched_invoice['date_charged'] ?></TD>
+                    <TD><a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<?php echo $searched_invoice['cv_id'] ?>" target="_blank" method=POST><?php echo $searched_invoice['cv_name'] ?></a></TD>
+                    <TD><?php echo $searched_invoice['invoice_total'] ?></TD>
+                    <TD>
+                          <?php echo $searched_invoice['total_remitted'] ?>
+                    </TD>
+                    <TD>
+                    <input type=SUBMIT name="ACTION" value="VIEW INVOICE/AUTO REQUISITIONS" >
+                    <input type=hidden name="invoice_id" value=<?php echo $searched_invoice['invoice_id']?>>
+                    </TD></form>
+                    <TD>
+                    <?php if($searched_invoice['is_vendor'])
+                    {
+                    	//are there outstanding purchase orders?
+                    	$unpaids = Purchase_Order::getall_unpaidpurchaseorders_of_vendor($searched_invoice['customer_id']);
+                    	if(count($unpaids) > 0)
+                    	{
+                    	?>
+						<form action="<?php echo $BASE_DIR ?>/invoices/invoices_clearing.php"  method=POST>
+                		<input type=SUBMIT name="ACTION" value="CLEAR AGAINST POs" >
+                         <input type=hidden name="invoice_id" value=<?php echo $searched_invoice['invoice_id']?>>
+                         </form>          	
+                    	<?php
+                    	} 
+            		}?>
+                    </TD>
+                    
+                </TR>
+                
+            <?php
+            }
+            ?>
+        </table>
+	</div>
+</div>
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/invoices/invoices_create.php"  method=POST>
+    <div class="divheader">Create New Invoice</div>
+    <div class="row">
+        <span class="label">Customer:</span>
+        <span class="formw">
+            <SELECT class="smallsans" NAME="customer_id">
+            <?php
+            foreach($customers as $customer)
+            {
+                ?>
+                <OPTION VALUE="<?php echo $customer['cv_id'] ?>"><?php echo $customer['cv_name'] ?></OPTION>
+                <?php 
+            }
+            
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Normal/Recurring:</span>
+        <span class="formw"><SELECT class="smallsans" NAME="invoice_type">
+            <OPTION VALUE="normal">NORMAL</OPTION>
+            <OPTION VALUE="recurring">RECURRING</OPTION>
+        </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <input type="SUBMIT"  name="ACTION"  value="Create Invoice" >
+    </div>    
+</form>
+</div>
+
+<div class="portlet2">
+    <div class="divheader">Broken Invoices</div>
+    <div class="row">
+        <table>
+        <?php  foreach($broken_invoices as $broken_invoice)
+            {
+            ?>
+                <form action="<?php echo $BASE_DIR ?>/invoices/invoices_items.php"  method=POST>
+                <TR>
+                <TD>
+                    <TD><a href="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<?php echo $broken_invoice['cv_id'] ?>" target="_blank" method=POST><?php echo $broken_invoice['cv_name'] ?></a></TD>
+                    <TD><?php echo $broken_invoice['invoice_total'] ?></TD>
+                    <TD>
+                    <input type=SUBMIT name="ACTION" value="EDIT INVOICE" >
+                    <input type=SUBMIT name="ACTION" value="DELETE INVOICE" >
+                    <input type=hidden name="invoice_id" value=<?php echo $broken_invoice['invoice_id']?>>
+                </TD>
+                </TR>
+                </form>
+            <?php
+            }
+            ?>
+        </table>
+    </div>
+</div>
+
+<div class="portlet2">
+    <div class="divheader">Open Invoices (ESTIMATES) (not yet charged)</div>
+    <div class="row">
+        <table>
+        <?php  foreach($invoices as $invoice)
+            {
+            ?>
+                <TR>
+                    <TD><?php echo $invoice['cv_name'] ?></TD>
+                    <TD><?php echo $invoice['invoice_total'] ?></TD>
+                    <TD>
+                    <form action="<?php echo $BASE_DIR ?>/invoices/invoices_items.php"  method=POST>
+                    <input type=SUBMIT name="ACTION" value="EDIT INVOICE" >
+                    <input type=SUBMIT name="ACTION" value="DELETE INVOICE" >
+                    <input type=hidden name="invoice_id" value=<?php echo $invoice['invoice_id']?>>
+                    </form>
+                    </TD>
+                    <TD>
+                    <form action="<?php echo $BASE_DIR ?>/invoices/invoices_view.php"  method=POST>
+                    <input type=SUBMIT name="ACTION" value="PRINT ESTIMATE" >
+                    <input type=hidden name="invoice_id" value=<?php echo $invoice['invoice_id']?>>
+                    </form>
+                    </TD>
+                </TR>
+            <?php
+            }
+            ?>
+        </table>
+    </div>
+</div>
+<div class="portlet2">
+    <div class="divheader">Unpaid Invoices</div>
+    <div class="row">
+        <table>
+    	<colgroup>
+    	<col class="col1"/>
+     	<col class="col2"/>
+     	<col class="col3"/>
+     	<col class="col4"/>
+     	<col class="col5"/>
+     	<col class="col6"/>
+     	<col class="col7"/>
+     	<col class="col8"/>
+     	</colgroup>
+             <TR>
+                <TD>Inv No</TD>
+                <TD>Date</TD>
+                <TD>Customer</TD>
+                <TD>Description</TD>
+                <TD>Total</TD>
+                <TD>Total Remitted</TD>
+                <TD>Balance Due</TD>
+            </TR>
+        <?php  foreach($unpaid_invoices as $unpaid_invoice)
+            {
+            ?>
+                <TR>
+                    <form action="<?php echo $BASE_DIR ?>/invoices/invoices_view.php"  method=POST>
+                	<TD><?php echo $unpaid_invoice['invoice_id'] ?></TD>
+                    <TD><?php echo $unpaid_invoice['date_charged'] ?></TD>
+                    <TD><?php echo $unpaid_invoice['cv_name'] ?></TD>
+                    <TD><?php echo $unpaid_invoice['invoice_description'] ?></TD>
+                    <TD class="td_right"><?php echo $unpaid_invoice['invoice_total'] ?></TD>
+                    <TD class="td_right">
+                          <?php echo $unpaid_invoice['total_remitted'] ?>
+                    </TD>
+                    <TD  class="td_right">
+                          <?php echo number_format($unpaid_invoice['invoice_total']-$unpaid_invoice['total_remitted'], 2); ?>
+                    </TD>
+                    <TD>
+                    <input type=SUBMIT name="ACTION" value="VIEW DETAILS" >
+                    <input type=SUBMIT name="ACTION" value="PRINT" >
+                    <input type=hidden name="invoice_id" value=<?php echo $unpaid_invoice['invoice_id']?>>
+                    </TD></form>
+                    <TD>
+                    <?php if($unpaid_invoice['is_vendor'])
+                    {
+                    	//are there outstanding purchase orders?
+                    	$unpaids = Purchase_Order::getall_unpaidpurchaseorders_of_vendor($unpaid_invoice['customer_id']);
+                    	if(count($unpaids) > 0)
+                    	{
+                    	?>
+						<form action="<?php echo $BASE_DIR ?>/invoices/invoices_clearing.php"  method=POST>
+                		<input type=SUBMIT name="ACTION" value="CLEAR AGAINST POs" >
+                         <input type=hidden name="invoice_id" value=<?php echo $unpaid_invoice['invoice_id']?>>
+                         </form>          	
+                    	<?php
+                    	} 
+            		}?>
+                    </TD>
+                    
+                </TR>
+                
+            <?php
+            }
+            ?>
+        </table>
+    </div>
+</div>
+
+

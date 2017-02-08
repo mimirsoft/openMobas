@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><?php  ?></title>
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="admin_main.css" media="screen" >
+</head>
+<body>
+<?php
+
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+?>
+
+<div class="module_container">
+<div class="portlet">
+    <form action="<?php echo $BASE_DIR ?>/admin/admin_main.php"  method=POST>
+    <div class="divheader">Enter User Info</div>
+        <div class="row">
+            <span class="label">
+                User Name:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="username"  value="<?php echo $username; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Password:
+            </span>
+            <span class="formw">
+                <input type="PASSWORD"  name="md5_pw"  value="<?php echo $md5_pw; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">First Name:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="user_firstname"  value="<?php echo $user_firstname; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">Last Name:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="user_lastname"  value="<?php echo $user_lastname; ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                User Default Phone:
+            </span>
+            <span class="formw">
+               <input type="TEXT"  name="user_default_phone"  value="<?php echo  $user_default_phone; ?>" >
+           </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                User Email:
+            </span>
+            <span class="formw">
+               <input type="TEXT"  name="user_email"  value="<?php echo  $user_email; ?>" >
+           </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+            </span>
+            <span class="formw">
+                <input type="HIDDEN"  name="user_id"  value="NULL" >
+                <input type="SUBMIT"  name="ACTION"  value="Add User" >
+            </span>
+        </div>    
+    </form>
+</div>
+
+<div class="portlet2">
+    <div class="divheader">Users</div>
+        <table>
+        <tr>
+        <th>
+        <a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=username" ?>" >User Name</a>
+        </th>
+        <th>
+        <a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=user_lastname" ?>">Last Name</a>
+        </th>
+        <th>
+        <a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=user_firstname" ?>">First Name</a>
+        </th>
+        </tr>
+
+    <?php
+        foreach($users as $user)
+        {
+        ?>
+			<tr>
+    			<td><?php echo $user['username'] ?>
+    			</td>
+    			<td><?php echo $user['user_lastname'] ?>
+    			</td>
+    			<td><?php echo $user['user_firstname'] ?>
+    			</td>
+    			<td><?php echo framework::inet_dtop($user['ip']) ?>
+    			</td>
+    			<td><?php echo $user['last_login'] ?>
+    			</td>
+    			<td>
+    			<form action="<?php echo $BASE_DIR ?>/admin/admin_edit.php" target="_blank" method=POST>
+                    <input type="HIDDEN"  name="user_id"  value="<?php echo $user['user_id'] ?>" >
+                    <input type="SUBMIT"  name="CONTACT"  value="EDIT" >
+                    </form>
+    			</td>
+			</tr>
+        <?php
+    }
+    ?>	
+    </table>
+</div>
+<div class="portlet2">
+    <div class="divheader">Unconfirmed Users</div>
+        <div class="row">
+            <span class="col1"><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=username" ?>">User Name</a></span>
+            <span class="col1"><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=user_lastname" ?>">Last Name</a></span>
+            <span class="col1"><a href="<?php echo $_SERVER["PHP_SELF"]."?SORTBY=user_firstname" ?>">First Name</a></span>
+        </div>    
+    <?php
+        foreach($unconfirmed_users as $unconfirmed)
+        {
+        ?>
+        <div class="row">
+        <form action="<?php echo $BASE_DIR ?>/admin/admin_main.php" target="_blank" method=POST>
+            <span class="col1"><?php echo $unconfirmed['username'] ?></span>
+            <span class="col1"><?php echo $unconfirmed['lastname'] ?></span>
+            <span class="col1"><?php echo $unconfirmed['firstname'] ?></span>
+            <span class="col1">
+                <input type="HIDDEN"  name="confirm_code"  value="<?php echo $unconfirmed['confirm_code'] ?>" >
+                <input type="SUBMIT"  name="ACTION"  value="Confirm" >
+            </span>
+            <span class="col1">
+                <input type="SUBMIT"  name="ACTION"  value="Delete Unconfirmed User" >
+            </span>
+        </form>
+        </div>    
+        <?php
+    }
+    ?>	
+</div>
+
+</div>
+</body>
+</html>
+
+

@@ -1,0 +1,821 @@
+<?php
+include("../../../framework/theme.css");
+include("transactions_reconcile3.css");
+$FRAMEWORK->warning($WARNING);
+?>
+<script language="JavaScript"
+type="text/javascript">
+var SORT_COLUMN_INDEX;
+
+var row_target;
+var DC_COUNT = 0;
+var balance_amount = new Number(0.00);
+var transaction_id = "NULL";
+var xmlHttp;
+var DEBIT_OR_CREDIT = '<?php echo $account_info['accounttype_sign'] ?>';
+var WORKING_ACCOUNT = <?php echo $account_id ?>;
+
+var starting_balance = <?php echo $starting_reconciled_balance ?>;
+var ending_balance = <?php echo $ending_balance ?>;
+var reconciled_debits = 0;
+var reconciled_credits = 0;
+
+var account_rdate_year =  <?php echo date("Y", $account_rec_nextday); ?>;
+var account_rdate_month =  <?php echo date("m", $account_rec_nextday); ?>;
+var account_rdate_day =  <?php echo date("d", $account_rec_nextday); ?>;
+var account_rdate = new Date(account_rdate_year, account_rdate_month-1, account_rdate_day);
+	
+
+function add_dc_box(account, dc, amount)
+{
+    amount = parseFloat(amount);
+    amount = amount.toFixed(2);
+
+    newdiv_account = document.createElement('div');
+    newdiv_account.setAttribute('class', 'dc_account');
+    newdiv_account.innerHTML = account;
+    newdiv_amount = document.createElement('div');
+    newdiv_amount.setAttribute('class', 'dc_amount');
+    newdiv_amount.innerHTML = amount;
+    
+    newdiv = document.createElement('div');
+    newdiv.appendChild(newdiv_account);
+    newdiv.appendChild(newdiv_amount);
+    newdiv.setAttribute('class', 'DEBIT_CREDIT_BOX');
+    if(dc == 'DEBIT')
+    {
+        var div_box = document.getElementById("debits_column");
+    }
+    if(dc == 'CREDIT')
+    {
+        var div_box = document.getElementById("credits_column");
+    }
+    div_box.appendChild(newdiv);
+}
+
+function draw_table() {
+    window.location = '<?php echo $_SERVER['PHP_SELF']."?".$query_string; ?>';
+}
+
+
+function check_date(evt, datetype)
+{ 
+    createXMLHttpRequest();
+    var objectID = (evt.target) ? evt.target.id : ((evt.srcElement) ? evt.srcElement.id :null);
+    var date = document.getElementById(objectID);
+    var url = "../tools/validate_date.php?type="+datetype+"&target="+objectID+"&num=" + escape(date.value);
+    xmlHttp.open("GET", url, true);
+    xmlHttp.onreadystatechange = callback;
+    xmlHttp.send(null);
+}
+function callback()
+{
+    if (xmlHttp.readyState == 4) {
+        if (xmlHttp.status == 200) {
+            var xmlDoc = xmlHttp.responseXML;
+            var objectID = xmlDoc.getElementsByTagName("target")[0].childNodes[0].nodeValue;
+            var num = xmlDoc.getElementsByTagName("num")[0].childNodes[0].nodeValue;
+            var currentElement = document.getElementById(objectID);
+            currentElement.value = num;
+        }
+    }
+}
+
+function toggle_vis(divheader)
+{
+    document.getElementById("new_trans").style.visibility = 'visible';
+}
+function toggle_vis_off(divheader)
+{
+    document.getElementById("new_trans").style.visibility = 'hidden';
+}
+
+function createXMLHttpRequest() {
+  try {
+    xmlHttp = new XMLHttpRequest();
+  } catch (trymicrosoft) {
+    try {
+      xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (othermicrosoft) {
+      try {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (failed) {
+        xmlHttp = false;
+      }
+    }
+  }
+
+  if (!xmlHttp)
+    alert("Error initializing XMLHttpRequest!");
+}
+
+
+function open_editbox(row)
+{
+    document.getElementById("transaction[date_year]").value = '';
+    document.getElementById("transaction[date_month]").value = '';
+    document.getElementById("transaction[date_day]").value = '';
+    document.getElementById("transaction[transaction_checkno]").value = '';
+    document.getElementById("transaction[transaction_comment]").value = '';
+    document.getElementById("transaction[transaction_reconcile]").value = '';
+    document.getElementById("transaction[reconciledate_year]").value = '';
+    document.getElementById("transaction[reconciledate_month]").value = '';
+    document.getElementById("transaction[reconciledate_day]").value = '';
+    createXMLHttpRequest();
+    trans_id = row.getAttribute('id');
+    box_clear = document.getElementById("debits_column");
+    if ( box_clear.hasChildNodes() )
+    {
+        while ( box_clear.childNodes.length >= 1 )
+        {
+            box_clear.removeChild( box_clear.firstChild );       
+        } 
+    }
+    box_clear = document.getElementById("credits_column");
+    if ( box_clear.hasChildNodes() )
+    {
+        while ( box_clear.childNodes.length >= 1 )
+        {
+            box_clear.removeChild( box_clear.firstChild );       
+        } 
+    }
+    var queryString = "ACTION=get_transaction&transaction_id=" + trans_id;
+    xmlHttp.open("POST", "transactions_edittransaction.php", true);
+    xmlHttp.onreadystatechange = handleStateChange;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+}
+
+function save_transaction() {
+    createXMLHttpRequest();
+    var dateYear =  document.getElementById("transaction[date_year]").value;
+    var dateMonth = document.getElementById("transaction[date_month]").value;
+    var dateDay =   document.getElementById("transaction[date_day]").value;
+    var reconcile =    document.getElementById("transaction[transaction_reconcile]").value;
+    var reconciledateYear =  document.getElementById("transaction[reconciledate_year]").value;
+    var reconciledateMonth = document.getElementById("transaction[reconciledate_month]").value;
+    var reconciledateDay =   document.getElementById("transaction[reconciledate_day]").value;
+    
+    var queryString = "ACTION=toggle_rec"
+        + "&reconciledate_year=" + reconciledateYear + "&reconciledate_month=" + reconciledateMonth + "&reconciledate_day=" + reconciledateDay
+        + "&transaction_id=" + transaction_id + "&reconcile=" + reconcile;
+    xmlHttp.open("POST", "transactions_savetransaction.php", true);
+    xmlHttp.onreadystatechange = handleStateChange;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+    
+}
+
+function delete_transaction(id) {
+    createXMLHttpRequest();
+    row_target = id;
+    var transaction_id =    transactions[id][8];
+    var queryString = "ACTION=delete_transaction&transaction_id=" + transaction_id;
+    xmlHttp.open("POST", "transactions_savetransaction.php", true);
+    xmlHttp.onreadystatechange = handleStateChange_delete;
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    xmlHttp.send(queryString);
+}
+
+function handleStateChange() {
+     if (xmlHttp.readyState == 4) {
+       if (xmlHttp.status == 200)
+       {
+            var xmlDoc = xmlHttp.responseXML;
+            if(xmlDoc.getElementsByTagName("transaction").length > 0)
+            {
+                var transaction_status = xmlDoc.getElementsByTagName("transaction")[0].childNodes[0].nodeValue;
+                if(transaction_status == "SAVED")
+                { 
+                     draw_table();
+                }
+            }    
+            if(xmlDoc.getElementsByTagName("login").length > 0)
+            {
+                var login_status = xmlDoc.getElementsByTagName("login")[0].childNodes[0].nodeValue;
+                if(login_status == "FAILED")
+                {
+                    
+                    loginwindow = window.open('../interface/login_popup.html', 'Login', 'height=100,width=300');
+                    //loginwindow.document.write(xmlHttp.responseText);
+                }
+            }
+            if(xmlDoc.getElementsByTagName("retrieved").length > 0)
+            {
+                if(xmlDoc.getElementsByTagName("id")[0].childNodes.length > 0)
+                {   
+                    transaction_id =  xmlDoc.getElementsByTagName("id")[0].childNodes[0].nodeValue;
+                }
+                if(xmlDoc.getElementsByTagName("checkno")[0].childNodes.length > 0)
+                {   
+                    document.getElementById("transaction[transaction_checkno]").value =  xmlDoc.getElementsByTagName("checkno")[0].childNodes[0].nodeValue;
+                }
+                if(xmlDoc.getElementsByTagName("comments")[0].childNodes.length > 0)
+                {   
+                    document.getElementById("transaction[transaction_comment]").value =  xmlDoc.getElementsByTagName("comments")[0].childNodes[0].nodeValue;
+                }
+                if(xmlDoc.getElementsByTagName("reconcile")[0].childNodes.length > 0)
+                {   
+                    document.getElementById("transaction[transaction_reconcile]").value =  xmlDoc.getElementsByTagName("reconcile")[0].childNodes[0].nodeValue;
+                }
+                if(xmlDoc.getElementsByTagName("date_year")[0].childNodes.length > 0)
+                {   
+                    document.getElementById("transaction[date_year]").value =  xmlDoc.getElementsByTagName("date_year")[0].childNodes[0].nodeValue;
+                }
+                if(xmlDoc.getElementsByTagName("date_month")[0].childNodes.length > 0)
+                {   
+                    document.getElementById("transaction[date_month]").value =  xmlDoc.getElementsByTagName("date_month")[0].childNodes[0].nodeValue;
+                }
+                if(xmlDoc.getElementsByTagName("date_day")[0].childNodes.length > 0)
+                {   
+                    document.getElementById("transaction[date_day]").value =  xmlDoc.getElementsByTagName("date_day")[0].childNodes[0].nodeValue;
+                }
+                if(xmlDoc.getElementsByTagName("r_date_year")[0].childNodes.length > 0)
+                {   
+                    document.getElementById("transaction[reconciledate_year]").value =  xmlDoc.getElementsByTagName("r_date_year")[0].childNodes[0].nodeValue;
+                }
+                if(xmlDoc.getElementsByTagName("r_date_year")[0].childNodes.length == 0)
+                {   
+                    document.getElementById("transaction[reconciledate_year]").value =  xmlDoc.getElementsByTagName("date_year")[0].childNodes[0].nodeValue;
+                }
+                if(xmlDoc.getElementsByTagName("r_date_month")[0].childNodes.length > 0)
+                {   
+                    document.getElementById("transaction[reconciledate_month]").value =  xmlDoc.getElementsByTagName("r_date_month")[0].childNodes[0].nodeValue;
+                }
+                if(xmlDoc.getElementsByTagName("r_date_month")[0].childNodes.length == 0)
+                {   
+                    document.getElementById("transaction[reconciledate_month]").value =  xmlDoc.getElementsByTagName("date_month")[0].childNodes[0].nodeValue;
+                }
+                if(xmlDoc.getElementsByTagName("r_date_day")[0].childNodes.length > 0)
+                {   
+                    document.getElementById("transaction[reconciledate_day]").value =  xmlDoc.getElementsByTagName("r_date_day")[0].childNodes[0].nodeValue;
+                }
+                if(xmlDoc.getElementsByTagName("r_date_day")[0].childNodes.length == 0)
+                {   
+                    document.getElementById("transaction[reconciledate_day]").value =  xmlDoc.getElementsByTagName("date_day")[0].childNodes[0].nodeValue;
+                }
+                debit_credit_length = xmlDoc.getElementsByTagName("debit_credit").length;
+                debit_credit = xmlDoc.getElementsByTagName("debit_credit");
+                for(dc_iterate=0; dc_iterate < debit_credit_length; dc_iterate++)
+                {
+                   add_dc_box(xmlDoc.getElementsByTagName("debit_credit")[dc_iterate].childNodes[7].firstChild.nodeValue, xmlDoc.getElementsByTagName("debit_credit")[dc_iterate].childNodes[5].firstChild.nodeValue, xmlDoc.getElementsByTagName("debit_credit")[dc_iterate].childNodes[3].firstChild.nodeValue);
+                }
+                toggle_vis(document.getElementById("toggle_button"));
+                javascript:scroll(0,0);
+
+            }
+            if(xmlDoc.getElementsByTagName("show").length > 0)
+            {
+                var message = xmlDoc.getElementsByTagName("message")[0].childNodes[0].nodeValue;
+                popUp = document.getElementById("warning_box");
+                popUp.style.visibility="visible";
+                message_div = document.getElementById("warning_box_message");
+                message_div.innerHTML = message;
+            }
+               
+       }
+       else if (xmlHttp.status == 404)
+         alert("Request URL does not exist");
+       else
+         alert("Error: status code is " + xmlHttp.status);
+      }
+}
+
+    function handleStateChange_delete() {
+        if (xmlHttp.readyState == 4) {
+        if (xmlHttp.status == 200)
+        {
+                var xmlDoc = xmlHttp.responseXML;
+                if(xmlDoc.getElementsByTagName("transaction").length > 0)
+                {
+                    var transaction_status = xmlDoc.getElementsByTagName("transaction")[0].childNodes[0].nodeValue;
+                    if(transaction_status == "SAVED")
+                    { 
+                        draw_table();
+                    }
+                }    
+                if(xmlDoc.getElementsByTagName("login").length > 0)
+                {
+                    var login_status = xmlDoc.getElementsByTagName("login")[0].childNodes[0].nodeValue;
+                    if(login_status == "FAILED")
+                    {
+                        loginwindow = window.open('../interface/login_popup.html', 'Login', 'height=100,width=300');
+                        //loginwindow.document.write(xmlHttp.responseText);
+                    }
+                }
+                if(xmlDoc.getElementsByTagName("show").length > 0)
+                {
+                    var message = xmlDoc.getElementsByTagName("message")[0].childNodes[0].nodeValue;
+                    popUp = document.getElementById("warning_box");
+                    popUp.style.visibility="visible";
+                    message_div = document.getElementById("warning_box_message");
+                    message_div.innerHTML = message;
+                }
+                
+        }
+        else if (xmlHttp.status == 404)
+            alert("Request URL does not exist");
+        else
+            alert("Error: status code is " + xmlHttp.status);
+        }
+    }
+
+    function hidetip2(){
+        var popUp;
+        popUp = document.getElementById("warning_box");
+        popUp.style.visibility="hidden";
+    }
+
+	function add_date_inputs()
+	{
+
+	}
+	function createRDateInputs()
+	{
+	
+	     if (xmlHttp.readyState == 4) {
+	       if (xmlHttp.status == 200)
+	       {
+	            var xmlDoc = xmlHttp.responseXML;
+	            if(xmlDoc.getElementsByTagName("login").length > 0)
+	            {
+	                var login_status = xmlDoc.getElementsByTagName("login")[0].childNodes[0].nodeValue;
+	                if(login_status == "FAILED")
+	                {
+	                    
+	                    loginwindow = window.open('../interface/login_popup.html', 'Login', 'height=100,width=300');
+	                    //loginwindow.document.write(xmlHttp.responseText);
+	                }
+	            }
+	            if(xmlDoc.getElementsByTagName("retrieved").length > 0)
+	            {
+	            	if(xmlDoc.getElementsByTagName("id")[0].childNodes.length > 0)
+	                {   
+	                    transaction_id =  xmlDoc.getElementsByTagName("id")[0].childNodes[0].nodeValue;
+	                }
+	            	transaction_date = new Date(xmlDoc.getElementsByTagName("date_year")[0].childNodes[0].nodeValue, (xmlDoc.getElementsByTagName("date_month")[0].childNodes[0].nodeValue)-1, xmlDoc.getElementsByTagName("date_day")[0].childNodes[0].nodeValue)
+	                
+					transaction_rdate_year = document.createElement('input');
+	            	transaction_rdate_year.type = 'text';
+	            	transaction_rdate_year.name = 'transaction['+transaction_id+'][rdate_year]';
+	            	transaction_rdate_year.setAttribute('size', '3');
+	                if(xmlDoc.getElementsByTagName("r_date_year")[0].childNodes.length > 0)
+	                {   
+	                	transaction_rdate_year.value =  xmlDoc.getElementsByTagName("r_date_year")[0].childNodes[0].nodeValue;
+	                }
+	                //if no set rdate, pull the later of tdate or account rdate
+	            	if(xmlDoc.getElementsByTagName("r_date_year")[0].childNodes.length == 0)
+	                {   
+	                	if(transaction_date > account_rdate)
+						{
+	            			transaction_rdate_year.value = xmlDoc.getElementsByTagName("date_year")[0].childNodes[0].nodeValue;
+						}
+						else
+						{
+							transaction_rdate_year.value = account_rdate_year;
+						}
+	                }
+	                transaction_rdate_month = document.createElement('input');
+	            	transaction_rdate_month.type = 'text';
+	            	transaction_rdate_month.name = 'transaction['+transaction_id+'][rdate_month]';
+	            	transaction_rdate_month.setAttribute('size', '1');
+	                if(xmlDoc.getElementsByTagName("r_date_month")[0].childNodes.length > 0)
+	                {   
+	            		transaction_rdate_month.value =  xmlDoc.getElementsByTagName("r_date_month")[0].childNodes[0].nodeValue;
+	                }
+	                if(xmlDoc.getElementsByTagName("r_date_month")[0].childNodes.length == 0)
+	                {   
+	                	if(transaction_date > account_rdate)
+						{
+	            			transaction_rdate_month.value = xmlDoc.getElementsByTagName("date_month")[0].childNodes[0].nodeValue;
+						}
+						else
+						{
+							transaction_rdate_month.value = account_rdate_month;
+						}
+	                }
+	                transaction_rdate_day = document.createElement('input');
+	                transaction_rdate_day.type = 'text';
+	                transaction_rdate_day.name = 'transaction['+transaction_id+'][rdate_day]';
+	                transaction_rdate_day.setAttribute('size', '1');
+	                if(xmlDoc.getElementsByTagName("r_date_day")[0].childNodes.length > 0)
+	                {   
+	            		transaction_rdate_day.value =  xmlDoc.getElementsByTagName("r_date_day")[0].childNodes[0].nodeValue;
+	                }
+	                if(xmlDoc.getElementsByTagName("r_date_day")[0].childNodes.length == 0)
+	                {   
+	                	if(transaction_date > account_rdate)
+						{
+	            			transaction_rdate_day.value = xmlDoc.getElementsByTagName("date_day")[0].childNodes[0].nodeValue;
+						}
+						else
+						{
+							transaction_rdate_day.value = account_rdate_day;
+						}
+	                }
+	                var rdate_td = document.getElementById("rdate"+transaction_id);
+	                if ( rdate_td.hasChildNodes() )
+	                {
+	                    while ( rdate_td.childNodes.length >= 1 )
+	                    {
+	                    	rdate_td.removeChild( rdate_td.firstChild );       
+	                    } 
+	                }
+	                	                
+	                rdate_td.appendChild(transaction_rdate_year);
+	                rdate_td.appendChild(document.createTextNode("-"));
+	                rdate_td.appendChild(transaction_rdate_month);
+	                rdate_td.appendChild(document.createTextNode("-"));
+	                rdate_td.appendChild(transaction_rdate_day);
+	            
+	            }
+	            if(xmlDoc.getElementsByTagName("show").length > 0)
+	            {
+	                var message = xmlDoc.getElementsByTagName("message")[0].childNodes[0].nodeValue;
+	                popUp = document.getElementById("warning_box");
+	                popUp.style.visibility="visible";
+	                message_div = document.getElementById("warning_box_message");
+	                message_div.innerHTML = message;
+	            }
+	               
+	       }
+	       else if (xmlHttp.status == 404)
+	         alert("Request URL does not exist");
+	       else
+	         alert("Error: status code is " + xmlHttp.status);
+	      }
+	}
+    
+    function add_debit(checked_box) 
+    {
+		//get the id of the transaction
+        transaction_id = checked_box.value; 
+		//pull the transaction
+    	var queryString = "ACTION=get_transaction&transaction_id=" + transaction_id;
+    	createXMLHttpRequest();
+        xmlHttp.open("POST", "transactions_edittransaction.php", true);
+    	xmlHttp.onreadystatechange = createRDateInputs;
+    	xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    	xmlHttp.send(queryString);
+        // is it checked?
+        // we need a new way to recalc estimated check total
+        // each time a new one it check, or an amount is changed
+        // call the check total checker
+       	debit_totaler();
+
+   	}
+    function debit_totaler()
+    {
+        running_total = 0;
+    	comfList = document.getElementsByName('reconcile_debit_list[]');
+    	for (i = 0; i < comfList.length; i++) 
+       	{
+       		if(comfList[i].checked)
+           	{
+       			this_PO = document.getElementById('amount'+comfList[i].value);
+       			PO = parseFloat(this_PO.value);
+               	running_total = PO + running_total;
+    		}
+		}
+    	debit_total_disp = document.getElementById("debit_total_display");
+		debit_total_disp.innerHTML = running_total.toFixed(2);
+		debit_total_disp = document.getElementById("debit_total_display2");
+		debit_total_disp.innerHTML = running_total.toFixed(2);
+		reconciled_debits = running_total.toFixed(2);
+		ending_reconciled = parseFloat(starting_balance)-parseFloat(reconciled_credits)+parseFloat(reconciled_debits);
+		ending_reconciled_disp = document.getElementById("ending_reconciled_display");
+		ending_reconciled_disp.innerHTML = ending_reconciled.toFixed(2);
+		difference_disp = document.getElementById("difference_display");
+		difference = ending_reconciled-ending_balance;
+		difference_disp.innerHTML = difference.toFixed(2);
+    }
+		
+    function add_credit(checked_box) 
+    {
+    	//get the id of the transaction
+        transaction_id = checked_box.value; 
+		//pull the transaction
+    	var queryString = "ACTION=get_transaction&transaction_id=" + transaction_id;
+    	createXMLHttpRequest();
+        xmlHttp.open("POST", "transactions_edittransaction.php", true);
+    	xmlHttp.onreadystatechange = createRDateInputs;
+    	xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");    
+    	xmlHttp.send(queryString);
+		// is it checked?
+        // we need a new way to recalc estimated check total
+        // each time a new one it check, or an amount is changed
+        // call the check total checker
+        credit_totaler();
+       	
+   }
+
+    function credit_totaler()
+    {
+    	running_total = 0;
+    	comfList = document.getElementsByName('reconcile_credit_list[]');
+    	for (i = 0; i < comfList.length; i++) 
+       	{
+       		if(comfList[i].checked)
+           	{
+       			this_PO = document.getElementById('amount'+comfList[i].value);
+       			PO = parseFloat(this_PO.value);
+               	running_total = PO + running_total;
+    		}
+   		}
+    	credit_total_disp = document.getElementById("credit_total_display");
+   		credit_total_disp.innerHTML = running_total.toFixed(2);
+   		credit_total_disp = document.getElementById("credit_total_display2");
+   		credit_total_disp.innerHTML = running_total.toFixed(2);
+   		reconciled_credits = running_total.toFixed(2);
+   		ending_reconciled = parseFloat(starting_balance)-parseFloat(reconciled_credits)+parseFloat(reconciled_debits);
+   		ending_reconciled_disp = document.getElementById("ending_reconciled_display");
+   		ending_reconciled_disp.innerHTML = ending_reconciled.toFixed(2);
+		difference_disp = document.getElementById("difference_display");
+		difference = ending_reconciled-ending_balance;
+		difference_disp.innerHTML = difference.toFixed(2);
+    }
+
+</script>
+    <div class="warning_box" id="warning_box" style="visibility:hidden;">
+        <div id='subad'>
+            <div style='width:max;text-align:right;clear:both;'><a href='javascript:hidetip2();' style='color:red;font-size:10pt;'><b>CLOSE</b>[X]</a>
+            </div>
+            <div id="warning_box_message">
+                <?php echo $WARNING['message']?>
+            </div>
+        </div>
+    </div>
+<div class="portlet">
+    <div class="divheader">Reconcile <?php echo $all_accounts[$account_id]?></div>
+    
+
+<div class="new_trans" id="new_trans">
+    <span class=close_box onclick="toggle_vis_off()">[X]</span>
+    <table>
+        <tr> 
+            <th>Date</th>
+            <th>Check Num</th>
+            <th>Comment</th>
+            <th>Rec?</th>
+            <th>Reconcile Date</th>
+        </tr>
+        <tr>
+            <td class="nb">
+                <?php
+                Framework::date_selectors('', '', '', "transaction[", "]");
+                ?>
+            </td>
+            <td class="nb">
+                <input type="TEXT"  name="transaction[transaction_checkno]" id="transaction[transaction_checkno]"  value="" size="8">
+            </td>
+            <td class="nb">
+                <input type="TEXT"  id="transaction[transaction_comment]" name="transaction[transaction_comment]"  value="" size="16">
+            </td>
+            <td class="nb">
+                <input type="TEXT"  id="transaction[transaction_reconcile]" name="transaction[transaction_reconcile]"  value="" size="1">
+            </td>
+            <td class="nb">
+                <?php
+                Framework::date_selectors('', '', '', "transaction[reconcile", "]");
+                ?>
+            </td>
+            <td class="nb">
+                <input type="BUTTON" class="btn" name="ACTION"  value="Record" onclick="save_transaction()">
+            </td>
+        </tr>
+    </table>
+    <div >
+        <div class="DEBIT_LABEL">DEBITS</div>
+        <div class="CREDIT_LABEL">CREDITS</div>
+    </div>
+    <div id="debits_credits">
+        <div id="debits_column" class="DEBIT_LABEL"></div>
+        <div id="credits_column" class="CREDIT_LABEL"></div>
+    </div>
+</div>
+<form action="<?php echo $BASE_DIR ?>/transactions/transactions_reconcile3.php" method=POST>
+<div class="row">
+    <span>
+	    STARTING BALANCE
+    </span>
+    <span name="starting_total_display" id='starting_total_display'>
+        <?php echo $starting_reconciled_balance;?>
+    </span>
+    <span>
+    	DEBITS
+    </span>
+    <span name="debit_total_display2" id='debit_total_display2' >
+    </span>
+    <span>
+    	CREDITS
+    </span>
+    <span name="credit_total_display2" id='credit_total_display2' >
+    </span>
+    <span>
+    	ENDING RECONCILED
+    </span>
+    <span name="ending_reconciled_display" id='ending_reconciled_display' >
+    </span>
+    <span>
+    	ENDING BALANCE
+    </span>
+    <span name="ending_balance_display" id='ending_balance_display' >
+        <?php echo $ending_balance;?>
+    </span>
+    <span>
+    	Difference
+    </span>
+    <span name="difference_display" id='difference_display' >
+        
+    </span>
+    <span >
+        <input type=hidden name="account_id" value="<?php echo $account_id;?>" />
+        <input type=hidden name="ending_balance" value="<?php echo $ending_balance;?>" />
+        <input type=hidden name="date_year" value="<?php echo $date_year;?>" />
+        <input type=hidden name="date_month" value="<?php echo $date_month;?>" />
+        <input type=hidden name="date_day" value="<?php echo $date_day;?>" />
+        <input type=submit name="ACTION" value="Record Reconcile" />
+    </span>
+</div>
+<div class="row">
+<TABLE class="fixed" id="unique_id" cellspacing="0" cellpadding="0" >
+    <col class="date"></col>
+    <col class="checknum" ></col>
+    <col class="reconcile" ></col>
+    <col class="date"></col>
+    <col class="amount" ></col>
+        <tr> 
+            <td ><a href="#" onclick="ts_resortTable(this);return false;">Date:<span class="sortarrow">&nbsp;&nbsp;&uarr;</span></a></td>
+            <td align="right"><a href="#" onclick="ts_resortTable(this);return false;">Check Num:<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></a></td>
+            <td align="right"><a href="#" onclick="ts_resortTable(this);return false;">R:<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></a></td>
+            <td align="right"><a href="#" onclick="ts_resortTable(this);return false;">R Date:<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></a></td>
+            <td align="right"><a href="#" onclick="ts_resortTable(this);return false;">Debit:<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></a></td>
+        </tr>
+        <tr> 
+            <td class="nb"></td>
+            <td class="nb"></td>
+            <td class="nb"></td>
+            <td class="nb"></td>
+            <td class="nb"></td>
+            <td class="nb"></td>
+
+        </tr>
+<?php
+$class = "green";
+foreach($debits as $row)
+{
+    ?>
+        <tr class="<?php echo $class?>"  >
+            <td>
+                <?php echo $row['transaction_date'] ?>
+            </td>
+            <td align="right">
+                <?php echo $row['transaction_checkno']; ?>
+            </td>
+            <td align="right">
+                <?php echo $row['transaction_reconcile']; ?>
+            </td>
+            <td id="rdate<?php echo $row['transaction_id'] ?>" align="right">
+                <?php
+                Framework::date_selectors(substr($row['transaction_reconcile_date'], 0 ,4), substr($row['transaction_reconcile_date'], 5 ,2), substr($row['transaction_reconcile_date'], 8 ,2), "transaction[".$row['transaction_id']."][r", "]");
+                ?>
+            </td>
+            <td align="right">
+            <input type="HIDDEN"
+			id="amount<?php echo $row['transaction_id'] ?>"
+			value="<?php echo $row['transaction_dc_amount'];  ?>"">
+            <?php  if($row['transaction_dc'] == 'DEBIT')
+            {
+                  echo $row['transaction_dc_amount']; 
+            }
+            ?>
+            </td>
+            <td align="right">
+                <input type="checkbox" onclick='javascript:add_debit(this)' name="reconcile_debit_list[]" id="reconcile_debit_list[]" <?php
+                 if($row['transaction_reconcile'] == 'R')
+                 {
+                     echo "CHECKED";
+                 }
+                 
+                ?> value="<?php echo $row['transaction_id']; ?>">
+            </td>
+            <td id="<?php echo  $row['transaction_id'] ?>" onclick="open_editbox(this)" align="right">
+                [?]
+            </td>
+        </tr>    
+    <?php
+    switch ($class)
+    {
+        case "green":
+            $class = "yellow";
+            break;
+        
+        case "yellow":
+            $class = "green";
+            break;
+    }
+    
+}
+?>
+        <tr> 
+            <td class="nb"></td>
+            <td class="nb"></td>
+            <td class="nb"></td>
+            <td class="nb">TOTAL</td>
+            <td align="right" id="debit_total_display"></td>
+
+        </tr>
+
+
+</TABLE>
+
+<TABLE class="fixed" id="unique_id" cellspacing="0" cellpadding="0" >
+    <col class="date"></col>
+    <col class="checknum" ></col>
+    <col class="reconcile" ></col>
+    <col class="date"></col>
+    <col class="amount" ></col>
+        <tr> 
+            <td ><a href="#" onclick="ts_resortTable(this);return false;">Date:<span class="sortarrow">&nbsp;&nbsp;&uarr;</span></a></td>
+            <td align="right"><a href="#" onclick="ts_resortTable(this);return false;">Check Num:<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></a></td>
+            <td align="right"><a href="#" onclick="ts_resortTable(this);return false;">R:<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></a></td>
+            <td align="right"><a href="#" onclick="ts_resortTable(this);return false;">R Date:<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></a></td>
+            <td align="right"><a href="#" onclick="ts_resortTable(this);return false;">Credit:<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></a></td>
+        </tr>
+        
+<?php
+$class = "green";
+foreach($credits as $row)
+{
+    ?>
+        <tr class="<?php echo $class?>" >
+            <td>
+                <?php echo $row['transaction_date'] ?>
+            </td>
+            <td align="right">
+                <?php echo $row['transaction_checkno']; ?>
+            </td>
+            
+            <td align="right">
+                <?php echo $row['transaction_reconcile']; ?>
+            </td>
+            <td id="rdate<?php echo $row['transaction_id'] ?>" align="right">
+            <?php
+                Framework::date_selectors(substr($row['transaction_reconcile_date'], 0 ,4), substr($row['transaction_reconcile_date'], 5 ,2), substr($row['transaction_reconcile_date'], 8 ,2), "transaction[".$row['transaction_id']."][r", "]");
+                ?>
+            </td>
+            <td align="right">
+            <input type="HIDDEN"
+			id="amount<?php echo $row['transaction_id'] ?>"
+			value="<?php echo $row['transaction_dc_amount'];  ?>"">
+            <?php  if($row['transaction_dc'] == 'CREDIT')
+            {
+                  echo $row['transaction_dc_amount']; 
+            }
+            ?>
+            </td>
+            <td align="right">
+                <input type="checkbox" onclick='javascript:add_credit(this)' name="reconcile_credit_list[]" id="reconcile_credit_list[]" <?php
+                 if($row['transaction_reconcile'] == 'R')
+                 {
+                     echo "CHECKED";
+                 }
+                 
+                ?>   value="<?php echo $row['transaction_id']; ?>">
+            </td>
+            <td id="<?php echo  $row['transaction_id'] ?>" onclick="open_editbox(this)" align="right">
+                [?]
+            </td>
+        </tr>    
+    <?php
+    switch ($class)
+    {
+        case "green":
+            $class = "yellow";
+            break;
+        
+        case "yellow":
+            $class = "green";
+            break;
+    }
+    
+}
+?>
+<tr> 
+            <td class="nb"></td>
+            <td class="nb"></td>
+            <td class="nb"></td>
+            <td class="nb">TOTAL</td>
+            <td align="right" id="credit_total_display"></td>
+
+        </tr>
+
+</TABLE>
+</div>
+</form>
+<script language="JavaScript"
+type="text/javascript">
+
+credit_totaler();
+debit_totaler();
+</script>

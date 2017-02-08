@@ -1,0 +1,27 @@
+<?php if($city != ""){$city .= ",";}?>
+<p style="position: relative; font-family: 'Verdana'; font-size: 16pt; font-style:italic; font-weight:bold;"><?php echo $coname ?>&nbsp;</p>
+<p style="position: relative; top: 0mm; font-family: 'Verdana'; font-size: 11pt; font-style:italic;"><?php echo $header ?>&nbsp;</p>
+<?php if($careof != "" )
+{ 
+    ?>
+    <p style="position: relative; left: 10mm; top: 26mm;"><?php  echo $name; ?></p>
+    <p style="position: relative; left: 10mm; top: 26mm;"><?php echo $careof; ?></p>
+    <p style="position: relative; left: 10mm; top: 26mm;"><?php echo $address." ".$aptnum ?></p>
+    <p style="position: relative; left: 10mm; top: 26mm; margin-bottom: 50mm"><?php echo $city." ".$state." ".$zip ?></p>
+    <?php
+
+}
+else
+{
+?>
+<p style="position: relative; left: 10mm; top: 26mm;"><?php echo $name; ?></p>
+<p style="position: relative; left: 10mm; top: 26mm;"><?php echo $address." ".$aptnum ?></p>
+<p style="position: relative; left: 10mm; top: 26mm; margin-bottom: 50mm"><?php echo $city." ".$state." ".$zip ?></p>
+<?php
+}
+ ?>
+
+<div style="position: relative; clear: both; 
+"><?php echo $body ?>
+</div>
+<div style="page-break-after:always;"></div>

@@ -1,0 +1,68 @@
+<style type="text/css">
+    
+   .portlet {
+        width: auto;
+        max-width: 80em;
+        display: block;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+   .portlet2 {
+        width: auto;
+        max-width: 50em;
+        display: block;
+        float: left;
+        border-top: 1px solid #035156;
+        border-bottom: 1px solid #035156;
+        border-left: 1px solid #035156;
+        border-right: 1px solid #035156;
+   }
+	.casehidden {
+		background: <? echo framework::$colors["theme_color1"] ?>;
+		color: red;
+	}
+
+div.row {
+  padding-top: .5em;
+  clear: both;
+  }
+
+div.row span.label {
+  float: left;
+  width: 15em;
+  text-align: right;
+  }
+  
+div.row span.formw {
+  float: left;
+  width: 20em;
+  text-align: left;
+  padding-right: 2em;  
+} 
+div.row span.col1 {
+  float: left;
+  text-align: left;
+  width: 7em;
+  }
+div.row span.col2 {
+  float: right;
+  text-align: left;
+  width: 7em;
+  }
+div.row span span.bc {
+  font-weight: bold;
+  font-size: 125%;
+  }
+div.cvtag{
+    float:left;
+   color:green;  
+   background-color:white;
+   display: block;
+   margin: 1px;
+   padding: 2px;
+   font-size: 85%;
+}
+</style>
+

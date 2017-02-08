@@ -1,0 +1,129 @@
+<?php
+include("tenants_3dayprint.css");
+?>
+<html>
+<body>         
+
+<div class="break">
+    <div class="portlet">
+        <div class="row">
+            <span class="col1"><?php echo $owners ?></span>
+            <span class="col1">Owner(s)</span>
+        </div>
+        <div class="row"><span class="bold">Plaintiff(s)</span></div>
+        <div class="row">VS.</div>
+        <div class="row">
+            <span class="col1"><?php echo $names ?></span>
+            <span class="col1">Tenant(s)</span>
+        </div>
+        <div class="row"><span class="bold">Defendant(s)</span></div>
+    </div>          
+    
+    <div class="portlet3">
+        <span class="bigbold">3-DAY NOTICE TO PAY RENT OR QUIT</span>
+    </div>
+</div>
+
+<div class="portlet2nb">
+    TO the above named TENANTS/RESIDENTS AND ALL OTHERS IN POSSESSION.  PLEASE TAKE NOTICE, 
+    that you are justly indebted to the owner of the herein described premises; and notice is
+    hereby given that pursuant to the lease and/or rental agreement under which you hold 
+    possession there is now due, unpaid and delinquent rent.  
+</div>          
+
+<div class="portlet3nb">
+    <div class="row">The total amount owing represents rent due for the following period(s).</div>
+<?php foreach($owed as $row)
+{
+    ?>
+    <div class="row"> 
+        Due from <?php echo $row['date_month']."/".$row['date_day']."/".$row['date_year'] ?>, 
+        thru <?php echo $row['enddate_month']."/".$row['enddate_day']."/".$row['enddate_year'] ?> <span class="bold">$<?php echo $row['transaction_amount']?></span>
+    </div>
+    <?php
+}         
+?>
+    <div class="row">
+        <span class="col1r">
+        Total Rent Now Due <span class="bold">$<?php echo $net ?></span>
+        </span>
+    </div>
+</div>
+
+<div class="portlet2nb">
+    WITHIN THREE (3) DAYS after service on you of this notice, you are hereby required 
+    to pay the amount of the above stated rent in full OR quit the subject premises, 
+    move out, and deliver up possession to the owner and/or his authorized agent. 
+    No personal checks will be accepted.
+</div>
+
+<div class="portlet2nb">
+    PLEASE TAKE FURTHER NOTICE that unless you pay the rent in full OR vacate the premises
+    WITHIN THREE (3) DAYS as required by this notice, that the undersigned does hereby elect
+    to declare forfeiture of your lease or rental agreement and institute legal proceedings
+    for an unlawful detainer against you to recover possession of the premises plus court costs,
+    attorney fees, and THREE TIMES THE AMOUNT OF RENT AND DAMAGES due as provided for by California law.
+</div>
+
+<div class="portlet2">
+    <div class="row">
+        The premises herein referred to which you hold and/or occupied by you are:
+    </div>
+    <div class="row">
+        <?php echo $property_address." ".$property_aptnum ?><BR/>
+        <?php echo $property_city. " ".$property_state.", ".$property_zip ?><BR/>
+        County Of: <?php echo $property_county ?>
+    </div>
+</div>  
+
+<div class="portlet">
+    <div class="row">
+    Location to pay rent:
+    </div>
+    <div class="row">
+        <?php echo $SYS_INFO['COMPANY_NAME'] ?> <BR />
+        <?php echo $SYS_INFO['COMPANY_PHYSADDRESS1'] ?> <BR />
+        <?php echo $SYS_INFO['COMPANY_PHYSADDRESS2'] ?>
+    </div>
+    <div class="row">
+        <?php echo $SYS_INFO['COMPANY_BUSINESSDT'] ?>  <?php echo $SYS_INFO['COMPANY_PHONE'] ?>
+    </div>
+</div>
+<div class="p2col2">
+    ____________________________________ ________
+    PERSON AUTHORIZED TO GIVE NOTICE     Date
+</div>
+   
+   <div class="portlet4">
+        <div class="row" align="center">
+            <span class="mediumbold">PROOF OF SERVICE</span>
+        </div>
+        <div class="row">
+            I, the undersigned, being at least 18 years of age, declare under penalty of perjury that I served the above notice, of which
+            this is a true copy, on the following tenant(s) in possession in the manner(s) indicated below:
+        </div>
+        <div class="row">
+            ___ On <?php echo $noticedate_month."/".$noticedate_day."/".$noticedate_year ?>, I handed the notice to the tenant(s)personally.
+        </div>
+        <div class="row">
+            ___On <?php echo $noticedate_month."/".$noticedate_day."/".$noticedate_year ?>, after attempting service in both manners indicated previously, I posted the notice in a 
+            conspicuous place at the residence of the tenant(s), AND I deposited a true copy in the U.S. Mail, 
+            in a sealed envelope with postage fully prepaid, addressed to the tenant(s) at his/her/their place of residence
+            (date mailed, if different________)
+        </div>
+        <div class="row">
+            ___On <?php echo $noticedate_month."/".$noticedate_day."/".$noticedate_year ?>, after attempting personal service, I handed the notice to a person of suitable age and
+            discretion at the residence/business of the tenant(s), AND I deposited a true copy in the U.S. Mail,
+            in a sealed envelope with postage fully prepaid, addressed to the tenant(s) at his/her/their place of residence
+            (date mailed, if different________)
+        </div>
+        <div class="row">
+            Executed on __________________Served by ____________________
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
+

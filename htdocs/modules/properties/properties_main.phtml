@@ -1,0 +1,89 @@
+<?php
+require_once("../../../framework/theme.css");
+require_once("properties_main.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+?>
+
+<div class="portlet">
+    <form action="<?php echo $BASE_DIR ?>/properties/properties_main.php"  method=POST>
+        <div class="divheader">Enter Property Info</div>
+        <div class="row">
+            <span class="col1">&nbsp;
+            <input type="HIDDEN"  name="property_id"  value="<?php echo $property_id ?>" size="15"></span>
+            <span class="col1">
+            <input type="SUBMIT"  name="ACTION"  value="SAVE">
+            </span>
+        </div>    
+            <?php include("properties_infotable.phtml"); ?>
+    <div class="row">
+        <span class="col1">&nbsp;
+        </span>
+        <span class="col1">
+        </span>
+        <span class="col1"><input type="SUBMIT"  name="ACTION"  value="SAVE">
+        <input type="HIDDEN"  name="property_id"  value="<?php echo $property_id ?>" size="15">
+        </span>
+    </div> 
+	</form>
+</div>    
+    <div class="portlet2">
+        <div class="divheader" ALIGN="center" COLSPAN="3" >PROPERTIES-<a href="<?php echo $BASE_DIR ?>/properties/properties_print.php?sortby=prop" >PRINT-PROP</a></div>
+        <div class="row">
+            <span class="col2"><span class="bc"><a href="<?php echo $BASE_DIR ?>/properties/properties_main.php?sortby=prop" >Property</a></span></span>
+        </div>    
+    <?php
+        if(is_array($current_props))
+        {
+            foreach($current_props as $row)
+            {
+                ?>
+                <form action="<?php echo $BASE_DIR ?>/properties/properties_edit.php"  target="_blank" method=POST>
+                <div class="row">
+                    <span class="col2">
+                        <a target="_blank" href="<?php echo $BASE_DIR ?>/properties/properties_edit.php?property_id=<?php echo $row['property_id'] ?>" ><?php echo $row['property_address']." ".$row['property_aptnum']?><BR /></a>
+                    </span>
+                    <span class="col2">
+                        <a target="_blank" href="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<?php echo $row['cv_id'] ?>" ><?php echo $row['cv_name']?></a>
+                    </span>
+                </div>    
+                </form>
+            <?php
+            }
+        }
+        ?>
+        <div class="row">
+        <span>Total Count
+        </span><span>
+        <?php  echo count($current_props);?>
+        </span>
+        </div>
+    </div>
+    <div class="portlet2">
+        <div class="divheader" ALIGN="center" COLSPAN="3" >PROPERTIES - CLOSED</div>
+        <div class="row">
+            <span class="col2"><span class="bc">Property</span></span>
+        </div>    
+    <?php
+        if(is_array($closed_props))
+        {
+            foreach($closed_props as $row)
+            {
+                ?>
+                <form action="<?php echo $BASE_DIR ?>/properties/properties_edit.php"  target="_blank" method=POST>
+                <div class="row">
+                    <span class="col2">
+                        <a target="_blank" href="<?php echo $BASE_DIR ?>/properties/properties_edit.php?property_id=<?php echo $row['property_id'] ?>" ><?php echo $row['property_address']." ".$row['property_aptnum']?><BR /></a>
+                    </span>
+                    <span class="col2">
+                        <a target="_blank" href="<?php echo $BASE_DIR ?>/cv_master/cv_master_edit.php?cv_id=<?php echo $row['cv_id'] ?>" ><?php echo $row['cv_name']?></a>
+                    </span>
+                </div>    
+                 </form>
+            <?php
+            }
+        }
+        ?>
+    </div>
+
+
+</div>

@@ -1,0 +1,50 @@
+<?php
+include("../../../framework/theme.css");
+include("transactions_reconcile.css");
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+?>
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/transactions/transactions_reconcile3.php" target="_blank" method=POST>
+    <div class="divheader">Reconcile</div>
+    <div class="row">
+        <span class="label">Account:</span>
+        <span class="formw">
+            <SELECT  SIZE="1" NAME="account_id" >
+            <?php
+            foreach($accountIDtoFullnameArray AS $key => $value)
+            {
+                echo "<OPTION value=\"".$key."\"";
+                echo ">".$value."</OPTION>\n";
+            }
+            ?>
+            </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Reconcile thru Date:</span>
+        <span class="formw">
+             <?php
+                Framework::date_selectors($date_year, $date_month, $date_day, "", "");
+                ?>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Ending Balance:</span>
+        <span class="formw">
+             <input name=ending_balance></input>
+        </span>
+    </div>    
+               
+    <div class="row">
+        <span class="label">
+            <input type="SUBMIT"  name="ACTION"  value="Reconcile">
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">
+            <input type="SUBMIT"  name="ACTION"  value="Record Reconcile Date">
+        </span>
+    </div>    
+</form>
+</div>

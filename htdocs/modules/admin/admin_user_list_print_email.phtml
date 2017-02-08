@@ -1,0 +1,16 @@
+        <table>
+
+    <?
+        if(is_array($users)){
+        foreach($users as $user)
+        {
+        ?>
+			<tr>
+               <td><? echo $user['user_email'] ?>
+                </td>
+			</tr>
+        <?
+        }
+        }
+    ?>	
+    </table>

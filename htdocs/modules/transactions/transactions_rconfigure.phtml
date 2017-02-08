@@ -1,0 +1,64 @@
+<?
+include("../../../framework/theme.css");
+include("transactions_rconfigure.css");
+framework::navbar();
+?>
+<div class="module_container">
+    <div class="portlet" >
+    <form action="<? echo $BASE_DIR ?>/transactions/transactions_rconfigure.php"  method=POST>
+        <div class="divheader">Create New Recurring Catagory</div>
+        <div class="row">
+            <span class="label">Type:</span>
+            <span class="formw">
+                <input type="TEXT"  name="recurringtype_name"  value="<? echo $recurringtype_name; ?>" >
+            </span>
+        </div>
+        <div class="row">
+            <span class="label">
+                <input type="HIDDEN"  name="recurringtype_id"  value="<? echo $recurringtype_id; ?>">
+                <input type="SUBMIT"  name="ACTION"  value="Save Type">
+                <input type="SUBMIT"  name="ACTION"  value="Update Recurring">
+            </span>
+        </div>
+    </form>
+    </div>
+    
+    <div class="portlet" >
+        <div class="divheader">Recurring Types</div>
+    
+    <?
+    foreach($types as $row)
+    {
+        ?>
+        <form action="<? echo $BASE_DIR ?>/transactions/transactions_rconfigure.php"  method=POST>
+        <div class="row">
+            <span class="label"><? echo $row['recurringtype_name']; ?></span>
+            <span class="formw">
+                <input type="HIDDEN"  name="recurring_type_edit"  value="<? echo $row['recurringtype_id']; ?>" >
+                <input type="SUBMIT"  name="ACTION"  value="Edit Type">
+            </span>
+        </div>
+        </form>
+    <?
+    }
+    ?>
+    </div>
+    
+    <div class="portlet" >
+        <div class="divheader">Recurring Summary</div>
+    
+    <?
+    foreach($summary as $row)
+    {
+        ?>
+        <div class="row">
+            <span class="col1"><? echo $row['recurringtype_name']; ?></span>
+            <span class="col1"><? echo $row['total']; ?>
+            </span>
+        </div>
+        
+    <?
+    }
+    ?>
+    </div>
+</div>

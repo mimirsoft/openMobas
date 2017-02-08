@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><?php  ?></title>
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="admin_edit.css" media="screen" >
+</head>
+<body>
+<?php
+
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+?>
+<div class="portlet">
+    <form action="<?php echo $BASE_DIR ?>/admin/admin_edit.php"  method=POST>
+    <div class="divheader">User Info</div>
+        <div class="row">
+            <span class="label">
+                User Name:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="username"  value="<?php echo $user->GetUserName(); ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                Password:
+            </span>
+            <span class="formw">
+                <input type="password"  name="md5_pw"  value="" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                Password Again:
+            </span>
+            <span class="formw">
+                <input type="password"  name="md5_pw2"  value="" >
+                <input type="checkbox"  name="update_pass"  >Check to Change
+            </span>
+        </div>    
+         <div class="row">
+            <span class="label">
+                First Name:
+            </span>
+            <span class="formw">
+                <input type="TEXT"  name="user_firstname"  value="<?php echo  $user->GetFirstname(); ?>" >
+            </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                Last Name:
+            </span>
+            <span class="formw">
+               <input type="TEXT"  name="user_lastname"  value="<?php echo  $user->GetLastname(); ?>" >
+           </span>
+         </div>    
+        <div class="row">
+            <span class="label">
+                User Default Phone:
+            </span>
+            <span class="formw">
+               <input type="TEXT"  name="user_default_phone"  value="<?php echo  $user->GetTelephone(); ?>" >
+           </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+                User Email:
+            </span>
+            <span class="formw">
+               <input type="TEXT"  name="user_email"  value="<?php echo  $user->GetEmail(); ?>" >
+           </span>
+        </div>    
+        <div class="row">
+            <span class="label">
+            </span>
+            <span class="formw">
+                <input type="HIDDEN"  name="user_id"  value="<?php echo  $user->GetUserID_no_test(); ?>" >
+                <input type="SUBMIT"  name="ACTION"  value="Save User" >
+                <input type="SUBMIT"  name="ACTION"  value="Delete User" >
+           </span>
+        </div>    
+    </form>
+</div>

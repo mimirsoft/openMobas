@@ -1,0 +1,630 @@
+    <div class="row">
+        <span class="label">Owners:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="cv_id" >
+        <?php
+        foreach($owners as $row)
+        {
+            ?>
+            <OPTION <?php if($prop['cv_id'] == $row['cv_id']){echo " SELECTED ";}?> value="<?php echo $row['cv_id'] ?>"><?php echo $row['cv_name'] ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT>
+        </span>
+    </div> 
+    <div class="row">
+        <span class="label">Address:</span>
+        <span class="formw"><input type="TEXT"  name="address"  value="<?php echo $address; ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Apt. #:</span>
+        <span class="formw"><input type="TEXT"  name="aptnum"  value="<?php echo $aptnum; ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">City:</span>
+        <span class="formw"><input type="TEXT"  name="city"  value="<?php echo $city; ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">State:</span>
+        <span class="formw"><input type="TEXT"  name="state"  value="<?php echo $state; ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Zip:</span>
+        <span class="formw"><input type="TEXT"  name="zip"  value="<?php echo $zip; ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">County:</span>
+        <span class="formw"><input type="TEXT"  name="county"  value="<?php echo $county; ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">T.G #:</span>
+        <span class="formw"><input type="TEXT"  name="thomasguidenum"  value="<?php echo $thomasguidenum; ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Prop #:</span>
+        <span class="formw"><input type="TEXT"  name="propnum"  value="<?php echo $propnum; ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Type:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="propertytype_id" >
+        <?php
+        foreach($propTypes as $row)
+        {
+            ?>
+            <OPTION <?php if($propertytype_id == $row['propertytype_id']){echo " SELECTED ";}?> value="<?php echo $row['propertytype_id'] ?>"><?php echo $row['propertytype_name'] ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT>
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Complex:</span>
+        <span class="formw"><input type="TEXT"  name="complex"  value="<?php echo stripslashes($complex); ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Area:</span>
+        <span class="formw"><input type="TEXT"  name="area"  value="<?php echo $area; ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Parking:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="parking" >
+        <?php
+        $parking_SELECT[] = "NONE";
+        $parking_SELECT[] = "STREET ONLY";
+        $parking_SELECT[] = "1 ASSIGNED SPACE";
+        $parking_SELECT[] = "2 ASSIGNED SPACES";
+        $parking_SELECT[] = "3 ASSIGNED SPACES";
+        $parking_SELECT[] = "4 ASSIGNED SPACES";
+        foreach($parking_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($parking == $option)echo " selected "; ?>> <?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT>
+    </div>    
+    <div class="row">
+        <span class="label">Parking #:</span>
+        <span class="formw"><input type="TEXT"  name="parknum"  value="<?php echo $parknum; ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Garage:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="garage" >
+        <?php
+        $garage_SELECT[] = "NONE";
+        $garage_SELECT[] = "1 CAR ATTACHED";
+        $garage_SELECT[] = "1 CAR DETACHED";
+        $garage_SELECT[] = "1 CAR CARPORT";
+        $garage_SELECT[] = "2 CAR ATTACHED";
+        $garage_SELECT[] = "2 CAR DETACHED";
+        $garage_SELECT[] = "2 CAR CARPORT";
+        $garage_SELECT[] = "3 CAR ATTACHED";
+        $garage_SELECT[] = "3 CAR DETACHED";
+        $garage_SELECT[] = "3 CAR CARPORT";
+        $garage_SELECT[] = "4 CAR ATTACHED";
+        $garage_SELECT[] = "4 CAR DETACHED";
+        $garage_SELECT[] = "4 CAR CARPORT";
+        foreach($garage_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($garage == $option)echo " selected "; ?>> <?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT>
+    </div>    
+    <div class="row">
+        <span class="label">Garage #:</span>
+        <span class="formw"><input type="TEXT"  name="garagenum"  value="<?php echo $garagenum; ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Garage/Park Additional Info:</span>
+        <span class="formw"><input type="TEXT"  name="garageinfo"  value="<?php echo $garageinfo; ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Openers:</span>
+        <span class="formw"><input type="TEXT"  name="openers"  value="<?php echo $openers; ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Mail Box #:</span>
+        <span class="formw"><input type="TEXT"  name="mailboxnum"  value="<?php echo $mailboxnum; ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Square Ft: </span>
+        <span class="formw"><input type="TEXT"  name="sqft"  value="<?php echo $sqft ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Year Built:</span>
+        <span class="formw"><input type="TEXT"  name="yrblt"  value="<?php echo $yrblt ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label"># of Rooms:</span>
+        <span class="formw"><input type="TEXT"  name="numrm"  value="<?php echo $numrm ?>" size="15"></span>
+    </div>    
+     <div class="row">
+        <span class="label">Bedrooms:</span>
+        <span class="formw"><input type="TEXT"  name="numbed"  value="<?php echo $numbed ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Bathrooms:</span>
+        <span class="formw"><input type="TEXT"  name="numbath"  value="<?php echo $numbath ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Refridgerator:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="refridge" >
+        <?php
+        $refridge_SELECT[] = "NO";
+        $refridge_SELECT[] = "YES";
+        foreach($refridge_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($refridge == $option)echo " selected "; ?>><?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Dishwasher:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="dishwasher" >
+        <?php
+        $dishwasher_SELECT[] = "NO";
+        $dishwasher_SELECT[] = "YES";
+        foreach($dishwasher_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($dishwasher == $option)echo " selected "; ?>><?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Microwave:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="microwave" >
+        <?php
+        $microwave_SELECT[] = "NO";
+        $microwave_SELECT[] = "YES";
+        foreach($microwave_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($microwave == $option)echo " selected "; ?>><?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Stove:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="stove" >
+        <?php
+        $stove_SELECT[] = "NONE";
+        $stove_SELECT[] = "GAS";
+        $stove_SELECT[] = "ELECTRIC";
+        foreach($stove_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($stove == $option)echo " selected "; ?>> <?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Fireplace:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="fireplace" >
+        <?php
+        $fireplace_SELECT[] = "NONE";
+        $fireplace_SELECT[] = "YES";
+        $fireplace_SELECT[] = "UNKNOWN";
+        $fireplace_SELECT[] = "GAS";
+        $fireplace_SELECT[] = "WOOD";
+        $fireplace_SELECT[] = "GAS AND WOOD";
+        foreach($fireplace_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($fireplace == $option)echo " selected "; ?>> <?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Heat:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="heat" >
+        <?php
+        $heat_SELECT[] = "GAS";
+        $heat_SELECT[] = "ELECTRIC";
+        $heat_SELECT[] = "GAS CENTRAL FURNACE";
+        $heat_SELECT[] = "GAS WALL FURNACE";
+        $heat_SELECT[] = "ELECTRIC RADIANT HEAT";
+        foreach($heat_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($heat == $option)echo " selected "; ?>> <?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Air:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="air" >
+        <?php
+        $air_SELECT[] = "NO A/C";
+        $air_SELECT[] = "YES";
+        $air_SELECT[] = "CENTRAL A/C";
+        $air_SELECT[] = "ROOM A/C";
+        foreach($air_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($air == $option)echo " selected "; ?>> <?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Washer:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="washer" >
+        <?php
+        $washer_SELECT[] = "NONE";
+        $washer_SELECT[] = "HOOK UPS";
+        $washer_SELECT[] = "YES";
+        $washer_SELECT[] = "INCLUDED IN GARAGE";
+        $washer_SELECT[] = "INCLUDED INSIDE";
+        $washer_SELECT[] = "HOOKUP IN GARAGE";
+        $washer_SELECT[] = "HOOKUP INSIDE";
+        $washer_SELECT[] = "ON SITE";
+        
+        foreach($washer_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($washer == $option)echo " selected "; ?>> <?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Dryer:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="dryer" >
+        <?php
+        $dryer_SELECT[] = "NONE";
+        $dryer_SELECT[] = "GAS";
+        $dryer_SELECT[] = "ELECTRIC";
+        $dryer_SELECT[] = "HOOK-UP GAS";
+        $dryer_SELECT[] = "HOOK-UP ELECTRIC";
+        $dryer_SELECT[] = "INCLUDED IN GARAGE";
+        $dryer_SELECT[] = "INCLUDED INSIDE";
+        $dryer_SELECT[] = "HOOKUP IN GARAGE - GAS";
+        $dryer_SELECT[] = "HOOKUP IN GARAGE - ELECTRIC";
+        $dryer_SELECT[] = "HOOKUP IN GARAGE - BOTH";
+        $dryer_SELECT[] = "HOOKUP INSIDE - GAS";
+        $dryer_SELECT[] = "HOOKUP INSIDE - ELECTRIC";
+        $dryer_SELECT[] = "HOOKUP INSIDE - BOTH";
+        $dryer_SELECT[] = "ON SITE";
+        
+        foreach($dryer_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($dryer == $option)echo " selected "; ?>> <?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Pool:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="pool" >
+        <?php
+        $poolspa_SELECT[] = "NONE";
+        $poolspa_SELECT[] = "PRIVATE POOL";
+        $poolspa_SELECT[] = "COMMUNITY POOL";
+        
+        foreach($poolspa_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($pool == $option)echo " selected "; ?>> <?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Spa:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="spa" >
+        <?php
+        $spa_SELECT[] = "NONE";
+        $spa_SELECT[] = "PRIVATE SPA";
+        $spa_SELECT[] = "COMMUNITY SPA";
+        
+        foreach($spa_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($spa == $option)echo " selected "; ?>> <?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Landscaping:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="landscaping" >
+        <?php
+        $landscaping_SELECT[] = "TENANT MAINTAINS";
+        $landscaping_SELECT[] = "OWNER MAINTAINS";
+        $landscaping_SELECT[] = "HOA MAINTAINS";
+        $landscaping_SELECT[] = "NONE";
+        foreach($landscaping_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($landscaping == $option)echo " selected "; ?>> <?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Pets:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="pets" >
+        <?php
+        $pets_SELECT[] = "YES";
+        $pets_SELECT[] = "NO";
+        foreach($pets_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($pets == $option)echo " selected "; ?>> <?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Pet Deposit:</span>
+        <span class="formw"><input type="TEXT"  name="petdeposit"  value="<?php echo $petdeposit ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Pet Additional Info:</span>
+        <span class="formw"><input type="TEXT"  name="petdescription"  value="<?php echo $petdescription ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Smoking:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="smoking" >
+        <?php
+        $smoking_SELECT[] = "NO";
+        $smoking_SELECT[] = "YES";
+        foreach($smoking_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($smoking == $option)echo " selected "; ?>> <?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Who Pays Gas:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="whopaygas" >
+        <?php
+        $whopaygas_SELECT[] = "TENANT";
+        $whopaygas_SELECT[] = "OWNER";
+        $whopaygas_SELECT[] = "HOA";
+        $whopaygas_SELECT[] = "NO GAS";
+        foreach($whopaygas_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($whopaygas == $option)echo " selected "; ?>> <?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Who Pays Electric:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="whopayelec" >
+        <?php
+        $whopayelec_SELECT[] = "TENANT";
+        $whopayelec_SELECT[] = "OWNER";
+        $whopayelec_SELECT[] = "HOA";
+        foreach($whopayelec_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($whopayelec == $option)echo " selected "; ?>> <?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Who Pays Water/Sewer:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="whopaywater" >
+        <?php
+        $whopaywater_SELECT[] = "TENANT";
+        $whopaywater_SELECT[] = "OWNER";
+        $whopaywater_SELECT[] = "HOA";
+        foreach($whopaywater_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($whopaywater == $option)echo " selected "; ?>> <?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Garbage:</span>
+        <span class="formw"><SELECT class="smallsans" SIZE="1" NAME="whopaygarbage" >
+        <?php
+        $whopaygarbage_SELECT[] = "TENANT";
+        $whopaygarbage_SELECT[] = "OWNER";
+        $whopaygarbage_SELECT[] = "HOA";
+        foreach($whopaygarbage_SELECT as $option)
+        {
+            ?>
+            <OPTION value="<?php echo $option ?>" <?php if($whopaygarbage == $option)echo " selected "; ?>> <?php echo $option ?></OPTION>
+            <?php
+        }
+        ?>
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Association Name(if any):</span>
+        <span class="formw"><input type="TEXT"  name="hoa"  value="<?php echo $hoa ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Association Manager(if any):</span>
+        <span class="formw"><input type="TEXT"  name="hoa_manager"  value="<?php echo $hoa_manager ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Association Number(if any):</span>
+        <span class="formw"><input type="TEXT"  name="hoa_number"  value="<?php echo $hoa_number ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Comments:</span>
+        <span class="formw">
+            <TEXTAREA name="comments" rows="6" cols="80"><?php echo  stripslashes($comments) ?></TEXTAREA>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">Description:</span>
+        <span class="formw">
+            <TEXTAREA name="description" rows="6" cols="80"><?php echo  stripslashes($description) ?></TEXTAREA>
+        </span>
+    </div>
+    <div class="row">
+        <span class="label">Rent Desired:</span>
+        <span class="formw"><input type="TEXT"  name="rentdesired"  value="<?php echo $rentdesired ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Rent Minimum:</span>
+        <span class="formw"><input type="TEXT"  name="rentmin"  value="<?php echo $rentmin ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Lease Desired:</span>
+        <span class="formw"><input type="TEXT"  name="leasedesired"  value="<?php echo $leasedesired ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Lease Minimum:</span>
+        <span class="formw"><input type="TEXT"  name="leasemin"  value="<?php echo $leasemin ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Management Rate:</span>
+        <span class="formw"><input type="TEXT"  name="feepercent"  value="<?php echo $feepercent ?>" size="15"></span>
+    </div>    
+    <div class="row">
+        <span class="label">Property Status:</span>
+        <span class="formw"><SELECT class="smallsans" NAME="property_status">
+            <OPTION
+            <?php
+            if ($property_status == 'CURRENT')
+                {
+                    echo "SELECTED";
+                }
+            ?>
+            VALUE="CURRENT">CURRENT</OPTION>
+            <OPTION
+            <?php
+            if ($property_status == 'CLOSED')
+                {
+                    echo "SELECTED";
+                }
+            ?>
+            VALUE="CLOSED">CLOSED</OPTION>
+            <OPTION
+            <?php
+            if ($property_status == 'OLD')
+                {
+                    echo "SELECTED";
+                }
+            ?>
+            VALUE="OLD">OLD</OPTION>
+            </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Property Available?:</span>
+        <span class="formw"><SELECT class="smallsans" NAME="property_avail">
+            <OPTION
+            <?php
+            if ($property_avail == 'Y')
+                {
+                    echo "SELECTED";
+                }
+            ?>
+            VALUE="Y">YES</OPTION>
+            <OPTION
+            <?php
+            if ($property_avail == 'N')
+                {
+                    echo "SELECTED";
+                }
+            ?>
+            VALUE="N">NO</OPTION>
+            </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Property For Sale?:</span>
+        <span class="formw"><SELECT class="smallsans" NAME="property_sale">
+            <OPTION
+            <?php
+            if ($prop['property_sale'] == 'Y')
+                {
+                    echo "SELECTED";
+                }
+            ?>
+            VALUE="Y">YES</OPTION>
+            <OPTION
+            <?php
+            if ($prop['property_sale'] == 'N')
+                {
+                    echo "SELECTED";
+                }
+            ?>
+            VALUE="N">NO</OPTION>
+            </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Property a Short Term Rental?:</span>
+        <span class="formw"><SELECT class="smallsans" NAME="shortterm">
+            <OPTION
+            <?php
+            if ($prop['property_shortterm'] == 'Y')
+                {
+                    echo "SELECTED";
+                }
+            ?>
+            VALUE="Y">YES</OPTION>
+            <OPTION
+            <?php
+            if ($prop['property_shortterm'] == 'N')
+                {
+                    echo "SELECTED";
+                }
+            ?>
+            VALUE="N">NO</OPTION>
+            </SELECT></span>
+    </div>
+    <div class="row">
+        <span class="label">Property Maintenance?:</span>
+        <span class="formw"><SELECT class="smallsans" NAME="maintenance">
+            <OPTION
+            <?php
+            if ($prop['property_maintenance'] == 'Y')
+                {
+                    echo "SELECTED";
+                }
+            ?>
+            VALUE="Y">YES</OPTION>
+            <OPTION
+            <?php
+            if ($prop['property_maintenance'] == 'N')
+                {
+                    echo "SELECTED";
+                }
+            ?>
+            VALUE="N">NO</OPTION>
+            </SELECT></span>
+    </div>
+   

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><?php  ?></title>
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="leads_main.css" media="screen" >
+</head>
+<body>
+
+
+<?php 
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+
+?>
+<script language="JavaScript"
+
+type="text/javascript">
+var lead_id = <?php echo $lead_id ?>;
+
+
+function remove_tag(tag_id) {
+	  var myForm = document.createElement("form");
+	  myForm.method="post" ;
+	  myForm.action = '<?php echo $_SERVER['PHP_SELF']?>' ;
+	  var myInput = document.createElement("input") ;
+	  myInput.setAttribute("name", 'ACTION') ;
+	  myInput.setAttribute("value", 'Remove Tag');
+	  myForm.appendChild(myInput) ;
+	  var myInput = document.createElement("input") ;
+	  myInput.setAttribute("name", 'lead_id') ;
+	  myInput.setAttribute("value", lead_id);
+	  myForm.appendChild(myInput) ;
+	  var myInput = document.createElement("input") ;
+	  myInput.setAttribute("name", 'leadcat_id') ;
+	  myInput.setAttribute("value", tag_id);
+	  myForm.appendChild(myInput) ;
+	  document.body.appendChild(myForm) ;
+	  myForm.submit() ;
+	  document.body.removeChild(myForm) ;
+}
+
+</script>
+
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/leads/leads_update.php"  method=POST>
+    <div class="divheader">Lead</div>
+    <div class="row">
+        <span class="label">First Name:</span>
+        <span class="formw">
+            <input type="TEXT"  ID="firstname" name="firstname"  value="<?php echo $lead_info['firstname']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Last Name:</span>
+        <span class="formw">
+            <input type="TEXT"  ID="lastname" name="lastname"  value="<?php echo $lead_info['lastname']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Tags:</span>
+        <span class="formw">
+<?php
+            foreach($lead_tags as $row)
+            {
+                ?>
+                   <div class="leadtag"><?php echo $row['leadcat_name']; ?>|<span onclick="remove_tag(<?php echo $row['leadcat_id']; ?>)"> X&nbsp;</span></div>
+                <?php
+            }
+?>            
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Tag:</span>
+        <span class="formw"><SELECT  class="smallsans" SIZE="1" NAME="leadcat_id" >
+<?php
+            foreach($leadtypes as $row)
+            {
+                ?>
+                    <OPTION VALUE="<?php echo $row['leadcat_id'];?>"
+                    <?php 
+                    /*
+                     * Not sure why this is here.  This has been changes
+                     * to a many to many tagging system, rather than a catagory system
+                     * if($lead_info['leadcat_id'] == $row['leadcat_id'])
+                    { 
+                        echo " selected";
+                    }
+                    */
+                    ?>
+                    ><?php echo $row['leadcat_name']; ?>
+                    </OPTION>
+                <?php
+            }
+?>	
+        </SELECT><input type="SUBMIT"  name="ACTION"  value="Add Tag" ></span>
+    </div>    
+    <div class="row">
+        <span class="label">Origin:</span>
+        <span class="formw"><SELECT  class="smallsans" SIZE="1" NAME="leadorigin_id" >
+<?php
+            foreach($leadOrigin as $row)
+            {
+                ?>
+                    <OPTION VALUE="<?php echo $row['leadorigin_id']; ?>"<?php if($lead_info['leadorigin_id'] == $row['leadorigin_id']){echo " SELECTED "; } ?> ><?php echo $row['leadorigin_name']; ?></OPTION>
+                <?php
+            }
+?>	
+        </SELECT></span>
+    </div>    
+ 	<div class="row">
+        <span class="label">Color:</span>
+        <span class="formw">
+        <SELECT  class="smallsans" SIZE="1" NAME="color" >
+<?php
+            $colors = array("none", "lime", "teal", "cyan", "magenta", "pink", "salmon", "yellow",  "orange", "seagreen");
+            foreach($colors as $row)
+            {
+                ?>
+                    <OPTION VALUE="<?php echo $row; ?>"<?php if($lead_info['color'] == $row){echo " SELECTED "; } ?> ><?php echo $row; ?></OPTION>
+                <?php
+            }
+?>	
+        </SELECT></span>
+    </div> 
+    <div class="row">
+        <span class="label">Property Address:</span>
+        <span class="formw">
+            <input type="TEXT"  name="prop_street" ID="prop_street"  value="<?php echo $lead_info['prop_street']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Property Unit:</span>
+        <span class="formw">
+            <input type="TEXT"  name="prop_unit" ID="prop_unit"  value="<?php echo $lead_info['prop_unit']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Property City</span>
+        <span class="formw">
+                <input type="TEXT"  name="prop_city" ID="prop_city" value="<?php echo $lead_info['prop_city']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Property State:</span>
+        <span class="formw">
+            <input type="TEXT"  name="prop_state" ID="prop_state"  value="<?php echo $lead_info['prop_state']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Property Zip:</span>
+        <span class="formw">
+            <input type="TEXT"  name="prop_zip" ID="prop_zip"  value="<?php echo $lead_info['prop_zip']; ?>" >  
+        </span>
+    </div>    
+ 
+    <div class="row">
+        <span class="label">Address:</span>
+        <span class="formw">
+            <input type="TEXT"  name="street" ID="street"  value="<?php echo $lead_info['street']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">City</span>
+        <span class="formw">
+                <input type="TEXT"  name="city" ID="city" value="<?php echo $lead_info['city']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">State:</span>
+        <span class="formw">
+            <input type="TEXT"  name="state" ID="state"  value="<?php echo $lead_info['state']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Zip:</span>
+        <span class="formw">
+            <input type="TEXT"  name="zip" ID="zip"  value="<?php echo $lead_info['zip']; ?>" >  
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Phone Number:</span>
+        <span class="formw">
+            <input type="TEXT"  name="phone_num" ID="phone_num"  value="<?php echo $lead_info['phone_num']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Phone Number2:</span>
+        <span class="formw">
+            <input type="TEXT"  name="phone_num2" ID="phone_num2"  value="<?php echo $lead_info['phone_num2']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Email:</span>
+        <span class="formw">
+            <input type="TEXT"  name="email_address" ID="email_address"  value="<?php echo $lead_info['email_address']; ?>" >
+        </span>
+    </div>    
+        <div class="row">
+            <span class="label">When To Follow Up:</span>
+            <span class="formw">
+                <?php
+                $FRAMEWORK->date_selectors($whenreturn_date_year, $whenreturn_date_month, $whenreturn_date_day, "whenreturn_", "")
+                ?>
+            <input type="text" name="whenreturn_date_hour" size="2" value="<?php echo $whenreturn_date_hour ?>" maxlength="2" />:
+            <input type="text" name="whenreturn_date_minute" size="2" value="<?php echo $whenreturn_date_minute ?>" maxlength="2" />
+            <input type="radio" name="ampm" value="am" <?php if( date('H', $str_when_return) < 12){ echo " checked";} ?> />am
+            <input type="radio" name="ampm" value="pm" <?php if( date('H', $str_when_return) >= 12){ echo " checked";} ?> />pm
+            <input type="SUBMIT"  name="ACTION"  value="Add Callback" ><?php echo $callback; ?>
+            <input type="SUBMIT"  name="ACTION"  value="Add Appointment" ><?php echo $appt_msg; ?>
+            </span>
+        </div>    
+   <div class="row">
+        <span class="label">Comments:</span>   
+        <span class="formw"><TEXTAREA name="comments" rows="10" cols="60"><?php echo $FRAMEWORK->br2nl($lead_info['comments']); ?></TEXTAREA></span>
+    </div>
+   <div class="row">
+        <span class="label">Property Description:</span>   
+        <span class="formw"><TEXTAREA name="description" rows="10" cols="60"><?php echo $FRAMEWORK->br2nl($lead_info['description']); ?></TEXTAREA></span>
+    </div>
+    <div class="row">
+        <span class="label">Assign To:</span>
+        <span class="formw"><SELECT  SIZE="1" NAME="whoassigned_id" >
+        <?php foreach($users as $row)
+        {	
+            ?><OPTION VALUE="<?php echo $row['user_id'] ?>" <?php if($row['user_id'] ==  $lead_info['whoassigned_id']){echo " SELECTED ";} ?> ><?php echo $row['username'] ?></OPTION><?php
+        }
+        ?>
+        </SELECT>
+        </span>
+    </div>    
+     <div class="row">
+        <span class="label">&nbsp</span>
+        <span class="formw">
+            <input type="HIDDEN"  name="lead_id"  value="<?php echo $lead_info['lead_id'] ?>" >
+            <input type="SUBMIT"  name="ACTION" value="Save Lead" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">
+        <?php if($lead_info['closed_yn'] == 'YES')
+        { 
+            ?><input type="SUBMIT"  name="ACTION"  value="Reopen Lead" ><?php 
+        }
+        else
+        {
+            ?><input type="SUBMIT"  name="ACTION"  value="Close Lead" ><?php 
+        }
+        ?>
+        <span class="label"><input type="SUBMIT"  name="ACTION"  value="Convert Lead" >
+    </div>    
+</form>
+</div>    
+
+<div class="portlet">
+    <div class="divheader">Lead History</div>
+    <form action="<?php echo $BASE_DIR ?>/leads/leads_update.php"  method=POST>
+    <div class="row">
+        <span class="label">Comments:</span>   
+        <span class="formw"><TEXTAREA name="leadupdate_txt" rows="10" cols="60"></TEXTAREA></span>
+    </div>
+    <div class="row">
+        <span class="label">&nbsp</span>   
+        <span class="formw">
+            <input type="HIDDEN"  name="lead_id"  value="<?php echo $lead_info['lead_id'] ?>" >
+            <input type="SUBMIT"  name="ACTION"  value="Add Update" >
+        </span>
+    </div>
+    </form>  
+  <?php
+    if(is_array($caseentrys))
+    {
+        foreach($caseentrys as $row)
+        {
+            ?>
+            <div class="row">
+                <span class="col1">
+                    <?php echo $userArray[$row['user_id']]['username'] ?><BR /><?php echo $row['entry_date'] ?>
+                </span>
+                <span class="formw">
+                    <?php echo $row['entry_txt'] ?>
+                </span>    
+            </div>    
+            <?php
+        }
+    }
+    ?>
+</div>
+</body>
+</html>

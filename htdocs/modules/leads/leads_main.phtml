@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><?php  ?></title>
+<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+<link rel="stylesheet" type="text/css" href="leads_main.css" media="screen" >
+</head>
+<body>
+
+<?php
+$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+$FRAMEWORK->warning($WARNING);
+?>
+<script language="JavaScript"
+
+type="text/javascript">
+function check_all(frm, chAll, field) {
+    comfList = document.forms[frm].elements[field];
+    checkAll = (chAll.checked)?true:false; // what to do? Check all or uncheck all.
+    if (checkAll) {
+            for (i = 0; i < comfList.length; i++) {
+                comfList[i].checked = true;
+            }
+        }
+    else {
+        for (i = 0; i < comfList.length; i++) {
+                comfList[i].checked = false;
+            }
+        }
+
+
+
+}
+
+function remove_tag(tag_id, lead_id) {
+	  var myForm = document.createElement("form");
+      myForm.method="post" ;
+      myForm.action = '<?php echo $_SERVER['PHP_SELF']?>' ;
+      var myInput = document.createElement("input") ;
+      myInput.setAttribute("name", 'ACTION') ;
+      myInput.setAttribute("value", 'Remove Tag');
+      myForm.appendChild(myInput) ;
+      var myInput = document.createElement("input") ;
+      myInput.setAttribute("name", 'lead_id') ;
+      myInput.setAttribute("value", lead_id);
+      myForm.appendChild(myInput) ;
+      var myInput = document.createElement("input") ;
+      myInput.setAttribute("name", 'leadcat_id') ;
+      myInput.setAttribute("value", tag_id);
+      myForm.appendChild(myInput) ;
+      var myInput = document.createElement("input") ;
+      myInput.setAttribute("name", 'previous_search') ;
+      myInput.setAttribute("value", "<?php echo $SEARCH; ?>");
+      myForm.appendChild(myInput) ;
+      document.body.appendChild(myForm) ;
+      myForm.submit() ;
+      document.body.removeChild(myForm) ;
+}
+
+</script>
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/leads/leads_main.php"  method=POST>
+    <div class="divheader">Search</div>
+    <div class="row">
+        <span class="label">String:</span>
+        <span class="formw"><input type="TEXT"  name="string"  value="<?php echo $string; ?>" ></span>
+    </div>    
+    <div class="row">
+        <span class="label"></span>
+        <span class="formw"><input type="SUBMIT"  name="ACTION"  value="Search All" ></span>
+    </div>    
+</form>
+</div>
+<div class="portlet">
+    <div class="divheader">Results</div>
+        <table>
+        <TR>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=lead_name" ?>">LEAD NAME</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=tag" ?>">TAGS</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=whoopen_id" ?>">WHO OPENED</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=whoupdated_id" ?>">WHO UPDATED</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=whoassigned_id" ?>">WHO ASSIGNED</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=whenopen_date" ?>">WHEN OPEN</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=whenupdated_date" ?>">WHEN UPDATED</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=whenclosed_date" ?>">WHEN CLOSE</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=whenreturn_date" ?>">WHEN FOLLOW-UP?</A></TD>
+        </TR>
+      <?php
+        if(is_array($search_results))
+        {
+        foreach($search_results as $row)
+        {
+        ?>
+            <form action="<?php echo $BASE_DIR ?>/leads/leads_update.php" target="_blank" method=POST>
+           <TR >
+                <TD><?php echo $row['firstname']." ".$row['lastname'] ?></TD>
+                <TD><?php echo $userArray[$row['whoopen_id']]['username']; ?></TD>
+                <TD><?php echo $userArray[$row['whoupdated_id']]['username'];  ?></TD>
+                <TD><?php echo $userArray[$row['whoassigned_id']]['username']; ?></TD>
+                <TD><?php echo $row['whenopen_date'] ?></TD>
+                <TD><?php echo $row['whenupdated_date'] ?></TD>
+                <TD><?php echo $row['whenclosed_date'] ?></TD>
+                <TD><?php echo $row['whenreturn_date'] ?></TD>
+                <TD>
+                    <input type="HIDDEN"  name="lead_id"  value="<?php echo $row['lead_id'] ?>" >
+                    <input type="SUBMIT"  name="EDIT"  value="Open Lead" >
+                </TD>
+            </TR>
+            </form>
+        <?php
+        }
+        }
+    ?>  
+</table>
+</div>
+
+<div class="portlet">
+<form action="<?php echo $BASE_DIR ?>/leads/leads_update.php"  method=POST>
+    <div class="divheader">Lead</div>
+    <div class="row">
+        <span class="label">First Name:</span>
+        <span class="formw">
+            <input type="TEXT"  ID="firstname" name="firstname"  value="<?php echo $lead_info['firstname']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Last Name:</span>
+        <span class="formw">
+            <input type="TEXT"  ID="lastname" name="lastname"  value="<?php echo $lead_info['lastname']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Catagory:</span>
+        <span class="formw"><SELECT  class="smallsans" SIZE="1" NAME="leadcat_id" >
+<?php
+            foreach($leadtypes as $row)
+            {
+                ?>
+                    <OPTION VALUE="<?php echo $row['leadcat_id']; ?>"<?php if($defaults['category'] == $row['leadcat_id']){echo " SELECTED "; } ?> ><?php echo $row['leadcat_name']; ?></OPTION>
+                <?php
+            }
+?>	
+        </SELECT></span>
+    </div>    
+    <div class="row">
+        <span class="label">Origin:</span>
+        <span class="formw"><SELECT  class="smallsans" SIZE="1" NAME="leadorigin_id" >
+<?php
+            foreach($leadOrigin as $row)
+            {
+                ?>
+                    <OPTION VALUE="<?php echo $row['leadorigin_id']; ?>"<?php if($defaults['origin'] == $row['leadorigin_id']){echo " SELECTED "; } ?> ><?php echo $row['leadorigin_name']; ?></OPTION>
+                <?php
+            }
+?>	
+        </SELECT></span>
+    </div>    
+ 
+    <div class="row">
+        <span class="label">Property Address:</span>
+        <span class="formw">
+            <input type="TEXT"  name="prop_street" ID="prop_street"  value="<?php echo $lead_info['street']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Property Unit:</span>
+        <span class="formw">
+            <input type="TEXT"  name="prop_unit" ID="prop_unit"  value="" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Property City</span>
+        <span class="formw">
+                <input type="TEXT"  name="prop_city" ID="prop_city" value="<?php echo $lead_info['city']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Property State:</span>
+        <span class="formw">
+            <input type="TEXT"  name="prop_state" ID="prop_state"  value="<?php echo $lead_info['state']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Property Zip:</span>
+        <span class="formw">
+            <input type="TEXT"  name="prop_zip" ID="prop_zip"  value="<?php echo $lead_info['zip']; ?>" >  
+        </span>
+    </div>    
+ 
+    <div class="row">
+        <span class="label">Address:</span>
+        <span class="formw">
+            <input type="TEXT"  name="street" ID="street"  value="<?php echo $lead_info['street']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">City</span>
+        <span class="formw">
+                <input type="TEXT"  name="city" ID="city" value="<?php echo $lead_info['city']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">State:</span>
+        <span class="formw">
+            <input type="TEXT"  name="state" ID="state"  value="<?php echo $lead_info['state']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Zip:</span>
+        <span class="formw">
+            <input type="TEXT"  name="zip" ID="zip"  value="<?php echo $lead_info['zip']; ?>" >  
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Phone Number:</span>
+        <span class="formw">
+            <input type="TEXT"  name="phone_num" ID="phone_num"  value="<?php echo $lead_info['phone_num']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Phone Number2:</span>
+        <span class="formw">
+            <input type="TEXT"  name="phone_num2" ID="phone_num2"  value="<?php echo $lead_info['phone_num']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="label">Email:</span>
+        <span class="formw">
+            <input type="TEXT"  name="email_address" ID="email_address"  value="<?php echo $lead_info['email_address']; ?>" >
+        </span>
+    </div>    
+    <div class="row">
+            <span class="label">When To Follow Up:</span>
+            <span class="formw">
+                <?php
+                $FRAMEWORK->date_selectors($whenreturn_date_year, $whenreturn_date_month, $whenreturn_date_day, "whenreturn_", "")
+                ?>
+            <input type="text" name="whenreturn_date_hour" size="2" value="<?php echo $whenreturn_date_hour ?>" maxlength="2" />:
+            <input type="text" name="whenreturn_date_minute" size="2" value="<?php echo $whenreturn_date_minute ?>" maxlength="2" />
+            <input type="radio" name="ampm" value="am" <?php if( date('H') < 12){ echo " checked";} ?> />am
+            <input type="radio" name="ampm" value="pm" <?php if( date('H') > 12){ echo " checked";} ?> />pm
+            </span>
+        </div>    
+   <div class="row">
+        <span class="label">Comments:</span>   
+        <span class="formw"><TEXTAREA name="comments" rows="10" cols="60"></TEXTAREA></span>
+    </div>
+   <div class="row">
+        <span class="label">Property Description:</span>   
+        <span class="formw"><TEXTAREA name="description" rows="10" cols="60"></TEXTAREA></span>
+    </div>
+    <div class="row">
+        <span class="label">Assign To:</span>
+        <span class="formw"><SELECT  SIZE="1" NAME="whoassigned_id" >
+        <?php foreach($users as $row)
+        {	
+            ?><OPTION VALUE="<?php echo $row['user_id'] ?>" <?php if($USER->GetUserID() ==  $row['user_id']){echo " SELECTED ";} ?>><?php echo $row['username'] ?></OPTION><?php
+        }
+        ?>
+        </SELECT>
+        </span>
+    </div>    
+     <div class="row">
+        <span class="formw">
+            <input type="SUBMIT"  name="ACTION" value="Create Lead" >
+        </span>
+    </div>    
+
+</form>
+</div>
+<div class="portlet">
+    <div class="divheader">Active Leads</div>    
+    <form name="leads_form" action="<?php echo $BASE_DIR ?>/leads/leads_main.php"  method=POST>
+    <div class="row">
+            <span class="label">Tag:</span>
+            <span class="forml"><SELECT  class="smallsans" SIZE="1" NAME="leadcat_id" >
+    <?php
+                foreach($leadtypes as $row)
+                {
+                    ?>
+                        <OPTION VALUE="<?php echo $row['leadcat_id'];?>">
+                        <?php echo $row['leadcat_name']; ?>
+                        </OPTION>
+                    <?php
+                }
+    ?>  
+            </SELECT>
+            <input type="SUBMIT"  name="ACTION"  value="Add Tag" >
+            <input type="SUBMIT"  name="ACTION"  value="Remove Tags" >
+            <input type="HIDDEN"  name="previous_search"  value="<?php echo $SEARCH; ?>" >
+            </span>
+    </div>
+    <div class="row">
+            <span class="label">Color:</span>
+            <span class="forml"><SELECT  class="smallsans" SIZE="1" NAME="color" >
+<?php
+            $colors = array("none", "lime", "teal", "cyan", "magenta", "pink", "salmon", "yellow",  "orange", "seagreen");
+            foreach($colors as $row)
+            {
+                ?>
+                    <OPTION VALUE="<?php echo $row; ?>" ><?php echo $row; ?></OPTION>
+                <?php
+            }
+?>  
+        </SELECT>
+            <input type="SUBMIT"  name="ACTION"  value="Set Color" >
+            </span>
+    </div>
+    <div class="row">
+            <span class="label">Close Leads:</span>
+            <span class="forml">
+            <input type="SUBMIT"  name="ACTION"  value="Set Closed" >
+            </span>
+    </div>
+         <div class="row">
+        <span class="formw">
+            <input type="SUBMIT"  name="ACTION" value="Generate CSV" >
+        </span>
+    </div>    
+    <div class="row">
+        <span class="col1"><a href="<?php echo $_SERVER["PHP_SELF"]?>?VIEW_ALL=CLOSED&VIEW_WHOSE=<?php echo $VIEW_WHOSE ?>">VIEW CLOSED </a></span>
+        <span class="col1"><a href="<?php echo $_SERVER["PHP_SELF"]?>?VIEW_ALL=ALL&VIEW_WHOSE=<?php echo $VIEW_WHOSE ?>">VIEW ALL </a></span>
+        <span class="col1"><a href="<?php echo $_SERVER["PHP_SELF"]?>?VIEW_ALL=OPEN&VIEW_WHOSE=<?php echo $VIEW_WHOSE ?>">VIEW OPEN</a></span>
+        <span class="col1"><a href="<?php echo $_SERVER["PHP_SELF"]?>?VIEW_ALL=<?php echo $VIEW_ALL ?>&VIEW_WHOSE=OWN">VIEW MINE</a></span>
+        <span class="col1"><a href="<?php echo $_SERVER["PHP_SELF"]?>?VIEW_ALL=<?php echo $VIEW_ALL ?>&VIEW_WHOSE=ALL">VIEW EVERYONES</a></span>
+    </div>
+    <div class="row">
+    <table>
+    	<TR><TD><input type="checkbox" name="checkAll" value="Comfortable with"
+    		onclick="javascript:check_all('leads_form', this, 'lead_ids[]')"  ></TD>
+        </tr>
+        <TR>
+            <TD></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=lead_name" ?>">LEAD NAME</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=tag" ?>">TAGS</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=whoopen_id" ?>">WHO OPENED</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=whoupdated_id" ?>">WHO UPDATED</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=whoassigned_id" ?>">WHO ASSIGNED</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=whenopen_date" ?>">WHEN OPEN</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=whenupdated_date" ?>">WHEN UPDATED</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=whenclosed_date" ?>">WHEN CLOSE</A></TD>
+            <TD><a href="<?php echo $_SERVER["PHP_SELF"]."?VIEW_ALL=".$VIEW_ALL."&VIEW_WHOSE=".$VIEW_WHOSE."&SORTBY=whenreturn_date" ?>">WHEN FOLLOW-UP?</A></TD>
+        </TR>
+<?php
+    if(is_array($leads2))
+    {
+        foreach($leads2 as $row)
+        {
+            ?>
+           <TR class="<?php echo $row['color'] ?>" >
+                <TD>
+                    <input type=checkbox name="lead_ids[]" value="<?php echo $row['lead_id'] ?>" />
+                </TD>
+                <TD><?php echo $row['firstname']." ".$row['lastname'] ?></TD>
+                <TD>
+                <?php
+                    if(@$row['leadtag_string'] != "")
+                    {
+                        $tags = explode(",", $row['leadtag_string']);
+                        foreach($tags as $tag)
+                        {
+                            ?>
+                               <div class="leadtag"><?php echo $tag_id_to_name[$tag]; ?>|<span onclick="remove_tag(<?php echo $tag; ?>, <?php echo $row['lead_id'] ?>)"> X&nbsp;</span></div>
+                            <?php
+                        }
+                    }
+                ?>  
+                </TD><TD><?php echo $userArray[$row['whoopen_id']]['username']; ?></TD>
+                <TD><?php echo $userArray[$row['whoupdated_id']]['username'];  ?></TD>
+                <TD><?php echo $userArray[$row['whoassigned_id']]['username']; ?></TD>
+                <TD><?php echo $row['whenopen_date'] ?></TD>
+                <TD><?php echo $row['whenupdated_date'] ?></TD>
+                <TD><?php echo $row['whenclosed_date'] ?></TD>
+                <TD  <?php
+           if(strtotime("now")>strtotime($row['whenreturn_date']) )
+           {
+              ?> class="alert"<?php 
+           }
+           ?>><?php echo $row['whenreturn_date'] ?></TD>
+                <TD>
+                     <a href="<?php echo $BASE_DIR ?>/leads/leads_update.php?lead_id=<?php echo $row['lead_id'] ?>" target="_blank" method=POST>EDIT</a>
+                     
+                </TD>
+            </TR>
+            <?php
+        }	
+    }
+    ?>
+    </table>
+    </form>
+    
+</div>
+</div>
+</body>
+</html>
