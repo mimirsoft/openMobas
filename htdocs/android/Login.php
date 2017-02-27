@@ -58,7 +58,7 @@ if($_SERVER['SERVER_PORT']!=443)
     exit;
 }
     
-require_once("../../../openMobas/globalconstants.php");
+require_once("../../../openMobas/om_globalconstants.php");
 require_once("../../../openMobas/classes/Database_Mysql.class.php");
 require_once("../../../openMobas/classes/Framework.class.php");
 require_once("../../../openMobas/classes/User_Session.class.php");
@@ -72,7 +72,8 @@ $USER = $objSession->GetUserObject();
 
 if($USER->IsLoggedIn() != true)//if USER is not logged in....
 {
-    if(isset($_GET['login']) & isset($_GET['password']))
+    
+    if(isset($_GET['login']) && isset($_GET['password']))
     {
         $USER->Login($_GET['login'], $_GET['password']);//try to log in.
     }
@@ -84,7 +85,6 @@ if($USER->IsLoggedIn() != true)//if USER is not logged in....
         //exit;
     }
 }
-
 $response['username'] = $USER->GetUserName();
 $response['userID'] = $USER->GetUserID();
 $response['loggedIn'] = $USER->IsLoggedIn();

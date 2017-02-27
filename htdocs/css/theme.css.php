@@ -21,7 +21,7 @@ header("Content-type: text/css"); ?>
     }
     input {   
         font-family: sans-serif;
-        font-size: 8pt }
+        font-size: 10pt }
     }
     a:link {
         text-decoration: none; 
@@ -106,7 +106,7 @@ header("Content-type: text/css"); ?>
 
     .smallsans {
         font-family: sans-serif;
-        font-size: 8pt;
+        font-size: 10pt;
         margin: 0 0 0 0;
         padding: 0 0 0 0;
          }
@@ -173,14 +173,14 @@ header("Content-type: text/css"); ?>
 		color:#000000 !important;
 		background-color:#EFF4FA !important;
 		text-decoration:underline !important;
-		background-image:url(images/bullet_black_down.gif) !important;
+		/*background-image:url(images/bullet_black_down.gif) !important;*/
 	}
 
 
 	/*"""""""" (MAIN) Parent Items """"""""*/
 	#qm0 .qmparent
 	{
-		background-image:url(images/bullet_white_down.gif);
+		/*background-image:url(images/bullet_white_down.gif);*/
 		background-repeat:no-repeat;
 		background-position:92%;
 		cursor:default;

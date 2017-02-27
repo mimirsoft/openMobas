@@ -5,7 +5,7 @@ ini_set('display_errors', '1');
 * This file is simple example on how to use the RBAC system
 * You must first run the setup.php file before running this file.
 */
-include("../../../framework_masterinclude.php");
+require_once("../../../../openMobas/framework_masterinclude.php");
 include("admin_include.php");
 
 $sortby = "is_singular";

@@ -294,8 +294,11 @@ public function get_users($sortby)
     if ($this->logged_in == true) {
         $stmt = $this->dbh->prepare("UPDATE user_session 
                                   SET logged_in = 'N', 
+                                      session_data = '', 
                                       user_id = 0 
                                 WHERE session_id = " . $this->native_session_id);
+        //remove all saved session variables on Logout
+        session_unset();
         $stmt->execute();
         $this->logged_in = false;
         $this->username = "";

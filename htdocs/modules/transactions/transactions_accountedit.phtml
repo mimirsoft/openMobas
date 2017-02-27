@@ -16,7 +16,7 @@ $FRAMEWORK->warning(@$WARNING);
                 <SELECT  SIZE="1" NAME="account_parent" >
                     <OPTION value="0" >TOP LEVEL</OPTION>
                 <?php
-                $transaction->build_accountstree_selectoptions($account_array, $transactions_accounts_parent, $account_id);
+                $transactionAccount->build_accountstree_selectoptions($account_array, $transactions_accounts_parent, $account_id);
                 ?>
                 </SELECT>
             </span>

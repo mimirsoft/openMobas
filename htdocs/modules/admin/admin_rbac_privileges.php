@@ -5,7 +5,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
-include("../../../framework_masterinclude.php");
+require_once("../../../../openMobas/framework_masterinclude.php");
 include("admin_include.php");
 
 $sortby = "name";

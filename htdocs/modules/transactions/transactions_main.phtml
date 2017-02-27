@@ -1,16 +1,22 @@
-<link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
-<link rel="stylesheet" type="text/css" href="transactions_main.css" media="screen" >
-<?php 
-
-$FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
-
-if(!($rbac_user->IsAllowedTo($USER->GetUserID(), "view_accounttree", "transactions_module")))
-{
-    echo "PERMISSION DENIED TO VIEW ACCOUNTTREE IN TRANSACTIONS MODULE!!";
-    exit;
-}
-?>
-
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8" />
+    <title>Transactions - Main</title>
+    <link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
+    <link rel="stylesheet" type="text/css" href="transactions_main.css" media="screen" >
+    <?php 
+    
+    $FRAMEWORK->navbar($MODULE_NAME, $BASE_DIR, $USER);
+    
+    if(!($rbac_user->IsAllowedTo($USER->GetUserID(), "view_accounttree", "transactions_module")))
+    {
+        echo "PERMISSION DENIED TO VIEW ACCOUNTTREE IN TRANSACTIONS MODULE!!";
+        exit;
+    }
+    ?>
+</head>
+<body>
 <a href="<?php echo $MODULE_NAME?>_main.php?VIEWALL=Y">View All</A>
     <div class="portlet" >
         <div class="divheader">Select Account</div>
@@ -40,3 +46,5 @@ if(!($rbac_user->IsAllowedTo($USER->GetUserID(), "view_accounttree", "transactio
         }
         ?>      
     </div>
+</body>
+</html>

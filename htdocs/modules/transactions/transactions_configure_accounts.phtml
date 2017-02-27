@@ -20,7 +20,7 @@ if(!($rbac_user->IsAllowedTo($USER->GetUserID(), "configure_accounts", "transact
                 <SELECT  SIZE="1" NAME="account_parent" >
                 <OPTION value="0" >TOP LEVEL</OPTION>
                 <?php
-                $transaction->build_accountstree_selectoptions($account_stack_all);
+                $transactionAccount->build_accountstree_selectoptions($account_stack_all);
                 ?>
                 </SELECT>
             </span>

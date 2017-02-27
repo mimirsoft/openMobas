@@ -298,9 +298,9 @@ public function navbar($MODULE_NAME, $BASE_DIR, $USER)
         <a class="#">ABOUT</a> 
         <div>
             Powered by <BR />
-            EphemeralTech Inc<BR />
-            NetPropMan Suite<BR />
-        <a href="www.ephemeraltech.com">www.ephemeraltech.com</a>
+            Mimir Software Corp<BR />
+            openMobas<BR />
+        <a href="http://www.mimirsoft.com">www.mimirsoft.com</a>
         </div>
         <a HREF="<?php echo $BASE_DIR ?>/interface/logout.php"><B>LOG OUT <?php echo $USER->GetUsername()?></B></a>
     <!--%%%%%%%%%%%% QuickMenu Create Menu (false=horizontal true=veritcal) %%%%%%%%%%%*-->
@@ -516,9 +516,9 @@ public function tens_to_word($num, $ones)
 }
 public function date_selectors($date_year, $date_month, $date_day, $name, $name2)
 {
-   echo "<input type=\"TEXT\" SIZE=\"3\" onchange=\"check_date(event, 'year')\" MAXLENGTH =\"4\" name=\"".$name."date_year".$name2."\" id=\"".$name."date_year".$name2."\" value=\"".$date_year."\">\n";
-   echo "<input type=\"TEXT\" SIZE=\"1\" onchange=\"check_date(event, 'month')\" MAXLENGTH =\"2\" name=\"".$name."date_month".$name2."\"id=\"".$name."date_month".$name2."\" value=\"".$date_month."\">\n";
-   echo "<input type=\"TEXT\" SIZE=\"1\" onchange=\"check_date(event, 'day')\" MAXLENGTH =\"2\" name=\"".$name."date_day".$name2."\" id=\"".$name."date_day".$name2."\" value=\"".$date_day."\">\n";
+   echo "<input type=\"TEXT\" SIZE=\"3\" onchange=\"check_date(event, 'year')\" MAXLENGTH=\"4\" name=\"".$name."date_year".$name2."\" id=\"".$name."date_year".$name2."\" value=\"".$date_year."\"/>\n";
+   echo "<input type=\"TEXT\" SIZE=\"1\" onchange=\"check_date(event, 'month')\" MAXLENGTH=\"2\" name=\"".$name."date_month".$name2."\" id=\"".$name."date_month".$name2."\" value=\"".$date_month."\"/>\n";
+   echo "<input type=\"TEXT\" SIZE=\"1\" onchange=\"check_date(event, 'day')\" MAXLENGTH=\"2\" name=\"".$name."date_day".$name2."\" id=\"".$name."date_day".$name2."\" value=\"".$date_day."\"/>\n";
 
 }
 function br2nl($text)

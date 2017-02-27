@@ -1,7 +1,7 @@
 <?php 
+header('Content-Type: text/css');
 
-header("Content-type: text/css"); ?>
-
+?>  
 
    .portlet {
         display: block;
@@ -78,7 +78,7 @@ header("Content-type: text/css"); ?>
     }
    
     table.fixed {
-        background-color: <? echo $FRAMEWORK_COLORS['background_color'] ?>;
+        background-color: <?php echo $FRAMEWORK_COLORS['background_color'] ?>;
         table-layout:fixed;
     }
     div.edit_box {

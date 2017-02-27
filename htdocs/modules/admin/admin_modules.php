@@ -18,14 +18,15 @@ switch ($ACTION)
 {
     case "Verify RBAC":
     
-        echo "verify RBAC";        
+        echo "verify RBAC";  
+        //print_r($GLOBAL_CONSTANTS[$_SERVER['SERVER_NAME']]);
         $RBAC->verify_rbac($module_name);
         $RBAC->cascade_session_permissions();
         
         break;
     //install module
     case "Install Module":
-    	include("../$module_name/{$module_name}_rbac.php");
+    	include("../$module_name/{$module_name}_sql_setup.php");
     	
 
     	
@@ -33,7 +34,7 @@ switch ($ACTION)
 		
     case "Load Defaults":
     	//try to install
-        include("../$module_name/{$module_name}_rbac.php");
+        include("../$module_name/{$module_name}_sql_setup.php");
     	        
     	break;
 

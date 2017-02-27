@@ -40,7 +40,7 @@ if($_SERVER['SERVER_PORT']!=443)
     exit;
 }
     
-require_once("../../../openMobas/globalconstants.php");
+require_once("../../../openMobas/om_globalconstants.php");
 require_once("../../../openMobas/classes/Database_Mysql.class.php");
 require_once("../../../openMobas/classes/Framework.class.php");
 require_once("../../../openMobas/classes/User_Session.class.php");

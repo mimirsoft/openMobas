@@ -1,4 +1,27 @@
 <?php
+/*
+ *
+ This file is part of OpenMobas
+ Copyright (C) 2011, Kevin Milhoan, Mimir Software Corporation
+
+ OpenMobas is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+
+ OpenMobas is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with WebPropMan.  If not, see <http://www.gnu.org/licenses/>.
+
+ Contact MimirSoft at mimirsoft@gmail.com or www.mimirsoft.com
+
+ *
+ */
+
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 require_once("../../../../openMobas/framework_masterinclude.php");
@@ -36,7 +59,9 @@ if($page < 0)
     $page = 0;
 }
 
-$dbh = new DB_Mysql();
+$transactionAccount = new TransactionAccount($dbh, $FRAMEWORK);
+$transaction = new Transaction($dbh, $transactionAccount);
+
 
 // Here we paginate the transactions
 $stmt = $dbh->prepare("SELECT COUNT(*)  
@@ -100,19 +125,19 @@ $credit_sub = $row['credit'];
 $net = $debit_sub-$credit_sub;
 // we need to round after subtracting to avoid machine precision errors. I.E.  $10.60999999
 $net = round($net, 2);
-$account_info = transaction::get_account_byID($working_account);
+$account_info = $transactionAccount->get_account_byID($working_account);
 if($account_info['accounttype_sign'] == 'CREDIT')
 {
     $net = -$net;
 }
 $debit_or_credit = $account_info['accounttype_sign'];
 
-$TOTAL = transaction::get_balance($working_account);
+$TOTAL = $transactionAccount->get_balance($working_account);
 $RUNNING_TOTAL = bcadd($RUNNING_TOTAL, 0, 2);
 $RUNNING_TOTAL = bcadd($RUNNING_TOTAL, $net, 2);
 
-$all_accounts = transaction::build_accountIDtoFullName_array(false);
-$account_array = transaction::build_account_stack_all(true);
+$all_accounts = $transactionAccount->build_accountIDtoFullName_array(false);
+$account_array = $transactionAccount->build_account_stack_all(true);
 
 
 

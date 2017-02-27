@@ -7,7 +7,8 @@ require_once("transactions_include.php");
 $FRAMEWORK->authenticate($objSession, $MODULE_NAME, $USER, $BASE_DIR);
 
 $action = '';
-$transaction = new Transaction($dbh);
+$transactionAccount = new TransactionAccount($dbh, $FRAMEWORK);
+$transaction = new Transaction($dbh, $transactionAccount);
 
 foreach ($_POST as $key => $value)
 {
@@ -70,10 +71,10 @@ if ($action == "Reverse All Transactions" && $account_id != "")
     
 }
 
-$account = $transaction->get_account_byID($account_id);
+$account = $transactionAccount->get_account_byID($account_id);
 $transactions_accounts_parent = $account['account_parent'];
-$accounttypes = $transaction->getall_accounttypes();
-$account_array = $transaction->build_account_stack_all();
+$accounttypes = $transactionAccount->getall_accounttypes();
+$account_array = $transactionAccount->build_account_stack_all();
 
 include("transactions_accountedit.phtml");
 

@@ -53,8 +53,8 @@
  *
  *  *************************************************/
 
-//error_reporting(E_ALL);
-//ini_set('display_errors', '1');
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 
 
 //this is our half assed way of enforcing HTTPS
@@ -63,7 +63,7 @@ if($_SERVER['SERVER_PORT']!=443)
     exit;
 }
 
-require_once("../../../openMobas/globalconstants.php");
+require_once("../../../openMobas/om_globalconstants.php");
 require_once("../../../openMobas/classes/Database_Mysql.class.php");
 require_once("../../../openMobas/classes/Framework.class.php");
 require_once("../../../openMobas/classes/User_Session.class.php");
@@ -96,7 +96,7 @@ if($USER->IsLoggedIn() != true)//if USER is not logged in....
     exit;
 }
 
-if(!$rbac_user->IsAllowedTo($USER->GetUserID(), "access_module", "serves_module"))
+if(!$rbac_user->IsAllowedTo($USER->GetUserID(), "access_module", "process_serve_module"))
 {
     
     $response['message'] = "permission denied to access module serves_module";

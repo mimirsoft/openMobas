@@ -1,4 +1,7 @@
-    
+<?php 
+header('Content-Type: text/css');
+
+?>      
     .portlet {
         width: 47em;
         display: block;

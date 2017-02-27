@@ -1,4 +1,28 @@
 <?php
+/*
+ *
+ This file is part of OpenMobas
+ Copyright (C) 2011, Kevin Milhoan, Mimir Software Corporation
+
+ OpenMobas is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+
+ OpenMobas is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with WebPropMan.  If not, see <http://www.gnu.org/licenses/>.
+
+ Contact MimirSoft at mimirsoft@gmail.com or www.mimirsoft.com
+
+ *
+ */
+
+
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
@@ -22,7 +46,8 @@ $account_current = '';
 $defaultstatement_type = '';
 $page = 0;
 $results = array();
-$transaction = new Transaction($dbh);
+$transactionAccount = new TransactionAccount($dbh, $FRAMEWORK);
+$transaction = new Transaction($dbh, $transactionAccount);
 
 
 foreach ($_GET as $key => $value)
@@ -45,7 +70,7 @@ switch($action)
         }
         if ($account_name != "")
         {
-            $transaction->add_accountnew($account_id, $account_name, $account_parent, $accounttype_id, $account_memo, $account_current);
+            $transactionAccount->add_accountnew($account_id, $account_name, $account_parent, $accounttype_id, $account_memo, $account_current);
             $account_id = "";
             $account_name = "";
             $accounttype_id = "";
@@ -54,13 +79,13 @@ switch($action)
         }
         break;
     case "Verify Names":
-        $transaction->verify_names();
+        $transactionAccount->verify_names();
         break;
     case "Search":
-        $results = $transaction->search_accounts($search_string);
+        $results = $transactionAccount->search_accounts($search_string);
         break;
     case "Verify Tree":
-        $transaction->verify_tree();
+        $transactionAccount->verify_tree();
         break;
 }
 
@@ -75,10 +100,10 @@ $account_num = $count['COUNT(*)'];
 $page_count = floor($account_num/200);
 
 
-$account_array = $transaction->build_accountIDtoFullname_array(true);
+$account_array = $transactionAccount->build_accountIDtoFullname_array(true);
 $starting_point = $page*200;
-$account_stack = $transaction->build_account_stack($starting_point, 200);
-$account_stack_all = $transaction->build_account_stack_all();
+$account_stack = $transactionAccount->build_account_stack($starting_point, 200);
+$account_stack_all = $transactionAccount->build_account_stack_all();
 
 include("transactions_configure_accounts.phtml");
 

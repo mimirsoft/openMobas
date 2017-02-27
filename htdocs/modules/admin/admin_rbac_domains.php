@@ -7,7 +7,7 @@ ini_set('display_errors', '1');
 * You must first run the setup.php file before running this file.
 */
 
-include("../../../framework_masterinclude.php");
+require_once("../../../../openMobas/framework_masterinclude.php");
 include("admin_include.php");
 
 $sortby = "name";
