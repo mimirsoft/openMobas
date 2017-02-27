@@ -1,9 +1,30 @@
 <?php
+/*
+ *
+ This file is part of OpenMobas
+ Copyright (C) 2011, Kevin Milhoan
 
+ OpenMobas is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+
+ OpenMobas is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with WebPropMan.  If not, see <http://www.gnu.org/licenses/>.
+
+ Contact MimirSoft at mimirsoft@gmail.com or www.mimirsoft.com
+
+ *
+ */
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 require_once("../../../../openMobas/framework_masterinclude.php");
-require_once("serves_include.php");
+require_once("process_serve_include.php");
 $FRAMEWORK->authenticate($objSession, $MODULE_NAME, $USER, $BASE_DIR);
 $WARNING['show'] = false;
 
@@ -58,7 +79,7 @@ switch($ACTION)
     case "Delete":
             //delete it, and go back to main
         $serve->delete($serve_id);
-        header ("Location: serves_main.php");
+        header ("Location: process_serve_main.php");
         break;
         
     default:
@@ -78,4 +99,4 @@ if($str_date == -62169955200)
 	$serve_date_minute = date('i', $str_date);
 }
 
-include("serves_update.phtml");
+include("process_serve_update.phtml");

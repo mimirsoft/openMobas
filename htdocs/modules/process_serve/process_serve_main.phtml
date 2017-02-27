@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title><?php  ?></title>
+<meta charset="utf-8" />
+<title>Process Serves</title>
 <link rel="stylesheet" type="text/css" href="/css/theme.css.php" media="screen" >
-<link rel="stylesheet" type="text/css" href="serves_main.css" media="screen" >
+<link rel="stylesheet" type="text/css" href="process_serve_main.css" media="screen" >
 </head>
 <body>
 
@@ -13,7 +14,7 @@ $FRAMEWORK->warning($WARNING);
 ?>
 
 <div class="portlet">
-<form action="<?php echo $BASE_DIR ?>/serves/serves_main.php"  method=POST>
+<form action="<?php echo $BASE_DIR ?>/process_serve/process_serve_main.php"  method=POST>
     <div class="divheader">Search</div>
     <div class="row">
         <span class="label">String:</span>
@@ -53,7 +54,7 @@ $FRAMEWORK->warning($WARNING);
                 <TD><?php echo $row['type'] ?></TD>
                  <TD><?php echo $row['date'] ?></TD>
                
-               <TD> <form action="<?php echo $BASE_DIR ?>/serves/serves_update.php" target="_blank" method=POST>
+               <TD> <form action="<?php echo $BASE_DIR ?>/process_serve/process_serve_update.php" target="_blank" method=POST>
            
                     <input type="HIDDEN"  name="serve_id"  value="<?php echo $row['serve_id'] ?>" >
                     <input type="SUBMIT"  name="EDIT"  value="Edit" >
@@ -71,7 +72,7 @@ $FRAMEWORK->warning($WARNING);
 </div>
 
 <div class="portlet">
-<form action="<?php echo $BASE_DIR ?>/serves/serves_main.php"  method=POST>
+<form action="<?php echo $BASE_DIR ?>/process_serve/process_serve_main.php"  method=POST>
     <div class="divheader">Serve</div>
     <div class="row">
         <span class="label">First Name:</span>
@@ -203,7 +204,7 @@ $types = array('UD','SC','FL','TRO','CH','DV');
                  <TD><?php echo $row['date'] ?></TD>
                  <TD><?php echo $row['complete'] ?></TD>
                
-               <TD> <form action="<?php echo $BASE_DIR ?>/serves/serves_update.php" target="_blank" method=POST>
+               <TD> <form action="<?php echo $BASE_DIR ?>/process_serve/process_serve_update.php" target="_blank" method=POST>
            
                     <input type="HIDDEN"  name="serve_id"  value="<?php echo $row['serve_id'] ?>" >
                     <input type="SUBMIT"  name="EDIT"  value="Edit" >
@@ -233,6 +234,6 @@ $types = array('UD','SC','FL','TRO','CH','DV');
     </table>
     
 </div>
-</div>
+
 </body>
 </html>
